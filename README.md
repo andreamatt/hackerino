@@ -1,8 +1,8 @@
 # hackerino
 ## Membri
-- @andreamatt
-- @andreidiaconu97
-- @edomenegaz
+- [Andrea Mattè](https://github.com/andreamatt)
+- [Andrei Diaconu](https://github.com/andreidiaconu97)
+- [Edoardo Meneghini](https://github.com/edomenegaz)
 - ioza
 
 ## [Apiary](https://hackerino.docs.apiary.io)
