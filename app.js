@@ -10,8 +10,10 @@ app.get("/", (req, res) => {
 });
 
 app.get("/help", (req, res) => {
-	 res.sendFile(path.join(__dirname + '/help.html'));
-    
+	res.sendFile(path.join(__dirname + '/help.html'));
+
 });
 
-app.listen(port, () => console.log("server running"));
+var server = app.listen(port, () => console.log("server running"));
+
+module.exports.server = server
