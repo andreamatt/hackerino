@@ -9,3 +9,4 @@
 
 ## [Heroku](https://hackerino.herokuapp.com)
 - [Develop Branch](https://hackerino-dev.herokuapp.com) (uses CI check)
+- [Master Branch](https://hackerino.herokuapp.com/) (manual deploy)
