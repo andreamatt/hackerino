@@ -18,6 +18,8 @@ paths:
   /exams:
     get:
       summary: Returns exams list.
+      tags:
+      - /exams
       responses:
         "200":
           description: An exam list.
@@ -25,6 +27,8 @@ paths:
           description: Unexpected error
     post:
       summary: Adds an exam.
+      tags:
+      - /exams
       responses:
         "201":
           description: Exam created.
@@ -35,6 +39,8 @@ paths:
   /exams/{examID}:
     get:
       summary: Returns exam by ID.
+      tags:
+      - /exams
       responses:
         "200":
           description: An exam.
@@ -44,6 +50,8 @@ paths:
           description: Unexpected error
     put:
       summary: Updates/creates exam by ID.
+      tags:
+      - /exams
       responses:
         "200":
           description: Exam updated.
@@ -55,6 +63,8 @@ paths:
           description: Unexpected error
     delete:
       summary: Deletes exam by ID.
+      tags:
+      - /exams
       responses:
         "204":
           description: Exam deleted.
@@ -62,10 +72,130 @@ paths:
           description: Could not delete exam with the specified ID (exam not found).
         default:
           description: Unexpected error
-
-  /student/{studentEmail}:
+  /exams/reviews:
+    get:
+      summary:
+      tags:
+      - /exams/reviews
+      responses:
+    post:
+      summary:
+      tags:
+      - /exams/reviews
+      responses:
+  /exams/reviews/{reviewID}:
+    get:
+      summary:
+      tags:
+      - /exams/reviews
+      responses:
+    put:
+      summary:
+      tags:
+      - /exams/reviews
+      responses:
+    delete:
+      summary:
+      tags:
+      - /exams/reviews
+      responses:
+  /exams/submissions:
+    get:
+      summary:
+      tags:
+      - /exams/submissions
+      responses:
+    post:
+      summary:
+      tags:
+      - /exams/submissions
+      responses:
+  /exams/submissions/{submissionID}:
+    get:
+      summary:
+      tags:
+      - /exams/submissions
+      responses:
+    put:
+      summary:
+      tags:
+      - /exams/submissions
+      responses:
+    delete:
+      summary:
+      tags:
+      - /exams/submissions
+      responses:
+  /exams/tasks:
+    get:
+      summary:
+      tags:
+      - /exams/tasks
+      responses:
+    post:
+      summary:
+      tags:
+      - /exams/tasks
+      responses:
+  /exams/tasks/{taskID}:
+    get:
+      summary:
+      tags:
+      - /exams/tasks
+      responses:
+    put:
+      summary:
+      tags:
+      - /exams/tasks
+      responses:
+    delete:
+      summary:
+      tags:
+      - /exams/tasks
+      responses:
+  /groups:
+    get:
+      summary:
+      tags:
+      - /groups
+      responses:
+    post:
+      summary:
+      tags:
+      - /groups
+      responses:
+  /groups/{groupID}:
+    get:
+      summary:
+      tags:
+      - /groups
+      responses:
+    put:
+      summary:
+      tags:
+      - /groups
+      responses:
+    delete:
+      summary:
+      tags:
+      - /groups
+      responses:
+  /students:
+    get:
+      summary:
+      tags:
+      - /students
+      responses:
+    post:
+      summary:
+      tags:
+      - /students
+      responses:
+  /students/{studentEmail}:
     get:
       summary: Returns a student by email.
+      tags:
+      - /students
       description: insert text
       parameters:
         - name: studentEmail
@@ -81,6 +211,61 @@ paths:
           description: A student with the specified email was not found.
         default:
           description: Unexpected error
+    put:
+      summary:
+      tags:
+      - /students
+      responses:
+    delete:
+      summary:
+      tags:
+      - /students
+      responses:
+  /tasks:
+    get:
+      summary:
+      tags:
+      - /tasks
+      responses:
+    post:
+      summary:
+      tags:
+      - /tasks
+      responses:
+  /tasks/{taskID}:
+    get:
+      summary:
+      tags:
+      - /tasks
+      responses:
+    put:
+      summary:
+      tags:
+      - /tasks
+      responses:
+    delete:
+      summary:
+      tags:
+      - /tasks
+      responses:
+  
+tags:
+  - name: /exams
+    description:
+  - name: /exams/reviews
+    description:
+  - name: /exams/submissions
+    description:
+  - name: /exams/tasks
+    description:
+  - name: /exams/TAs
+    description:
+  - name: /students
+    description:
+  - name: /tasks
+    description:
+  - name: /TAs
+    description:
 
 definitions:
   Exam:
@@ -98,8 +283,8 @@ definitions:
   TA:
     title: TA
 
-  Choice:
-    title: Choice
+  Example:
+    title: Example
     type: object
     properties:
       votes:
