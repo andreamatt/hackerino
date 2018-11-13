@@ -72,113 +72,113 @@ paths:
           description: Could not delete exam with the specified ID (exam not found).
         default:
           description: Unexpected error
-  /exams/reviews:
+  /exams/{examID}/reviews:
     get:
-      summary:
+      summary: Returns
       tags:
-      - /exams/reviews
+      - /exams/{examID}/reviews
       responses:
     post:
       summary:
       tags:
-      - /exams/reviews
+      - /exams/{examID}/reviews
       responses:
-  /exams/reviews/{reviewID}:
+  /exams/{examID}/reviews/{reviewID}:
     get:
       summary:
       tags:
-      - /exams/reviews
+      - /exams/{examID}/reviews
       responses:
     put:
       summary:
       tags:
-      - /exams/reviews
+      - /exams/{examID}/reviews
       responses:
     delete:
       summary:
       tags:
-      - /exams/reviews
+      - /exams/{examID}/reviews
       responses:
   /exams/submissions:
     get:
       summary:
       tags:
-      - /exams/submissions
+      - /exams/{examID}/submissions
       responses:
     post:
       summary:
       tags:
-      - /exams/submissions
+      - /exams/{examID}/submissions
       responses:
-  /exams/submissions/{submissionID}:
+  /exams/{examID}/submissions/{submissionID}:
     get:
       summary:
       tags:
-      - /exams/submissions
+      - /exams/{examID}/submissions
       responses:
     put:
       summary:
       tags:
-      - /exams/submissions
+      - /exams/{examID}/submissions
       responses:
     delete:
       summary:
       tags:
-      - /exams/submissions
+      - /exams/{examID}/submissions
       responses:
-  /exams/tasks:
+  /exams/{examID}/tasks:
     get:
       summary:
       tags:
-      - /exams/tasks
+      - /exams/{examID}/tasks
       responses:
     post:
       summary:
       tags:
-      - /exams/tasks
+      - /exams/{examID}/tasks
       responses:
-  /exams/tasks/{taskID}:
+  /exams/{examID}/tasks/{taskID}:
     get:
       summary:
       tags:
-      - /exams/tasks
+      - /exams/{examID}/tasks
       responses:
     put:
       summary:
       tags:
-      - /exams/tasks
+      - /exams/{examID}/tasks
       responses:
     delete:
       summary:
       tags:
-      - /exams/tasks
+      - /exams/{examID}/tasks
       responses:
   /groups:
     get:
       summary:
       tags:
-      - /groups
+      - /exams/{examID}/group
       responses:
     post:
       summary:
       tags:
-      - /groups
+      - /exams/{examID}/group
       responses:
   /groups/{groupID}:
     get:
       summary:
       tags:
-      - /groups
+      - /exams/{examID}/group
       responses:
     put:
       summary:
       tags:
-      - /groups
+      - /exams/{examID}/group
       responses:
     delete:
       summary:
       tags:
-      - /groups
+      - /exams/{examID}/group
       responses:
   /students:
     get:
@@ -252,14 +252,16 @@ paths:
 tags:
   - name: /exams
     description:
-  - name: /exams/reviews
+  - name: /exams/{examID}/reviews
     description:
-  - name: /exams/submissions
+  - name: /exams/{examID}/submissions
     description:
-  - name: /exams/tasks
+  - name: /exams/{examID}/tasks
     description:
-  - name: /exams/TAs
+  - name: /exams/{examID}/TAs
     description:
+  - name: /exams/{examID}/group
+    definitions:
   - name: /students
     description:
   - name: /tasks
