@@ -153,7 +153,7 @@ paths:
       tags:
       - /exams/{examID}/tasks
       responses:
-  /groups:
+  /exams/{examID}/group:
     get:
       summary:
       tags:
@@ -164,7 +164,7 @@ paths:
       tags:
       - /exams/{examID}/group
       responses:
-  /groups/{groupID}:
+  /exams/{examID}/group/{studentID}:
     get:
       summary:
       tags:
@@ -251,23 +251,14 @@ paths:
   
 tags:
   - name: /exams
-    description:
   - name: /exams/{examID}/reviews
-    description:
   - name: /exams/{examID}/submissions
-    description:
   - name: /exams/{examID}/tasks
-    description:
   - name: /exams/{examID}/TAs
-    description:
   - name: /exams/{examID}/group
-    definitions:
   - name: /students
-    description:
   - name: /tasks
-    description:
   - name: /TAs
-    description:
 
 definitions:
   Exam:
