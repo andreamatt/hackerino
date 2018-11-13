@@ -6,7 +6,7 @@ info:
   license:
     name: MIT
     url: https://github.com/apiaryio/polls-api/blob/master/LICENSE
-host: hackerino.herokuapp.com/
+host: hackerino.herokuapp.com
 basePath: /v1
 schemes:
   - http
@@ -17,18 +17,18 @@ produces:
 paths:
   /exams:
     get:
-      summary: Returns exams list.
+      description: Returns exams list.
       tags:
-      - /exams
+        - /exams
       responses:
         "200":
-          description: An exam list.
+          description: An exams list.
         default:
           description: Unexpected error
     post:
-      summary: Adds an exam.
+      description: Adds an exam.
       tags:
-      - /exams
+        - /exams
       responses:
         "201":
           description: Exam created.
@@ -37,228 +37,545 @@ paths:
         default:
           description: Unexpected error
   /exams/{examID}:
+    parameters:
+      - in: path
+        name: examID
+        type: integer
+        required: true
     get:
-      summary: Returns exam by ID.
+      description: Returns an exam by examID.
       tags:
-      - /exams
+        - /exams
       responses:
         "200":
           description: An exam.
         "404":
-          description: An exam with the specified ID was not found.
+          description: An exam with the specified examID was not found.
         default:
           description: Unexpected error
     put:
-      summary: Updates/creates exam by ID.
+      description: Updates/creates an exam by examID.
       tags:
-      - /exams
+        - /exams
       responses:
         "200":
           description: Exam updated.
         "201":
           description: Exam created.
         "404":
-          description: Could not update exam with the specified ID (exam not found).
+          description: Could not update exam with the specified examID (exam not found).
         default:
           description: Unexpected error
     delete:
-      summary: Deletes exam by ID.
+      description: Deletes an exam by examID.
       tags:
-      - /exams
+        - /exams
       responses:
         "204":
           description: Exam deleted.
         "404":
-          description: Could not delete exam with the specified ID (exam not found).
+          description: Could not delete exam with the specified examID (exam not found).
         default:
           description: Unexpected error
+
   /exams/{examID}/reviews:
+    parameters:
+      - in: path
+        name: examID
+        type: integer
+        required: true
     get:
-      summary: Returns
+      description: Returns submission reviews for given exam.
       tags:
-      - /exams/{examID}/reviews
+        - /exams/{examID}/reviews
       responses:
+        "200":
+          description: A reviews list.
+        default:
+          description: Unexpected error
     post:
-      summary:
+      description: Adds a submission review to an exam.
       tags:
-      - /exams/{examID}/reviews
+        - /exams/{examID}/reviews
       responses:
+        "201":
+          description: Review submitted.
+        "400":
+          description: Bad request.
+        default:
+          description: Unexpected error
   /exams/{examID}/reviews/{reviewID}:
+    parameters:
+      - in: path
+        name: examID
+        type: integer
+        required: true
+      - in: path
+        name: reviewID
+        type: integer
+        required: true
     get:
-      summary:
+      description: Returns a submission review by examID and reviewID.
       tags:
-      - /exams/{examID}/reviews
+        - /exams/{examID}/reviews
       responses:
+        "200":
+          description: A review.
+        "404":
+          description: A review with the specified reviewID was not found.
+        default:
+          description: Unexpected error
     put:
-      summary:
+      description: Updates/creates a submission review of an exam by reviewID.
       tags:
-      - /exams/{examID}/reviews
+        - /exams/{examID}/reviews
       responses:
+        "200":
+          description: Review updated.
+        "201":
+          description: Review created.
+        "404":
+          description: Could not update review with the specified reviewID (review not found).
+        default:
+          description: Unexpected error
     delete:
-      summary:
+      description: Deletes a submission review from an exam by reviewID.
       tags:
-      - /exams/{examID}/reviews
+        - /exams/{examID}/reviews
       responses:
-  /exams/submissions:
+        "204":
+          description: Review deleted.
+        "404":
+          description: Could not delete review with the specified reviewID (review not found).
+        default:
+          description: Unexpected error
+
+  /exams/{examID}/submissions:
+    parameters:
+      - in: path
+        name: examID
+        type: integer
+        required: true
     get:
-      summary:
+      description: Returns submissions list for an exam.
       tags:
-      - /exams/{examID}/submissions
+        - /exams/{examID}/submissions
       responses:
+        "200":
+          description: A submissions list of an exam.
+        default:
+          description: Unexpected error
     post:
-      summary:
+      description: Adds a submission to an exam.
       tags:
-      - /exams/{examID}/submissions
+        - /exams/{examID}/submissions
       responses:
+        "201":
+          description: Submission added to the exam.
+        "400":
+          description: Bad request.
+        default:
+          description: Unexpected error
   /exams/{examID}/submissions/{submissionID}:
+    parameters:
+      - in: path
+        name: examID
+        type: integer
+        required: true
+      - in: path
+        name: submissionID
+        type: integer
+        required: true
     get:
-      summary:
+      description: Returns a submission by examID and submissionID.
       tags:
-      - /exams/{examID}/submissions
+        - /exams/{examID}/submissions
       responses:
+        "200":
+          description: A submission of an exam.
+        "404":
+          description: A submission with the specified submissionID was not found for the given exam.
+        default:
+          description: Unexpected error
     put:
-      summary:
+      description: Updates/creates a submission of an exam by submissionID.
       tags:
-      - /exams/{examID}/submissions
+        - /exams/{examID}/submissions
       responses:
+        "200":
+          description: Submission updated.
+        "201":
+          description: Submission added to the exam.
+        "404":
+          description: Could not update submission with the specified submissionID (submission not found).
+        default:
+          description: Unexpected error
     delete:
-      summary:
+      description: Deletes a submission from an exam by ID.
       tags:
-      - /exams/{examID}/submissions
+        - /exams/{examID}/submissions
       responses:
+        "204":
+          description: Submission removed.
+        "404":
+          description: Could not remove the submission with the specified submissionID (submission not found).
+        default:
+          description: Unexpected error
+
   /exams/{examID}/tasks:
+    parameters:
+      - in: path
+        name: examID
+        type: integer
+        required: true
     get:
-      summary:
+      description: Returns a tasks list for an exam.
       tags:
-      - /exams/{examID}/tasks
+        - /exams/{examID}/tasks
       responses:
+        "200":
+          description: A list of tasks used in an exam.
+        default:
+          description: Unexpected error
     post:
-      summary:
+      description: Adds a task to an exam.
       tags:
-      - /exams/{examID}/tasks
+        - /exams/{examID}/tasks
       responses:
+        "201":
+          description: Task added to exam.
+        "400":
+          description: Bad request.
+        default:
+          description: Unexpected error
   /exams/{examID}/tasks/{taskID}:
+    parameters:
+      - in: path
+        name: examID
+        type: integer
+        required: true
+      - in: path
+        name: taskID
+        type: integer
+        required: true
     get:
-      summary:
+      description: Returns a task by examID and taskID.
       tags:
-      - /exams/{examID}/tasks
+        - /exams/{examID}/tasks
       responses:
+        "200":
+          description: A task of an exam.
+        "404":
+          description: A task with the specified taskID was not found for the given exam.
+        default:
+          description: Unexpected error
     put:
-      summary:
+      description: Updates/creates a task of an exam by taskID.
       tags:
-      - /exams/{examID}/tasks
+        - /exams/{examID}/tasks
       responses:
+        "200":
+          description: Task updated.
+        "201":
+          description: Task added to the exam.
+        "404":
+          description: Could not update task with the specified taskID (task not found).
+        default:
+          description: Unexpected error
     delete:
-      summary:
+      description: Deletes a task from an exam by taskID.
       tags:
-      - /exams/{examID}/tasks
+        - /exams/{examID}/tasks
       responses:
-  /exams/{examID}/group:
+        "204":
+          description: Task removed from exam.
+        "404":
+          description: Could not remove the task with the specified taskID from exam (task not found).
+        default:
+          description: Unexpected error
+
+  /exams/{examID}/TeacherAssistants:
+    parameters:
+      - in: path
+        name: examID
+        type: integer
+        required: true
     get:
-      summary:
+      description: Returns a TeacherAssistants list.
       tags:
-      - /exams/{examID}/group
+        - /exams/{examID}/TeacherAssistants
       responses:
+        "200":
+          description: A TeacherAssistant list.
+        default:
+          description: Unexpected error
     post:
-      summary:
+      description: Adds a TeacherAssistant.
       tags:
-      - /exams/{examID}/group
+        - /exams/{examID}/TeacherAssistants
       responses:
-  /exams/{examID}/group/{studentID}:
+        "201":
+          description: TeacherAssistant created.
+        "400":
+          description: Bad request.
+        default:
+          description: Unexpected error
+  /exams/{examID}/TeacherAssistants/{TeacherAssistantID}:
+    parameters:
+      - in: path
+        name: examID
+        type: integer
+        required: true
+      - in: path
+        name: TeacherAssistantID
+        type: integer
+        required: true
     get:
-      summary:
+      description: Returns a TeacherAssistant by TeacherAssistantID.
       tags:
-      - /exams/{examID}/group
+        - /exams/{examID}/TeacherAssistants
       responses:
+        "200":
+          description: A TeacherAssistant object.
+        "404":
+          description: A TeacherAssistant with the specified TeacherAssistantID was not found.
+        default:
+          description: Unexpected error
     put:
-      summary:
+      description: Updates/creates a TeacherAssistant by TeacherAssistantID.
       tags:
-      - /exams/{examID}/group
+        - /exams/{examID}/TeacherAssistants
       responses:
+        "200":
+          description: TeacherAssistant updated.
+        "201":
+          description: TeacherAssistant created.
+        "404":
+          description: Could not update the TeacherAssistant with the specified TeacherAssistantID (TeacherAssistant not found).
+        default:
+          description: Unexpected error
     delete:
-      summary:
+      description: Removes a TeacherAssistant by TeacherAssistantID.
       tags:
-      - /exams/{examID}/group
+        - /exams/{examID}/TeacherAssistants
       responses:
+        "204":
+          description: TeacherAssistant removed.
+        "404":
+          description: Could not remove the TeacherAssistant with the specified TeacherAssistantID (TeacherAssistant not found).
+        default:
+          description: Unexpected error
+
+  /exams/{examID}/group:
+    parameters:
+      - in: path
+        name: examID
+        type: integer
+        required: true
+    get:
+      description: Returns a list of students signed up for an exam.
+      tags:
+        - /exams/{examID}/group
+      responses:
+        "200":
+          description: A list of students signed up for an exam.
+        default:
+          description: Unexpected error
+    post:
+      description: Signs up a student for an exam.
+      tags:
+        - /exams/{examID}/group
+      responses:
+        "201":
+          description: Student signed up to exam.
+        "400":
+          description: Bad request.
+        default:
+          description: Unexpected error
+  /exams/{examID}/group/{studentID}:
+    parameters:
+      - in: path
+        name: examID
+        type: integer
+        required: true
+      - in: path
+        name: studentID
+        type: integer
+        required: true
+    get:
+      description: Returns a student signed up for an exam by studentID.
+      tags:
+        - /exams/{examID}/group
+      responses:
+        "200":
+          description: A student signed up for an exam.
+        "404":
+          description: A student with the specified studentID was not found signed up for the given exam.
+        default:
+          description: Unexpected error
+    put:
+      description: Updates/creates a student signed up for an exam by studentID.
+      tags:
+        - /exams/{examID}/group
+      responses:
+        "200":
+          description: Updated a student signed up for the exam.
+        "201":
+          description: Student signed up for an exam.
+        "404":
+          description: Could not update student with the specified studentID (student not signed up).
+        default:
+          description: Unexpected error
+    delete:
+      description: Removes a student from an exam by studentID.
+      tags:
+        - /exams/{examID}/group
+      responses:
+        "204":
+          description: Student removed from exam.
+        "404":
+          description: Could not remove the student with the specified studentID from exam (student not signed up).
+        default:
+          description: Unexpected error
+
   /students:
     get:
-      summary:
+      description: Returns students list.
       tags:
-      - /students
+        - /students
       responses:
+        "200":
+          description: A students list.
+        default:
+          description: Unexpected error
     post:
-      summary:
+      description: Adds a student.
       tags:
-      - /students
+        - /students
       responses:
-  /students/{studentEmail}:
+        "201":
+          description: Student created.
+        "400":
+          description: Bad request.
+        default:
+          description: Unexpected error
+
+  /students/{studentID}:
+    parameters:
+      - in: path
+        name: studentID
+        type: integer
+        required: true
     get:
-      summary: Returns a student by email.
+      description: Returns a student by id.
       tags:
-      - /students
-      description: insert text
-      parameters:
-        - name: studentEmail
-          in: path
-          required: true
-          description: The Email of the student to return.
+        - /students
       responses:
         "200":
           description: A student object.
         "400":
-          description: The specified email is invalid.
+          description: The specified studentID is invalid.
         "404":
-          description: A student with the specified email was not found.
+          description: A student with the specified studentID was not found.
         default:
           description: Unexpected error
     put:
-      summary:
+      description: Updates/creates a student by studentID.
       tags:
-      - /students
+        - /students
       responses:
+        "200":
+          description: Student updated.
+        "201":
+          description: Student created.
+        "404":
+          description: Could not update the student with the specified studentID (student not found).
+        default:
+          description: Unexpected error
     delete:
-      summary:
+      description: Removes a student by studentID.
       tags:
-      - /students
+        - /students
       responses:
+        "204":
+          description: Student removed.
+        "404":
+          description: Could not remove the student with the specified ID (student not found).
+        default:
+          description: Unexpected error
+          
   /tasks:
     get:
-      summary:
+      description: Returns a tasks list.
       tags:
-      - /tasks
+        - /tasks
       responses:
+        "200":
+          description: A tasks list.
+        default:
+          description: Unexpected error
     post:
-      summary:
+      description: Adds a task.
       tags:
-      - /tasks
+        - /tasks
       responses:
+        "201":
+          description: Task created.
+        "400":
+          description: Bad request.
+        default:
+          description: Unexpected error
   /tasks/{taskID}:
+    parameters:
+      - in: path
+        name: taskID
+        type: integer
+        required: true
     get:
-      summary:
+      description: Returns a task by taskID.
       tags:
-      - /tasks
+        - /tasks
       responses:
+        "200":
+          description: A task object.
+        "404":
+          description: A task with the specified taskID was not found.
+        default:
+          description: Unexpected error
     put:
-      summary:
+      description: Updates/creates a task by taskID.
       tags:
-      - /tasks
+        - /tasks
       responses:
+        "200":
+          description: Task updated.
+        "201":
+          description: Task created.
+        "404":
+          description: Could not update the task with the specified taskID (task not found).
+        default:
+          description: Unexpected error
     delete:
-      summary:
+      description: Removes a task by taskID.
       tags:
-      - /tasks
+        - /tasks
       responses:
-  
+        "204":
+          description: Task removed.
+        "404":
+          description: Could not remove the task with the specified taskID (task not found).
+        default:
+          description: Unexpected error
+
 tags:
   - name: /exams
   - name: /exams/{examID}/reviews
   - name: /exams/{examID}/submissions
   - name: /exams/{examID}/tasks
-  - name: /exams/{examID}/TAs
+  - name: /exams/{examID}/TeacherAssistants
   - name: /exams/{examID}/group
   - name: /students
   - name: /tasks
-  - name: /TAs
 
 definitions:
   Exam:
@@ -273,8 +590,8 @@ definitions:
     title: Review
   Submission:
     title: Submission
-  TA:
-    title: TA
+  TeacherAssistant:
+    title: TeacherAssistant
 
   Example:
     title: Example
