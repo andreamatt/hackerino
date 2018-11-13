@@ -1,93 +1,292 @@
-swagger: '2.0'
+swagger: "2.0"
 info:
-  version: '1.0'
+  version: "1.0"
   title: "hackerino"
   description: Polls is a simple API allowing consumers to view polls and vote in them.
   license:
     name: MIT
     url: https://github.com/apiaryio/polls-api/blob/master/LICENSE
-host: polls.apiblueprint.org
-basePath: /
+host: hackerino.herokuapp.com/
+basePath: /v1
 schemes:
-- http
+  - http
 consumes:
-- application/json
+  - application/json
 produces:
-- application/json
+  - application/json
 paths:
-  /questions:
-    x-summary: Questions Collection
+  /exams:
     get:
-      summary: List All Questions
+      summary: Returns exams list.
+      tags:
+      - /exams
       responses:
-        200:
-          description: Successful Response
-          schema:
-            type: array
-            items:
-              $ref: '#/definitions/Question'
-          examples:
-            application/json:
-              - question: Favourite programming language?
-                published_at: '2015-08-05T08:40:51.620Z'
-                choices:
-                  - choice: Swift
-                    votes: 2048
-                  - choice: Python
-                    votes: 1024
-                  - choice: Objective-C
-                    votes: 512
-                  - choice: Ruby
-                    votes: 256
+        "200":
+          description: An exam list.
+        default:
+          description: Unexpected error
     post:
-      description: >-
-        You may create your own question using this action. It takes a JSON
-        object containing a question and a collection of answers in the
-        form of choices.
-      summary: Create a New Question
-      parameters:
-        - name: body
-          in: body
-          required: true
-          schema:
-            $ref: '#/definitions/QuestionRequest'
+      summary: Adds an exam.
+      tags:
+      - /exams
       responses:
-        201:
-          description: ''
-          schema:
-            $ref: '#/definitions/Question'
-          examples:
-            application/json:
-                question: Favourite programming language?
-                published_at: '2015-08-05T08:40:51.620Z'
-                choices:
-                  - choice: Swift
-                    votes: 0
-                  - choice: Python
-                    votes: 0
-                  - choice: Objective-C
-                    votes: 0
-                  - choice: Ruby
-                    votes: 0
+        "201":
+          description: Exam created.
+        "400":
+          description: Bad request.
+        default:
+          description: Unexpected error
+  /exams/{examID}:
+    get:
+      summary: Returns exam by ID.
+      tags:
+      - /exams
+      responses:
+        "200":
+          description: An exam.
+        "404":
+          description: An exam with the specified ID was not found.
+        default:
+          description: Unexpected error
+    put:
+      summary: Updates/creates exam by ID.
+      tags:
+      - /exams
+      responses:
+        "200":
+          description: Exam updated.
+        "201":
+          description: Exam created.
+        "404":
+          description: Could not update exam with the specified ID (exam not found).
+        default:
+          description: Unexpected error
+    delete:
+      summary: Deletes exam by ID.
+      tags:
+      - /exams
+      responses:
+        "204":
+          description: Exam deleted.
+        "404":
+          description: Could not delete exam with the specified ID (exam not found).
+        default:
+          description: Unexpected error
+  /exams/{examID}/reviews:
+    get:
+      summary: Returns
+      tags:
+      - /exams/{examID}/reviews
+      responses:
+    post:
+      summary:
+      tags:
+      - /exams/{examID}/reviews
+      responses:
+  /exams/{examID}/reviews/{reviewID}:
+    get:
+      summary:
+      tags:
+      - /exams/{examID}/reviews
+      responses:
+    put:
+      summary:
+      tags:
+      - /exams/{examID}/reviews
+      responses:
+    delete:
+      summary:
+      tags:
+      - /exams/{examID}/reviews
+      responses:
+  /exams/submissions:
+    get:
+      summary:
+      tags:
+      - /exams/{examID}/submissions
+      responses:
+    post:
+      summary:
+      tags:
+      - /exams/{examID}/submissions
+      responses:
+  /exams/{examID}/submissions/{submissionID}:
+    get:
+      summary:
+      tags:
+      - /exams/{examID}/submissions
+      responses:
+    put:
+      summary:
+      tags:
+      - /exams/{examID}/submissions
+      responses:
+    delete:
+      summary:
+      tags:
+      - /exams/{examID}/submissions
+      responses:
+  /exams/{examID}/tasks:
+    get:
+      summary:
+      tags:
+      - /exams/{examID}/tasks
+      responses:
+    post:
+      summary:
+      tags:
+      - /exams/{examID}/tasks
+      responses:
+  /exams/{examID}/tasks/{taskID}:
+    get:
+      summary:
+      tags:
+      - /exams/{examID}/tasks
+      responses:
+    put:
+      summary:
+      tags:
+      - /exams/{examID}/tasks
+      responses:
+    delete:
+      summary:
+      tags:
+      - /exams/{examID}/tasks
+      responses:
+  /groups:
+    get:
+      summary:
+      tags:
+      - /exams/{examID}/group
+      responses:
+    post:
+      summary:
+      tags:
+      - /exams/{examID}/group
+      responses:
+  /groups/{groupID}:
+    get:
+      summary:
+      tags:
+      - /exams/{examID}/group
+      responses:
+    put:
+      summary:
+      tags:
+      - /exams/{examID}/group
+      responses:
+    delete:
+      summary:
+      tags:
+      - /exams/{examID}/group
+      responses:
+  /students:
+    get:
+      summary:
+      tags:
+      - /students
+      responses:
+    post:
+      summary:
+      tags:
+      - /students
+      responses:
+  /students/{studentEmail}:
+    get:
+      summary: Returns a student by email.
+      tags:
+      - /students
+      description: insert text
+      parameters:
+        - name: studentEmail
+          in: path
+          required: true
+          description: The Email of the student to return.
+      responses:
+        "200":
+          description: A student object.
+        "400":
+          description: The specified email is invalid.
+        "404":
+          description: A student with the specified email was not found.
+        default:
+          description: Unexpected error
+    put:
+      summary:
+      tags:
+      - /students
+      responses:
+    delete:
+      summary:
+      tags:
+      - /students
+      responses:
+  /tasks:
+    get:
+      summary:
+      tags:
+      - /tasks
+      responses:
+    post:
+      summary:
+      tags:
+      - /tasks
+      responses:
+  /tasks/{taskID}:
+    get:
+      summary:
+      tags:
+      - /tasks
+      responses:
+    put:
+      summary:
+      tags:
+      - /tasks
+      responses:
+    delete:
+      summary:
+      tags:
+      - /tasks
+      responses:
+  
+tags:
+  - name: /exams
+    description:
+  - name: /exams/{examID}/reviews
+    description:
+  - name: /exams/{examID}/submissions
+    description:
+  - name: /exams/{examID}/tasks
+    description:
+  - name: /exams/{examID}/TAs
+    description:
+  - name: /exams/{examID}/group
+    definitions:
+  - name: /students
+    description:
+  - name: /tasks
+    description:
+  - name: /TAs
+    description:
+
 definitions:
-  Question:
-    title: Question
-    type: object
-    properties:
-      question:
-        type: string
-      published_at:
-        type: string
-      choices:
-        type: array
-        items:
-          $ref: '#/definitions/Choice'
-    required:
-      - question
-      - published_at
-      - choices
-  Choice:
-    title: Choice
+  Exam:
+    title: Exam
+  Group:
+    title: Group
+  Student:
+    title: Student
+  Task:
+    title: Task
+  Review:
+    title: Review
+  Submission:
+    title: Submission
+  TA:
+    title: TA
+
+  Example:
+    title: Example
     type: object
     properties:
       votes:
@@ -98,23 +297,3 @@ definitions:
     required:
       - votes
       - choice
-  QuestionRequest:
-    title: Question Request
-    type: object
-    properties:
-      question:
-        type: string
-      choices:
-        type: array
-        items:
-          type: string
-    required:
-      - question
-      - choices
-    example:
-      question: Favourite programming language?
-      choices:
-        - Swift
-        - Python
-        - Objective-C
-        - Ruby

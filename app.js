@@ -6,7 +6,7 @@ var port = process.env.PORT || 3000;
 const app = express();
 
 app.get("/", (req, res) => {
-	res.send("ciao mondo");
+	res.sendFile(path.join(__dirname + '/info.html'));
 });
 
 app.get("/help", (req, res) => {
