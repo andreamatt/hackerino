@@ -49,6 +49,8 @@ paths:
       responses:
         "200":
           description: An exam.
+          schema:
+            $ref: "#/definitions/Exam"
         "404":
           description: An exam with the specified examID was not found.
         default:
@@ -91,6 +93,10 @@ paths:
       responses:
         "200":
           description: A reviews list.
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Review"
         default:
           description: Unexpected error
     post:
@@ -121,6 +127,8 @@ paths:
       responses:
         "200":
           description: A review.
+          schema:
+            $ref: "#/definitions/Exam"
         "404":
           description: A review with the specified reviewID was not found.
         default:
@@ -163,6 +171,10 @@ paths:
       responses:
         "200":
           description: A submissions list of an exam.
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Submission"
         default:
           description: Unexpected error
     post:
@@ -193,6 +205,8 @@ paths:
       responses:
         "200":
           description: A submission of an exam.
+          schema:
+            $ref: "#/definitions/Submission"
         "404":
           description: A submission with the specified submissionID was not found for the given exam.
         default:
@@ -446,6 +460,10 @@ paths:
       responses:
         "200":
           description: A students list.
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Student"
         default:
           description: Unexpected error
     post:
@@ -473,6 +491,8 @@ paths:
       responses:
         "200":
           description: A student object.
+          schema:
+            $ref: "#/definitions/Student"
         "400":
           description: The specified studentID is invalid.
         "404":
@@ -512,6 +532,10 @@ paths:
       responses:
         "200":
           description: A tasks list.
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Task"
         default:
           description: Unexpected error
     post:
@@ -538,6 +562,8 @@ paths:
       responses:
         "200":
           description: A task object.
+          schema:
+            $ref: "#/definitions/Task"
         "404":
           description: A task with the specified taskID was not found.
         default:
