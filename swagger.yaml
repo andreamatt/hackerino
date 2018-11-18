@@ -1,5 +1,6 @@
 # DA FARE:
 # aggiungere response schemas a post
+# aggiungere errore in response POST submission, review se deadline over
 # aggiungere 404 a /x/{xid}/y
 # aggiungere parametri di query nei vari get (/students?email=, )
 # aggiungere (/tasks/{tid}/vote POST ONLY)
