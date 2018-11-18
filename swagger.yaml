@@ -550,9 +550,8 @@ paths:
       parameters:
         - $ref: "#/parameters/limit"
         - $ref: "#/parameters/offset"
-        - email:
+        - in: query
           name: email
-          in: query
           type: string
       tags:
         - /students
