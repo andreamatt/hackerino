@@ -362,9 +362,33 @@ paths:
         default:
           description: Unexpected error
     post:
-      description: Adds a TeacherAssistant.
-      tags:
-        - /exams/{examID}/TeacherAssistants
+      description: Adds a submission 
+      parameters:
+        - in: body
+          name: submission
+          schema:
+            type: object
+            required:
+              - studentID
+              - taskID
+              - examID
+              - answer
+              - chosen_answer
+            properties:  
+              studentID:
+                type: integer
+              taskID:
+                type: integer
+              examID:
+                type: integer
+              answer:
+                description: If it is a m-choice, then ""
+                type: string
+              chosen_answer:
+                description: If it is an open question, then -1
+                type: integer
+      tags:          
+        - /submissions
       responses:
         "201":
           description: Submission added to the exam.
@@ -457,7 +481,23 @@ paths:
         default:
           description: Unexpected error
     post:
-      description: Signs up a student for an exam.
+      description: Adds a teacher.
+      parameters:
+        - in: body
+          name: teacher
+          schema:
+            type: object
+            required:
+              - email
+              - firstname
+              - lastname
+            properties:  
+              email:  
+                type: string
+              firstname:
+                type: string
+              lastname:
+                type: string
       tags:
         - /exams/{examID}/group
       responses:
@@ -568,6 +608,22 @@ paths:
           description: Unexpected error
     post:
       description: Adds a student.
+      parameters:
+        - in: body
+          name: student
+          schema:
+            type: object
+            required:
+              - email
+              - firstname
+              - lastname
+            properties:  
+              email:  
+                type: string
+              firstname:
+                type: string
+              lastname:
+                type: string
       tags:
         - /students
       responses:
@@ -717,6 +773,25 @@ paths:
           description: Unexpected error
     post:
       description: Adds a task.
+      parameters:
+        - in: body
+          name: task
+          schema:
+            type: object
+            required:
+              - type
+              - question
+              - possible_answers
+            properties:  
+              type:
+                type: string
+                enum: ["choice", "open"]
+              question:  
+                type: string
+              possible_answers:
+                type: array
+                items:
+                  type: string
       tags:
         - /tasks
       responses:
@@ -864,21 +939,6 @@ definitions:
         type: integer
       n_tasks:
         type: integer
-      # teachers:
-      #   type: array
-      #   items:
-      #     description: teacherID
-      #     type: integer
-      # students:
-      #   type: array
-      #   items:
-      #     description: studentID
-      #     type: integer
-      # tasks:
-      #   type: array
-      #   items:
-      #     description: taskID
-      #     type: integer
 
   Student:
     title: Student
@@ -886,10 +946,45 @@ definitions:
     title: Task
   Review:
     title: Review
+    type: object
+    properties:
+      id:
+        type: integer
+      student:
+        description: studentID
+        type: integer
+      submission:
+        description: submissionID
+        type: integer
+      mark:
+        description: mark given by the student to this submission
+        type: number
+
   Submission:
     title: Submission
-  TeacherAssistant:
-    title: TeacherAssistant
+    type: object
+    properties:
+      id:
+        type: integer
+      student:
+        description: studentID
+        type: integer
+      task:
+        description: taskID
+        type: integer
+      exam:
+        description: examID
+        type: integer
+      answer:
+        description: (If open question)
+        type: string
+      chosen_answer:
+        description: (If multiple-choice question, else -1)
+        type: integer
+      review_points:
+        type: number
+      final_points:
+        type: number
 
   Example:
     title: Example
