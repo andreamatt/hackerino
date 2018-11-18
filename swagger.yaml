@@ -1,8 +1,8 @@
 # DA FARE:
-# aggiungere response schemas a post
-# aggiungere parametri di query nei vari get (/students?email=, )
+# aggiungere response schemas a post OK
+# aggiungere parametri di query nei vari get (/students?email=, ) OK
 # aggiungere / inversi (/students/{studentID}/exams)
-# aggiungere /submissions?student=219&exam=213
+# aggiungere /submissions?student=219&exam=213 OK
 
 swagger: "2.0"
 info:
@@ -47,6 +47,8 @@ paths:
       responses:
         "201":
           description: Exam created.
+          schema:
+            $ref: "#/definitions/Exam"
         "400":
           description: Bad request.
         default:
@@ -119,8 +121,8 @@ paths:
       tags:
         - /exams/{examID}/reviews
       responses:
-        "201":
-          description: Review submitted.
+        "204":
+          description: Student added to exam.
         "400":
           description: Bad request.
         default:
@@ -153,23 +155,10 @@ paths:
       tags:
         - /exams/{examID}/reviews
       responses:
-        "200":
-          description: Review updated.
-        "201":
-          description: Review created.
-        "404":
-          description: Could not update review with the specified reviewID (review not found).
-        default:
-          description: Unexpected error
-    delete:
-      description: Deletes a submission review from an exam by reviewID.
-      tags:
-        - /exams/{examID}/reviews
-      responses:
         "204":
-          description: Review deleted.
-        "404":
-          description: Could not delete review with the specified reviewID (review not found).
+          description: Teacher added to exam.
+        "400":
+          description: Bad request.
         default:
           description: Unexpected error
 
@@ -197,8 +186,8 @@ paths:
       tags:
         - /exams/{examID}/submissions
       responses:
-        "201":
-          description: Submission added to the exam.
+        "204":
+          description: Task added to exam.
         "400":
           description: Bad request.
         default:
@@ -272,7 +261,9 @@ paths:
         - /exams/{examID}/tasks
       responses:
         "201":
-          description: Task added to exam.
+          description: Review submitted.
+          schema:
+            $ref: "#/definitions/Review"
         "400":
           description: Bad request.
         default:
@@ -330,7 +321,18 @@ paths:
         type: integer
         required: true
     get:
-      description: Returns a TeacherAssistants list.
+      description: Returns submissions list 
+      parameters:
+        - $ref: "#/parameters/limit"
+        - $ref: "#/parameters/offset"
+        - student:
+          name: student
+          in: query
+          type: integer
+        - exam:
+          name: exam
+          in: query
+          type: integer
       tags:
         - /exams/{examID}/TeacherAssistants
       responses:
@@ -344,7 +346,9 @@ paths:
         - /exams/{examID}/TeacherAssistants
       responses:
         "201":
-          description: TeacherAssistant created.
+          description: Submission added to the exam.
+          schema:
+            $ref: "#/definitions/Submission"
         "400":
           description: Bad request.
         default:
@@ -416,7 +420,9 @@ paths:
         - /exams/{examID}/group
       responses:
         "201":
-          description: Student signed up to exam.
+          description: teacher created.
+          schema:
+            $ref: "#/definitions/Teacher"
         "400":
           description: Bad request.
         default:
@@ -470,6 +476,13 @@ paths:
   /students:
     get:
       description: Returns students list.
+      parameters:
+        - $ref: "#/parameters/limit"
+        - $ref: "#/parameters/offset"
+        - email:
+          name: email
+          in: query
+          type: string
       tags:
         - /students
       responses:
@@ -493,6 +506,8 @@ paths:
       responses:
         "201":
           description: Student created.
+          schema:
+            $ref: "#/definitions/Student"
         "400":
           description: Bad request.
         default:
@@ -570,6 +585,8 @@ paths:
       responses:
         "201":
           description: Task created.
+          schema:
+            $ref: "#/definitions/Task"
         "400":
           description: Bad request.
         default:
