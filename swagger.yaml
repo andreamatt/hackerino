@@ -831,6 +831,21 @@ paths:
         default:
           description: Unexpected error
 
+  /tasks/{taskID}/vote:
+    parameters:
+      - $ref: "#/parameters/taskID"
+    post:
+      description: Send a review vote for a given task.
+      tags:
+        - /tasks
+      responses:
+        "204":
+          description: Your vote was received and the task's rating is updated.
+        "404":
+          description: A task with the specified taskID was not found.
+        default:
+          description: Unexpected error
+
 tags:
   - name: /exams
   - name: /exams/{examID}/reviews
