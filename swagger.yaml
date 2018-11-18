@@ -1,16 +1,5 @@
 # DA FARE:
-# aggiungere response schemas a post
-# aggiungere errore in response POST submission, review se deadline over
-# aggiungere 404 a /x/{xid}/y
-# aggiungere parametri di query nei vari get (/students?email=, )
-# aggiungere (/tasks/{tid}/vote POST ONLY)
-# aggiungere / inversi OK
-# (/students/{studentID}/exams, /submissions, /reviews) OK
-# (/teachers/{tid}/exams) OK
-# (/tasks/{tid}/exams, submissions) OK
-# (/exams/{examid}/submissions) OK
-# (/submissions/{subid}/reviews) OK
-# aggiungere /submissions?student=219&exam=213 OK
+# aggiungere parametri nei POST
 
 swagger: "2.0"
 info:
