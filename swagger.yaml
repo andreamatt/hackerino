@@ -1,7 +1,6 @@
 # DA FARE:
 # aggiungere response schemas a put, delete, post
 # aggiungere parametri di query nei vari get
-# fixare response dei put: non possono fallire
 
 swagger: "2.0"
 info:
@@ -29,9 +28,14 @@ paths:
         "200":
           description: An exams list.
           schema:
-            type: array
-            items:
-              $ref: "#/definitions/Exam"
+            type: object
+            properties:
+              tot_exams:
+                type: integer
+              exams:
+                type: array
+                items:
+                  $ref: "#/definitions/Exam"
         default:
           description: Unexpected error
     post:
@@ -73,8 +77,8 @@ paths:
           description: Exam updated.
         "201":
           description: Exam created.
-        "404":
-          description: Could not update exam with the specified examID (exam not found).
+        "400":
+          description: Bad request.
         default:
           description: Unexpected error
     delete:
@@ -470,9 +474,14 @@ paths:
         "200":
           description: A students list.
           schema:
-            type: array
-            items:
-              $ref: "#/definitions/Student"
+            type: object
+            properties:
+              tot_students:
+                type: integer
+              students:
+                type: array
+                items:
+                  $ref: "#/definitions/Student"
         default:
           description: Unexpected error
     post:
@@ -517,6 +526,8 @@ paths:
           description: Student updated.
         "201":
           description: Student created.
+        "400":
+          description: Bad request.
         default:
           description: Unexpected error
     delete:
@@ -540,9 +551,14 @@ paths:
         "200":
           description: A tasks list.
           schema:
-            type: array
-            items:
-              $ref: "#/definitions/Task"
+            type: object
+            properties:
+              tot_tasks:
+                type: integer
+              tasks:
+                type: array
+                items:
+                  $ref: "#/definitions/Task"
         default:
           description: Unexpected error
     post:
@@ -584,8 +600,8 @@ paths:
           description: Task updated.
         "201":
           description: Task created.
-        "404":
-          description: Could not update the task with the specified taskID (task not found).
+        "400":
+          description: Bad request.
         default:
           description: Unexpected error
     delete:
@@ -621,6 +637,14 @@ definitions:
         type: string
       deadline:
         type: string
+      review-deadline:
+        type: string
+      n_teachers:
+        type: integer
+      n_students:
+        type: integer
+      n_tasks:
+        type: integer
       # teachers:
       #   type: array
       #   items:
