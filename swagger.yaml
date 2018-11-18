@@ -1,7 +1,14 @@
 # DA FARE:
-# aggiungere response schemas a post OK
-# aggiungere parametri di query nei vari get (/students?email=, ) OK
-# aggiungere / inversi (/students/{studentID}/exams)
+# aggiungere response schemas a post
+# aggiungere 404 a /x/{xid}/y
+# aggiungere parametri di query nei vari get (/students?email=, )
+# aggiungere (/tasks/{tid}/vote POST ONLY)
+# aggiungere / inversi
+# (/students/{studentID}/exams, /submissions, /reviews)
+# (/teachers/{tid}/exams) OK
+# (/tasks/{tid}/exams, submissions) OK
+# (/exams/{examid}/submissions) OK
+# (/submissions/{subid}/reviews) OK
 # aggiungere /submissions?student=219&exam=213 OK
 
 swagger: "2.0"
@@ -192,16 +199,33 @@ paths:
           description: Bad request.
         default:
           description: Unexpected error
-  /exams/{examID}/submissions/{submissionID}:
+
+  /exams/{examID}/submissions:
     parameters:
-      - in: path
-        name: examID
-        type: integer
-        required: true
-      - in: path
-        name: submissionID
-        type: integer
-        required: true
+      - $ref: "#/parameters/examID"
+    get:
+      description: Returns the list of submissions relative to this exam.
+      parameters:
+        - $ref: "#/parameters/limit"
+        - $ref: "#/parameters/offset"
+      tags:
+        - /exams
+      responses:
+        "200":
+          description: A list of submissions
+          schema:
+            type: object
+            properties:
+              tot_submissions:
+                type: integer
+              submissions:
+                type: array
+                items:
+                  $ref: "#/definitions/Submission"
+        default:
+          description: Unexpected error
+
+  /reviews:
     get:
       description: Returns a submission by examID and submissionID.
       tags:
@@ -325,13 +349,14 @@ paths:
       parameters:
         - $ref: "#/parameters/limit"
         - $ref: "#/parameters/offset"
-        - student:
-          name: student
-          in: query
+        - in: query
+          name: examID
           type: integer
-        - exam:
-          name: exam
-          in: query
+        - in: query
+          name: taskID
+          type: integer
+        - in: query
+          name: studentID
           type: integer
       tags:
         - /exams/{examID}/TeacherAssistants
@@ -399,12 +424,31 @@ paths:
         default:
           description: Unexpected error
 
-  /exams/{examID}/group:
+  /submissions/{submissionID}/reviews:
     parameters:
-      - in: path
-        name: examID
-        type: integer
-        required: true
+      - $ref: "#/parameters/submissionID"
+    get:
+      description: Returns a list of reviews of a given submission.
+      tags:
+        - /submissions
+      responses:
+        "200":
+          description: A list of reviews.
+          schema:
+            type: object
+            properties:
+              tot_reviews:
+                type: integer
+              reviews:
+                type: array
+                items:
+                  $ref: "#/definitions/Review"
+        "404":
+          description: A submission with the specified submissionID was not found for the given exam.
+        default:
+          description: Unexpected error
+
+  /teachers:
     get:
       description: Returns a list of students signed up for an exam.
       tags:
@@ -470,6 +514,30 @@ paths:
           description: Student removed from exam.
         "404":
           description: Could not remove the student with the specified studentID from exam (student not signed up).
+        default:
+          description: Unexpected error
+
+  /teachers/{teacherID}/exams:
+    parameters:
+      - $ref: "#/parameters/teacherID"
+    get:
+      description: Returns the exams a teacher partecipates to.
+      tags:
+        - /teachers
+      responses:
+        "200":
+          description: A list of exams.
+          schema:
+            type: object
+            properties:
+              tot_exams:
+                type: integer
+              exams:
+                type: array
+                items:
+                  $ref: "#/definitions/Exam"
+        "404":
+          description: A teacher with the specified teacherID was not found.
         default:
           description: Unexpected error
 
@@ -632,6 +700,54 @@ paths:
           description: Task removed.
         "404":
           description: Could not remove the task with the specified taskID (task not found).
+        default:
+          description: Unexpected error
+
+  /tasks/{taskID}/exams:
+    parameters:
+      - $ref: "#/parameters/taskID"
+    get:
+      description: Returns the exams where this task is used.
+      tags:
+        - /tasks
+      responses:
+        "200":
+          description: A list of exams.
+          schema:
+            type: object
+            properties:
+              tot_exams:
+                type: integer
+              exams:
+                type: array
+                items:
+                  $ref: "#/definitions/Exam"
+        "404":
+          description: A task with the specified taskID was not found.
+        default:
+          description: Unexpected error
+
+  /tasks/{taskID}/submissions:
+    parameters:
+      - $ref: "#/parameters/taskID"
+    get:
+      description: Returns the list of submission to this task.
+      tags:
+        - /tasks
+      responses:
+        "200":
+          description: A list of submission to this task.
+          schema:
+            type: object
+            properties:
+              tot_submissions:
+                type: integer
+              submissions:
+                type: array
+                items:
+                  $ref: "#/definitions/Submission"
+        "404":
+          description: A task with the specified taskID was not found.
         default:
           description: Unexpected error
 
