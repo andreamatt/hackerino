@@ -1,6 +1,8 @@
 # DA FARE:
-# aggiungere response schemas a put, delete, post
-# aggiungere parametri di query nei vari get
+# aggiungere response schemas a post
+# aggiungere parametri di query nei vari get (/students?email=, )
+# aggiungere / inversi (/students/{studentID}/exams)
+# aggiungere /submissions?student=219&exam=213
 
 swagger: "2.0"
 info:
