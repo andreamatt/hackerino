@@ -39,6 +39,22 @@ paths:
           description: Unexpected error
     post:
       description: Adds an exam.
+      parameters:
+        - in: body
+          name: exam
+          schema:
+            type: object
+            required:
+              - date
+              - deadline
+              - review-deadline
+            properties:
+              date:
+                type: string
+              deadline:
+                type: string
+              review-deadline:
+                type: string
       tags:
         - /exams
       responses:
@@ -114,7 +130,17 @@ paths:
         default:
           description: Unexpected error
     post:
-      description: Adds a submission review to an exam.
+      description: Sign up a student for an exam.
+      parameters:
+        - in: body
+          name: student
+          schema:
+            type: object
+            required:
+              - studentID
+            properties:
+              studentID:
+                type: integer
       tags:
         - /exams/{examID}/reviews
       responses:
@@ -149,8 +175,18 @@ paths:
           description: A review with the specified reviewID was not found.
         default:
           description: Unexpected error
-    put:
-      description: Updates/creates a submission review of an exam by reviewID.
+    post:
+      description: Add a teacher to an exam.
+      parameters:
+        - in: body
+          name: teacher
+          schema:
+            type: object
+            required:
+              - teacherID
+            properties:
+              teacherID:
+                type: integer
       tags:
         - /exams/{examID}/reviews
       responses:
@@ -183,7 +219,17 @@ paths:
         default:
           description: Unexpected error
     post:
-      description: Adds a submission to an exam.
+      description: Add a task to the exam.
+      parameters:
+        - in: body
+          name: task
+          schema:
+            type: object
+            required:
+              - taskID
+            properties:
+              taskID:
+                type: integer
       tags:
         - /exams/{examID}/submissions
       responses:
@@ -276,7 +322,23 @@ paths:
         default:
           description: Unexpected error
     post:
-      description: Adds a task to an exam.
+      description: Adds a review.
+      parameters:
+        - in: body
+          name: review
+          schema:
+            type: object
+            required:
+              - studentID
+              - submissionID
+              - mark
+            properties:
+              studentID:
+                type: integer
+              submissionID:
+                type: integer
+              mark:
+                type: number
       tags:
         - /exams/{examID}/tasks
       responses:
@@ -995,6 +1057,44 @@ definitions:
         format: int32
       choice:
         type: string
-    required:
-      - votes
-      - choice
+
+
+parameters:
+  limit:
+    name: limit
+    in: query
+    type: integer
+  offset:
+    in: query
+    name: offset
+    type: integer
+  examID:
+    in: path
+    name: examID
+    type: integer
+    required: true
+  submissionID:
+    in: path
+    name: submissionID
+    type: integer
+    required: true
+  taskID:
+    in: path
+    name: taskID
+    type: integer
+    required: true
+  reviewID:
+    in: path
+    name: reviewID
+    type: integer
+    required: true
+  studentID:
+    in: path
+    name: studentID
+    type: integer
+    required: true
+  teacherID:
+    in: path
+    name: teacherID
+    type: integer
+    required: true
