@@ -1,3 +1,8 @@
+# DA FARE:
+# aggiungere response schemas a put, delete, post
+# aggiungere parametri di query nei vari get
+# fixare response dei put: non possono fallire
+
 swagger: "2.0"
 info:
   version: "1.0"
@@ -23,6 +28,10 @@ paths:
       responses:
         "200":
           description: An exams list.
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Exam"
         default:
           description: Unexpected error
     post:
@@ -508,8 +517,6 @@ paths:
           description: Student updated.
         "201":
           description: Student created.
-        "404":
-          description: Could not update the student with the specified studentID (student not found).
         default:
           description: Unexpected error
     delete:
@@ -606,8 +613,30 @@ tags:
 definitions:
   Exam:
     title: Exam
-  Group:
-    title: Group
+    type: object
+    properties:
+      id:
+        type: integer
+      date:
+        type: string
+      deadline:
+        type: string
+      # teachers:
+      #   type: array
+      #   items:
+      #     description: teacherID
+      #     type: integer
+      # students:
+      #   type: array
+      #   items:
+      #     description: studentID
+      #     type: integer
+      # tasks:
+      #   type: array
+      #   items:
+      #     description: taskID
+      #     type: integer
+
   Student:
     title: Student
   Task:
