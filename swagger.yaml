@@ -3,8 +3,8 @@
 # aggiungere 404 a /x/{xid}/y
 # aggiungere parametri di query nei vari get (/students?email=, )
 # aggiungere (/tasks/{tid}/vote POST ONLY)
-# aggiungere / inversi
-# (/students/{studentID}/exams, /submissions, /reviews)
+# aggiungere / inversi OK
+# (/students/{studentID}/exams, /submissions, /reviews) OK
 # (/teachers/{tid}/exams) OK
 # (/tasks/{tid}/exams, submissions) OK
 # (/exams/{examid}/submissions) OK
@@ -487,7 +487,9 @@ paths:
         - /exams/{examID}/group
       responses:
         "200":
-          description: A student signed up for an exam.
+          description: A teacher.
+          schema:
+            $ref: "#/definitions/Exam"
         "404":
           description: A student with the specified studentID was not found signed up for the given exam.
         default:
@@ -593,11 +595,9 @@ paths:
         - /students
       responses:
         "200":
-          description: A student object.
+          description: A student.
           schema:
             $ref: "#/definitions/Student"
-        "400":
-          description: The specified studentID is invalid.
         "404":
           description: A student with the specified studentID was not found.
         default:
@@ -626,7 +626,79 @@ paths:
           description: Could not remove the student with the specified ID (student not found).
         default:
           description: Unexpected error
-          
+
+  /students/{studentID}/exams:
+    parameters:
+      - $ref: "#/parameters/studentID"
+    get:
+      description: Returns the exams a student is signed up for.
+      tags:
+        - /students
+      responses:
+        "200":
+          description: A list of exams.
+          schema:
+            type: object
+            properties:
+              tot_exams:
+                type: integer
+              exams:
+                type: array
+                items:
+                  $ref: "#/definitions/Exam"
+        "404":
+          description: A student with the specified studentID was not found.
+        default:
+          description: Unexpected error
+
+  /students/{studentID}/submissions:
+    parameters:
+      - $ref: "#/parameters/studentID"
+    get:
+      description: Returns the submissions a student has sent.
+      tags:
+        - /students
+      responses:
+        "200":
+          description: A list of submissions.
+          schema:
+            type: object
+            properties:
+              tot_submissions:
+                type: integer
+              submissions:
+                type: array
+                items:
+                  $ref: "#/definitions/Submission"
+        "404":
+          description: A student with the specified studentID was not found.
+        default:
+          description: Unexpected error
+
+  /students/{studentID}/reviews:
+    parameters:
+      - $ref: "#/parameters/studentID"
+    get:
+      description: Returns the reviews a student has sent.
+      tags:
+        - /students
+      responses:
+        "200":
+          description: A list of reviews.
+          schema:
+            type: object
+            properties:
+              tot_reviews:
+                type: integer
+              reviews:
+                type: array
+                items:
+                  $ref: "#/definitions/Review"
+        "404":
+          description: A student with the specified studentID was not found.
+        default:
+          description: Unexpected error
+
   /tasks:
     get:
       description: Returns a tasks list.
@@ -671,7 +743,7 @@ paths:
         - /tasks
       responses:
         "200":
-          description: A task object.
+          description: A task.
           schema:
             $ref: "#/definitions/Task"
         "404":
