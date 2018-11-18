@@ -133,6 +133,8 @@ paths:
           description: Student added to exam.
         "400":
           description: Bad request.
+        "404":
+          description: Exam not found.
         default:
           description: Unexpected error
   /exams/{examID}/reviews/{reviewID}:
@@ -167,6 +169,8 @@ paths:
           description: Teacher added to exam.
         "400":
           description: Bad request.
+        "404":
+          description: Exam not found.
         default:
           description: Unexpected error
 
@@ -198,6 +202,8 @@ paths:
           description: Task added to exam.
         "400":
           description: Bad request.
+        "404":
+          description: Exam not found.
         default:
           description: Unexpected error
 
@@ -375,6 +381,8 @@ paths:
           description: Submission added to the exam.
           schema:
             $ref: "#/definitions/Submission"
+        "423":
+          description: "Deadline reached: cannot change submission."
         "400":
           description: Bad request.
         default:
