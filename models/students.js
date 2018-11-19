@@ -1,17 +1,17 @@
-var students_list = {
+const students_list = {
 	1: {
 		id: 1,
 		email: "mario@rossi.it",
 		firstname: "mario",
 		lastname: "rossi"
-	},
-	size: 1
+	}
 };
+let size = 1;
 
-const max_students = 10;
+let max_students = 10;
 
 function Student(email, firstname, lastname) {
-	if (students_list.size > max_students / 2) {
+	if (size > max_students / 2) {
 		max_students = max_students * 2;
 	}
 	this.id = Math.floor(Math.random() * max_students);
@@ -31,7 +31,8 @@ function getAllIDs() {
 };
 
 function getAllStudents() {
-	return Object.values(students_list);
+	let students = Object.values(students_list);
+	return {students: students, tot_students: size};
 };
 
 function getById(id) {
@@ -51,13 +52,13 @@ function getByEmail(email) {
 			result.push(students_list[id]);
 		}
 	}
-	return result;
+	return {students: result, tot_students: result.length};
 };
 
 function addStudent(email, firstname, lastname) {
 	let stud = new Student(email, firstname, lastname);
 	students_list[stud.id] = stud;
-	students_list.size++;
+	size++;
 	console.log(`Added ${stud}`);
 	return stud;
 };
@@ -66,7 +67,7 @@ function addStudentWithID(id, email, firstname, lastname){
 	let stud = new Student(email, firstname, lastname);
 	stud.id = id;
 	students_list[stud.id] = stud;
-	students_list.size++;
+	size++;
 	console.log(`Added using passed id ${stud}`);
 	return stud;
 }
@@ -86,7 +87,7 @@ function deleteStudent(id) {
 	if (students_list[id]) {
 		console.log(`Deleted student ${students_list[id]}`);
 		delete students_list[id];
-		students_list.size--;
+		size--;
 		return true;
 	}
 	return false;
