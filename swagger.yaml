@@ -1,6 +1,3 @@
-# DA FARE:
-# aggiungere parametri nei POST
-
 swagger: "2.0"
 info:
   version: "1.0"
@@ -66,6 +63,7 @@ paths:
           description: Bad request.
         default:
           description: Unexpected error
+
   /exams/{examID}:
     parameters:
       - in: path
@@ -462,7 +460,8 @@ paths:
           description: Bad request.
         default:
           description: Unexpected error
-  /exams/{examID}/TeacherAssistants/{TeacherAssistantID}:
+
+  /submissions/{submissionID}:
     parameters:
       - in: path
         name: examID
@@ -513,6 +512,9 @@ paths:
       - $ref: "#/parameters/submissionID"
     get:
       description: Returns a list of reviews of a given submission.
+      parameters:
+        - $ref: "#/parameters/limit"
+        - $ref: "#/parameters/offset"
       tags:
         - /submissions
       responses:
@@ -571,7 +573,8 @@ paths:
           description: Bad request.
         default:
           description: Unexpected error
-  /exams/{examID}/group/{studentID}:
+
+  /teachers/{teacherID}:
     parameters:
       - in: path
         name: examID
@@ -624,6 +627,9 @@ paths:
       - $ref: "#/parameters/teacherID"
     get:
       description: Returns the exams a teacher partecipates to.
+      parameters:
+        - $ref: "#/parameters/limit"
+        - $ref: "#/parameters/offset"
       tags:
         - /teachers
       responses:
@@ -747,6 +753,9 @@ paths:
       - $ref: "#/parameters/studentID"
     get:
       description: Returns the exams a student is signed up for.
+      parameters:
+        - $ref: "#/parameters/limit"
+        - $ref: "#/parameters/offset"
       tags:
         - /students
       responses:
@@ -771,6 +780,9 @@ paths:
       - $ref: "#/parameters/studentID"
     get:
       description: Returns the submissions a student has sent.
+      parameters:
+        - $ref: "#/parameters/limit"
+        - $ref: "#/parameters/offset"
       tags:
         - /students
       responses:
@@ -795,6 +807,9 @@ paths:
       - $ref: "#/parameters/studentID"
     get:
       description: Returns the reviews a student has sent.
+      parameters:
+        - $ref: "#/parameters/limit"
+        - $ref: "#/parameters/offset"
       tags:
         - /students
       responses:
@@ -865,6 +880,7 @@ paths:
           description: Bad request.
         default:
           description: Unexpected error
+
   /tasks/{taskID}:
     parameters:
       - in: path
@@ -914,6 +930,9 @@ paths:
       - $ref: "#/parameters/taskID"
     get:
       description: Returns the exams where this task is used.
+      parameters:
+        - $ref: "#/parameters/limit"
+        - $ref: "#/parameters/offset"
       tags:
         - /tasks
       responses:
@@ -938,6 +957,9 @@ paths:
       - $ref: "#/parameters/taskID"
     get:
       description: Returns the list of submission to this task.
+      parameters:
+        - $ref: "#/parameters/limit"
+        - $ref: "#/parameters/offset"
       tags:
         - /tasks
       responses:
