@@ -37,3 +37,7 @@ test("Testing GET /students?email=mario@rossi.it", async () => {
 		lastname: "rossi"
 	}));
 });
+
+afterAll(() => {
+	app.server.close();
+});
