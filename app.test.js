@@ -1,5 +1,5 @@
-const app = require("./app")
+const app = require("./app");
 
 test('close server test', () => {
-    app.server.close()
-})
+    app.server.close();
+});
