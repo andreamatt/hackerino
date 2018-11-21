@@ -2,10 +2,10 @@
   "name": "hackerino",
   "version": "1.0.0",
   "description": "",
-  "main": "app.js",
+  "main": "server.js",
   "scripts": {
-    "test": "jest --runInBand",
-    "start": "node app.js"
+    "test": "jest",
+    "start": "node server.js"
   },
   "repository": {
     "type": "git",

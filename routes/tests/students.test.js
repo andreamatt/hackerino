@@ -1,5 +1,4 @@
-const app = require('../../app'),
-	fetch = require('node-fetch');
+fetch = require('node-fetch');
 
 const basepath = 'http://localhost:3000/v1';
 
@@ -36,8 +35,4 @@ test("Testing GET /students?email=mario@rossi.it", async () => {
 		firstname: "mario",
 		lastname: "rossi"
 	}));
-});
-
-afterAll(() => {
-	app.server.close();
 });
