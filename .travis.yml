@@ -4,4 +4,4 @@ node_js:
 env:
   global:
     - PORT=3000
-    - BASEPATH= https://hackerino-dev.herokuapp.com
+    - BASEURL=https://hackerino-dev.herokuapp.com
