@@ -6,4 +6,3 @@ before_script:
 env:
   global:
     - PORT=3000
-    - BASEURL=https://hackerino-dev.herokuapp.com
