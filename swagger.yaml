@@ -148,6 +148,8 @@ paths:
           description: Bad request.
         "404":
           description: Exam not found.
+        "423":
+          description: Student already signed up.
         default:
           description: Unexpected error
   /exams/{examID}/reviews/{reviewID}:
@@ -194,6 +196,8 @@ paths:
           description: Bad request.
         "404":
           description: Exam not found.
+        "423":
+          description: Teacher already added.
         default:
           description: Unexpected error
 
@@ -237,6 +241,8 @@ paths:
           description: Bad request.
         "404":
           description: Exam not found.
+        "423":
+          description: Task already added.
         default:
           description: Unexpected error
 
@@ -346,6 +352,8 @@ paths:
             $ref: "#/definitions/Review"
         "400":
           description: Bad request.
+        "423":
+          description: This student has already reviewed that submission.
         default:
           description: Unexpected error
   /exams/{examID}/tasks/{taskID}:
@@ -377,9 +385,11 @@ paths:
         "200":
           description: Task updated.
         "201":
-          description: Task added to the exam.
-        "404":
-          description: Could not update task with the specified taskID (task not found).
+          description: Review created.
+        "400":
+          description: Bad request.
+        "423":
+          description: This student has already reviewed that submission.
         default:
           description: Unexpected error
     delete:
@@ -422,7 +432,7 @@ paths:
         default:
           description: Unexpected error
     post:
-      description: Adds a submission 
+      description: Adds a submission / Overrides a submission if the same student has already submitted that task during this exam.
       parameters:
         - in: body
           name: submission
@@ -442,10 +452,10 @@ paths:
               examID:
                 type: integer
               answer:
-                description: If it is a m-choice, then ""
+                description: If it is a m-choice then ""
                 type: string
               chosen_answer:
-                description: If it is an open question, then -1
+                description: If it is an open question then -1
                 type: integer
       tags:          
         - /submissions
@@ -536,7 +546,13 @@ paths:
 
   /teachers:
     get:
-      description: Returns a list of students signed up for an exam.
+      description: Returns a teachers list.
+      parameters:
+        - $ref: "#/parameters/limit"
+        - $ref: "#/parameters/offset"
+        - in: query
+          name: email
+          type: string
       tags:
         - /exams/{examID}/group
       responses:
@@ -571,6 +587,8 @@ paths:
             $ref: "#/definitions/Teacher"
         "400":
           description: Bad request.
+        "423":
+          description: A teacher with such email already exists.
         default:
           description: Unexpected error
 
@@ -605,9 +623,11 @@ paths:
         "200":
           description: Updated a student signed up for the exam.
         "201":
-          description: Student signed up for an exam.
-        "404":
-          description: Could not update student with the specified studentID (student not signed up).
+          description: teacher created.
+        "400":
+          description: Bad request.
+        "423":
+          description: A teacher with such email already exists.
         default:
           description: Unexpected error
     delete:
@@ -699,6 +719,8 @@ paths:
           description: Student created.
           schema:
             $ref: "#/definitions/Student"
+        "423":
+          description: A student with such email already exists.
         "400":
           description: Bad request.
         default:
@@ -734,6 +756,8 @@ paths:
           description: Student created.
         "400":
           description: Bad request.
+        "423":
+          description: A student with such email already exists.
         default:
           description: Unexpected error
     delete:
