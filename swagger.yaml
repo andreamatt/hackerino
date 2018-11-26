@@ -42,13 +42,13 @@ paths:
             required:
               - date
               - deadline
-              - review-deadline
+              - review_deadline
             properties:
               date:
                 type: string
               deadline:
                 type: string
-              review-deadline:
+              review_deadline:
                 type: string
       tags:
         - /exams
@@ -949,7 +949,7 @@ definitions:
         type: string
       deadline:
         type: string
-      review-deadline:
+      review_deadline:
         type: string
       n_teachers:
         type: integer
@@ -957,11 +957,60 @@ definitions:
         type: integer
       n_tasks:
         type: integer
+    required:
+      - id
+      - date
+      - deadline
+      - review_deadline
+      - n_teachers
+      - n_students
+      - n_tasks
 
   Student:
     title: Student
+    type: object
+    properties:
+      id:
+        type: integer
+      email:
+        type: string
+      firstname:
+        type: string
+      lastname:
+        type: string
+    required:
+      - id
+      - email
+      - firstname
+      - lastname
+
   Task:
     title: Task
+    type: object
+    properties:
+      id:
+        type: integer
+      type:
+        type: string
+        enum: ["choice", "open"]
+      question:
+        type: string
+      possible_answers:
+        type: array
+        items:
+          type: string
+      n_votes:
+        type: integer
+      rating:
+        type: number
+    required:
+      - id
+      - type
+      - question
+      - possible_answers
+      - n_votes
+      - rating
+
   Review:
     title: Review
     type: object
@@ -977,6 +1026,11 @@ definitions:
       mark:
         description: mark given by the student to this submission
         type: number
+    required:
+      - id
+      - student
+      - submission
+      - mark
 
   Submission:
     title: Submission
@@ -1003,6 +1057,15 @@ definitions:
         type: number
       final_points:
         type: number
+    required:
+      - id
+      - student
+      - task
+      - exam
+      - answer
+      - chosen_answer
+      - review_points
+      - final_points
 
   Example:
     title: Example
@@ -1013,6 +1076,11 @@ definitions:
         format: int32
       choice:
         type: string
+    required:
+      - id
+      - email
+      - firstname
+      - lastname
 
 
 parameters:
