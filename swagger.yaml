@@ -32,8 +32,6 @@ paths:
                 type: array
                 items:
                   $ref: "#/definitions/Exam"
-        default:
-          description: Unexpected error
     post:
       description: Adds an exam.
       parameters:
@@ -61,8 +59,6 @@ paths:
             $ref: "#/definitions/Exam"
         "400":
           description: Bad request.
-        default:
-          description: Unexpected error
 
   /exams/{examID}:
     parameters:
@@ -81,8 +77,6 @@ paths:
             $ref: "#/definitions/Exam"
         "404":
           description: An exam with the specified examID was not found.
-        default:
-          description: Unexpected error
     put:
       description: Updates/creates an exam by examID.
       tags:
@@ -94,8 +88,6 @@ paths:
           description: Exam created.
         "400":
           description: Bad request.
-        default:
-          description: Unexpected error
     delete:
       description: Deletes an exam by examID.
       tags:
@@ -105,8 +97,6 @@ paths:
           description: Exam deleted.
         "404":
           description: Could not delete exam with the specified examID (exam not found).
-        default:
-          description: Unexpected error
 
   /exams/{examID}/reviews:
     parameters:
@@ -122,11 +112,14 @@ paths:
         "200":
           description: A reviews list.
           schema:
-            type: array
-            items:
-              $ref: "#/definitions/Review"
-        default:
-          description: Unexpected error
+            type: object
+            properties:
+              tot_students:
+                type: integer
+              students:
+                type: array
+                items:
+                  $ref: "#/definitions/Student"
     post:
       description: Sign up a student for an exam.
       parameters:
@@ -150,9 +143,8 @@ paths:
           description: Exam not found.
         "423":
           description: Student already signed up.
-        default:
-          description: Unexpected error
-  /exams/{examID}/reviews/{reviewID}:
+   
+  /exams/{examID}/teachers:
     parameters:
       - in: path
         name: examID
@@ -170,11 +162,14 @@ paths:
         "200":
           description: A review.
           schema:
-            $ref: "#/definitions/Exam"
-        "404":
-          description: A review with the specified reviewID was not found.
-        default:
-          description: Unexpected error
+            type: object
+            properties:
+              tot_teachers:
+                type: integer
+              teachers:
+                type: array
+                items:
+                  $ref: "#/definitions/Teacher"
     post:
       description: Add a teacher to an exam.
       parameters:
@@ -198,8 +193,6 @@ paths:
           description: Exam not found.
         "423":
           description: Teacher already added.
-        default:
-          description: Unexpected error
 
   /exams/{examID}/submissions:
     parameters:
@@ -215,11 +208,14 @@ paths:
         "200":
           description: A submissions list of an exam.
           schema:
-            type: array
-            items:
-              $ref: "#/definitions/Submission"
-        default:
-          description: Unexpected error
+            type: object
+            properties:
+              tot_tasks:
+                type: integer
+              tasks:
+                type: array
+                items:
+                  $ref: "#/definitions/Task"
     post:
       description: Add a task to the exam.
       parameters:
@@ -243,8 +239,6 @@ paths:
           description: Exam not found.
         "423":
           description: Task already added.
-        default:
-          description: Unexpected error
 
   /exams/{examID}/submissions:
     parameters:
@@ -268,8 +262,6 @@ paths:
                 type: array
                 items:
                   $ref: "#/definitions/Submission"
-        default:
-          description: Unexpected error
 
   /reviews:
     get:
@@ -280,51 +272,14 @@ paths:
         "200":
           description: A submission of an exam.
           schema:
-            $ref: "#/definitions/Submission"
-        "404":
-          description: A submission with the specified submissionID was not found for the given exam.
-        default:
-          description: Unexpected error
-    put:
-      description: Updates/creates a submission of an exam by submissionID.
-      tags:
-        - /exams/{examID}/submissions
-      responses:
-        "200":
-          description: Submission updated.
-        "201":
-          description: Submission added to the exam.
-        "404":
-          description: Could not update submission with the specified submissionID (submission not found).
-        default:
-          description: Unexpected error
-    delete:
-      description: Deletes a submission from an exam by ID.
-      tags:
-        - /exams/{examID}/submissions
-      responses:
-        "204":
-          description: Submission removed.
-        "404":
-          description: Could not remove the submission with the specified submissionID (submission not found).
-        default:
-          description: Unexpected error
-
-  /exams/{examID}/tasks:
-    parameters:
-      - in: path
-        name: examID
-        type: integer
-        required: true
-    get:
-      description: Returns a tasks list for an exam.
-      tags:
-        - /exams/{examID}/tasks
-      responses:
-        "200":
-          description: A list of tasks used in an exam.
-        default:
-          description: Unexpected error
+            type: object
+            properties:
+              tot_reviews:
+                type: integer
+              reviews:
+                type: array
+                items:
+                  $ref: "#/definitions/Review"
     post:
       description: Adds a review.
       parameters:
@@ -354,9 +309,8 @@ paths:
           description: Bad request.
         "423":
           description: This student has already reviewed that submission.
-        default:
-          description: Unexpected error
-  /exams/{examID}/tasks/{taskID}:
+
+  /reviews/{reviewID}:
     parameters:
       - in: path
         name: examID
@@ -374,9 +328,7 @@ paths:
         "200":
           description: A task of an exam.
         "404":
-          description: A task with the specified taskID was not found for the given exam.
-        default:
-          description: Unexpected error
+          description: A review with the specified reviewID was not found.
     put:
       description: Updates/creates a task of an exam by taskID.
       tags:
@@ -390,8 +342,6 @@ paths:
           description: Bad request.
         "423":
           description: This student has already reviewed that submission.
-        default:
-          description: Unexpected error
     delete:
       description: Deletes a task from an exam by taskID.
       tags:
@@ -400,9 +350,7 @@ paths:
         "204":
           description: Task removed from exam.
         "404":
-          description: Could not remove the task with the specified taskID from exam (task not found).
-        default:
-          description: Unexpected error
+          description: Could not delete review with the specified reviewID (review not found).
 
   /exams/{examID}/TeacherAssistants:
     parameters:
@@ -428,9 +376,16 @@ paths:
         - /exams/{examID}/TeacherAssistants
       responses:
         "200":
-          description: A TeacherAssistant list.
-        default:
-          description: Unexpected error
+          description: A submissions list of an exam.
+          schema:
+            type: object
+            properties:
+              tot_submissions:
+                type: integer
+              submissions:
+                type: array
+                items:
+                  $ref: "#/definitions/Submission"
     post:
       description: Adds a submission / Overrides a submission if the same student has already submitted that task during this exam.
       parameters:
@@ -468,8 +423,6 @@ paths:
           description: "Deadline reached: cannot change submission."
         "400":
           description: Bad request.
-        default:
-          description: Unexpected error
 
   /submissions/{submissionID}:
     parameters:
@@ -489,9 +442,7 @@ paths:
         "200":
           description: A TeacherAssistant object.
         "404":
-          description: A TeacherAssistant with the specified TeacherAssistantID was not found.
-        default:
-          description: Unexpected error
+          description: A submission with the specified submissionID was not found for the given exam.
     put:
       description: Updates/creates a TeacherAssistant by TeacherAssistantID.
       tags:
@@ -500,11 +451,9 @@ paths:
         "200":
           description: TeacherAssistant updated.
         "201":
-          description: TeacherAssistant created.
-        "404":
-          description: Could not update the TeacherAssistant with the specified TeacherAssistantID (TeacherAssistant not found).
-        default:
-          description: Unexpected error
+          description: Submission added to the exam.
+        "400":
+          description: Bad request.
     delete:
       description: Removes a TeacherAssistant by TeacherAssistantID.
       tags:
@@ -513,9 +462,7 @@ paths:
         "204":
           description: TeacherAssistant removed.
         "404":
-          description: Could not remove the TeacherAssistant with the specified TeacherAssistantID (TeacherAssistant not found).
-        default:
-          description: Unexpected error
+          description: Could not remove the submission with the specified submissionID (submission not found).
 
   /submissions/{submissionID}/reviews:
     parameters:
@@ -541,8 +488,6 @@ paths:
                   $ref: "#/definitions/Review"
         "404":
           description: A submission with the specified submissionID was not found for the given exam.
-        default:
-          description: Unexpected error
 
   /teachers:
     get:
@@ -557,9 +502,16 @@ paths:
         - /exams/{examID}/group
       responses:
         "200":
-          description: A list of students signed up for an exam.
-        default:
-          description: Unexpected error
+          description: A teacher list.
+          schema:
+            type: object
+            properties:
+              tot_teachers:
+                type: integer
+              teachers:
+                type: array
+                items:
+                  $ref: "#/definitions/Teacher"
     post:
       description: Adds a teacher.
       parameters:
@@ -589,8 +541,6 @@ paths:
           description: Bad request.
         "423":
           description: A teacher with such email already exists.
-        default:
-          description: Unexpected error
 
   /teachers/{teacherID}:
     parameters:
@@ -612,9 +562,7 @@ paths:
           schema:
             $ref: "#/definitions/Exam"
         "404":
-          description: A student with the specified studentID was not found signed up for the given exam.
-        default:
-          description: Unexpected error
+          description: A teacher with the specified teacherID was not found.
     put:
       description: Updates/creates a student signed up for an exam by studentID.
       tags:
@@ -628,8 +576,6 @@ paths:
           description: Bad request.
         "423":
           description: A teacher with such email already exists.
-        default:
-          description: Unexpected error
     delete:
       description: Removes a student from an exam by studentID.
       tags:
@@ -638,9 +584,7 @@ paths:
         "204":
           description: Student removed from exam.
         "404":
-          description: Could not remove the student with the specified studentID from exam (student not signed up).
-        default:
-          description: Unexpected error
+          description: Could not remove the teacher with the specified teacherID (teacher not found).
 
   /teachers/{teacherID}/exams:
     parameters:
@@ -666,8 +610,6 @@ paths:
                   $ref: "#/definitions/Exam"
         "404":
           description: A teacher with the specified teacherID was not found.
-        default:
-          description: Unexpected error
 
   /students:
     get:
@@ -692,8 +634,6 @@ paths:
                 type: array
                 items:
                   $ref: "#/definitions/Student"
-        default:
-          description: Unexpected error
     post:
       description: Adds a student.
       parameters:
@@ -723,8 +663,6 @@ paths:
           description: A student with such email already exists.
         "400":
           description: Bad request.
-        default:
-          description: Unexpected error
 
   /students/{studentID}:
     parameters:
@@ -743,8 +681,6 @@ paths:
             $ref: "#/definitions/Student"
         "404":
           description: A student with the specified studentID was not found.
-        default:
-          description: Unexpected error
     put:
       description: Updates/creates a student by studentID.
       tags:
@@ -758,8 +694,6 @@ paths:
           description: Bad request.
         "423":
           description: A student with such email already exists.
-        default:
-          description: Unexpected error
     delete:
       description: Removes a student by studentID.
       tags:
@@ -769,8 +703,6 @@ paths:
           description: Student removed.
         "404":
           description: Could not remove the student with the specified ID (student not found).
-        default:
-          description: Unexpected error
 
   /students/{studentID}/exams:
     parameters:
@@ -796,8 +728,6 @@ paths:
                   $ref: "#/definitions/Exam"
         "404":
           description: A student with the specified studentID was not found.
-        default:
-          description: Unexpected error
 
   /students/{studentID}/submissions:
     parameters:
@@ -823,8 +753,6 @@ paths:
                   $ref: "#/definitions/Submission"
         "404":
           description: A student with the specified studentID was not found.
-        default:
-          description: Unexpected error
 
   /students/{studentID}/reviews:
     parameters:
@@ -850,8 +778,6 @@ paths:
                   $ref: "#/definitions/Review"
         "404":
           description: A student with the specified studentID was not found.
-        default:
-          description: Unexpected error
 
   /tasks:
     get:
@@ -870,8 +796,6 @@ paths:
                 type: array
                 items:
                   $ref: "#/definitions/Task"
-        default:
-          description: Unexpected error
     post:
       description: Adds a task.
       parameters:
@@ -902,8 +826,6 @@ paths:
             $ref: "#/definitions/Task"
         "400":
           description: Bad request.
-        default:
-          description: Unexpected error
 
   /tasks/{taskID}:
     parameters:
@@ -922,8 +844,6 @@ paths:
             $ref: "#/definitions/Task"
         "404":
           description: A task with the specified taskID was not found.
-        default:
-          description: Unexpected error
     put:
       description: Updates/creates a task by taskID.
       tags:
@@ -935,8 +855,6 @@ paths:
           description: Task created.
         "400":
           description: Bad request.
-        default:
-          description: Unexpected error
     delete:
       description: Removes a task by taskID.
       tags:
@@ -946,8 +864,6 @@ paths:
           description: Task removed.
         "404":
           description: Could not remove the task with the specified taskID (task not found).
-        default:
-          description: Unexpected error
 
   /tasks/{taskID}/exams:
     parameters:
@@ -973,8 +889,6 @@ paths:
                   $ref: "#/definitions/Exam"
         "404":
           description: A task with the specified taskID was not found.
-        default:
-          description: Unexpected error
 
   /tasks/{taskID}/submissions:
     parameters:
@@ -1000,8 +914,6 @@ paths:
                   $ref: "#/definitions/Submission"
         "404":
           description: A task with the specified taskID was not found.
-        default:
-          description: Unexpected error
 
   /tasks/{taskID}/vote:
     parameters:
@@ -1015,8 +927,6 @@ paths:
           description: Your vote was received and the task's rating is updated.
         "404":
           description: A task with the specified taskID was not found.
-        default:
-          description: Unexpected error
 
 tags:
   - name: /exams
