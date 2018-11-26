@@ -1,13 +1,14 @@
 const students_list = {
+	/*
 	1: {
 		id: 1,
 		email: "mario@rossi.it",
 		firstname: "mario",
 		lastname: "rossi"
 	}
+	*/
 };
-let size = 1;
-
+let size = 0;
 let max_students = 10;
 
 function Student(email, firstname, lastname) {
@@ -21,7 +22,7 @@ function Student(email, firstname, lastname) {
 	this.email = email;
 	this.firstname = firstname;
 	this.lastname = lastname;
-	this.toString = function(){
+	this.toString = function () {
 		return JSON.stringify(this);
 	};
 }
@@ -32,7 +33,7 @@ function getAllIDs() {
 
 function getAllStudents() {
 	let students = Object.values(students_list);
-	return {students: students, tot_students: size};
+	return { students: students, tot_students: size };
 };
 
 function getById(id) {
@@ -44,18 +45,21 @@ function getById(id) {
 	}
 };
 
-// email is not a unique key => return an array
+// email IS UNIQUE => return null or 1 item
 function getByEmail(email) {
-	let result = [];
 	for (id in students_list) {
-		if (students_list[id].email == email) {
-			result.push(students_list[id]);
+		if (students_list[id].email === email) {
+			return students_list[id];
 		}
 	}
-	return {students: result, tot_students: result.length};
+	return null;
 };
 
 function addStudent(email, firstname, lastname) {
+	if (getByEmail(email)) {
+		console.log(`Unable to add ${email}: email already registered`);
+		return null;
+	}
 	let stud = new Student(email, firstname, lastname);
 	students_list[stud.id] = stud;
 	size++;
@@ -63,7 +67,11 @@ function addStudent(email, firstname, lastname) {
 	return stud;
 };
 
-function addStudentWithID(id, email, firstname, lastname){
+function addStudentWithID(id, email, firstname, lastname) {
+	if (getByEmail(email)) {
+		console.log(`Unable to add ${email}: email already registered`);
+		return null;
+	}
 	let stud = new Student(email, firstname, lastname);
 	stud.id = id;
 	students_list[stud.id] = stud;
@@ -74,13 +82,16 @@ function addStudentWithID(id, email, firstname, lastname){
 
 function updateStudent(id, email, firstname, lastname) {
 	if (students_list[id]) {
-		students_list[id].email = email;
 		students_list[id].firstname = firstname;
 		students_list[id].lastname = lastname;
 		console.log(`Modified student ${students_list[id]}`);
-		return true;
+		return 200;
+	} else if(getByEmail(email)){
+		return 423;
+	} else {
+		addStudentWithID(id, email, firstname, lastname);
+		return 201;
 	}
-	return false;
 }
 
 function deleteStudent(id) {
@@ -93,6 +104,4 @@ function deleteStudent(id) {
 	return false;
 }
 
-addStudent("andrea.matte@studenti.unitn.it", "andrea", "mattè");
-
-module.exports = {getAllIDs, getAllStudents, getById, getByEmail, addStudent, updateStudent, deleteStudent, addStudentWithID};
+module.exports = { getAllIDs, getAllStudents, getById, getByEmail, addStudent, updateStudent, deleteStudent, addStudentWithID };
