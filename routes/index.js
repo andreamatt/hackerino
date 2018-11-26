@@ -14,19 +14,6 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // routes setup
-app.get("/", (req, res) => {
-	res.sendFile(`${homeFolder}/public/info.html`);
-});
 
-app.get("/help", (req, res) => {
-	res.sendFile(`${homeFolder}/public/help.html`);
-});
-
-//app.use("/exams",exams);
-//app.use("/reviews",reviews);
-//app.use("/submissions",submissions);
-//app.use("/teachers",teachers);
-app.use("/v1/", students);
-//app.use("/tasks",tasks);
 
 module.exports = {app, homeFolder};
