@@ -1,3 +1,5 @@
+#TODO
+#aggiungere 424: riferimento a risorsa invalida
 swagger: "2.0"
 info:
   version: "1.0"
@@ -361,6 +363,8 @@ paths:
           description: Bad request.
         "423":
           description: This student has already reviewed that submission.
+        "451":
+          description: "Review deadline reached: cannot submit an other review."
 
   /reviews/{reviewID}:
     parameters:
@@ -488,10 +492,12 @@ paths:
           description: Submission added to the exam.
           schema:
             $ref: "#/definitions/Submission"
-        "423":
-          description: "Deadline reached: cannot change submission."
         "400":
           description: Bad request.
+        "423":
+          description: This student has already submitted this task during this exam. If you want to update it, use PUT /submissions/submissionID instead.
+        "451":
+          description: "Deadline reached: cannot submit another submission."
 
   /submissions/{submissionID}:
     parameters:
