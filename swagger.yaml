@@ -27,7 +27,9 @@ paths:
             type: object
             properties:
               tot_exams:
+                description: Total number of exams
                 type: integer
+                minimum: 0
               exams:
                 type: array
                 items:
@@ -49,10 +51,13 @@ paths:
             properties:
               date:
                 type: string
+                format: date-time
               deadline:
                 type: string
+                format: date-time
               review_deadline:
                 type: string
+                format: date-time
       tags:
         - /exams
       responses:
@@ -82,6 +87,11 @@ paths:
           description: An exam with the specified examID was not found.
     put:
       description: Updates/creates an exam by examID.
+      parameters:
+        - in: body
+          name: exam
+          schema:
+            $ref: "#/definitions/Exam"
       tags:
         - /exams
       responses:
@@ -113,12 +123,14 @@ paths:
         - /exams/{examID}/reviews
       responses:
         "200":
-          description: A reviews list.
+          description: A list of students taking an exam.
           schema:
             type: object
             properties:
               tot_students:
+                description: Total number of students taking an exam
                 type: integer
+                minimum: 0
               students:
                 type: array
                 items:
@@ -138,6 +150,7 @@ paths:
             properties:
               studentID:
                 type: integer
+                minimum: 1
       tags:
         - /exams/{examID}/reviews
       responses:
@@ -149,7 +162,7 @@ paths:
           description: Exam not found.
         "423":
           description: Student already signed up.
-   
+
   /exams/{examID}/teachers:
     parameters:
       - in: path
@@ -161,17 +174,22 @@ paths:
         type: integer
         required: true
     get:
-      description: Returns a submission review by examID and reviewID.
+      description: Returns the teachers assigned to the exam.
+      parameters:
+        - $ref: "#/parameters/limit"
+        - $ref: "#/parameters/offset"
       tags:
         - /exams/{examID}/reviews
       responses:
         "200":
-          description: A review.
+          description: A list of teachers assigned to an exam
           schema:
             type: object
             properties:
               tot_teachers:
+                description: Total number of teachers assigned to an exam
                 type: integer
+                minimum: 0
               teachers:
                 type: array
                 items:
@@ -191,6 +209,7 @@ paths:
             properties:
               teacherID:
                 type: integer
+                minimum: 1
       tags:
         - /exams/{examID}/reviews
       responses:
@@ -210,17 +229,22 @@ paths:
         type: integer
         required: true
     get:
-      description: Returns submissions list for an exam.
+      description: Returns the list of tasks used in this exam.
+      parameters:
+        - $ref: "#/parameters/limit"
+        - $ref: "#/parameters/offset"
       tags:
         - /exams/{examID}/submissions
       responses:
         "200":
-          description: A submissions list of an exam.
+          description: A list of tasks used in an exam
           schema:
             type: object
             properties:
               tot_tasks:
+                description: Total number of tasks used in an exam
                 type: integer
+                minimum: 0
               tasks:
                 type: array
                 items:
@@ -240,6 +264,7 @@ paths:
             properties:
               taskID:
                 type: integer
+                minimum: 1
       tags:
         - /exams/{examID}/submissions
       responses:
@@ -256,7 +281,7 @@ paths:
     parameters:
       - $ref: "#/parameters/examID"
     get:
-      description: Returns the list of submissions relative to this exam.
+      description: Returns the list of submissions regarding tasks used in this exam.
       parameters:
         - $ref: "#/parameters/limit"
         - $ref: "#/parameters/offset"
@@ -264,12 +289,14 @@ paths:
         - /exams
       responses:
         "200":
-          description: A list of submissions
+          description: A list of submissions regarding tasks used in an exam
           schema:
             type: object
             properties:
               tot_submissions:
+                description: Total number of submissions regarding tasks used in an exam
                 type: integer
+                minimum: 0
               submissions:
                 type: array
                 items:
@@ -290,7 +317,9 @@ paths:
             type: object
             properties:
               tot_reviews:
+                description: Total number of reviews
                 type: integer
+                minimum: 0
               reviews:
                 type: array
                 items:
@@ -312,10 +341,15 @@ paths:
             properties:
               studentID:
                 type: integer
+                minimum: 1
               submissionID:
                 type: integer
+                minimum: 1
               mark:
                 type: number
+                multipleOf: 0.01
+                minimum: 0
+                maximum: 30
       tags:
         - /exams/{examID}/tasks
       responses:
@@ -348,7 +382,12 @@ paths:
         "404":
           description: A review with the specified reviewID was not found.
     put:
-      description: Updates/creates a task of an exam by taskID.
+      description: Updates/creates a submission review of an exam by reviewID.
+      parameters:
+        - in: body
+          name: review
+          schema:
+            $ref: "#/definitions/Review"
       tags:
         - /exams/{examID}/tasks
       responses:
@@ -377,19 +416,22 @@ paths:
         type: integer
         required: true
     get:
-      description: Returns submissions list 
+      description: Returns submissions list
       parameters:
         - $ref: "#/parameters/limit"
         - $ref: "#/parameters/offset"
         - in: query
           name: examID
           type: integer
+          minimum: 1
         - in: query
           name: taskID
           type: integer
+          minimum: 1
         - in: query
           name: studentID
           type: integer
+          minimum: 1
       tags:
         - /exams/{examID}/TeacherAssistants
       responses:
@@ -399,7 +441,9 @@ paths:
             type: object
             properties:
               tot_submissions:
+                description: Total number of submissions
                 type: integer
+                minimum: 0
               submissions:
                 type: array
                 items:
@@ -420,20 +464,24 @@ paths:
               - examID
               - answer
               - chosen_answer
-            properties:  
+            properties:
               studentID:
                 type: integer
+                minimum: 1
               taskID:
                 type: integer
+                minimum: 1
               examID:
                 type: integer
+                minimum: 1
               answer:
                 description: If it is a m-choice then ""
                 type: string
               chosen_answer:
-                description: If it is an open question then -1
                 type: integer
-      tags:          
+                minimum: -1
+                description: If it is an open question then -1
+      tags:
         - /submissions
       responses:
         "201":
@@ -465,7 +513,12 @@ paths:
         "404":
           description: A submission with the specified submissionID was not found for the given exam.
     put:
-      description: Updates/creates a TeacherAssistant by TeacherAssistantID.
+      description: Updates/creates a submission of an exam by submissionID.
+      parameters:
+        - in: body
+          name: submission
+          schema:
+            $ref: "#/definitions/Submission"
       tags:
         - /exams/{examID}/TeacherAssistants
       responses:
@@ -497,12 +550,14 @@ paths:
         - /submissions
       responses:
         "200":
-          description: A list of reviews.
+          description: A list of reviews done for a given submission.
           schema:
             type: object
             properties:
               tot_reviews:
+                description: Total number of reviews for a given submission
                 type: integer
+                minimum: 0
               reviews:
                 type: array
                 items:
@@ -519,9 +574,7 @@ paths:
       parameters:
         - $ref: "#/parameters/limit"
         - $ref: "#/parameters/offset"
-        - in: query
-          name: email
-          type: string
+        - $ref: "#/parameters/email"
       tags:
         - /exams/{examID}/group
       responses:
@@ -531,7 +584,9 @@ paths:
             type: object
             properties:
               tot_teachers:
+                description: Total number of teachers
                 type: integer
+                minimum: 0
               teachers:
                 type: array
                 items:
@@ -550,9 +605,10 @@ paths:
               - email
               - firstname
               - lastname
-            properties:  
-              email:  
+            properties:
+              email:
                 type: string
+                format: email
               firstname:
                 type: string
               lastname:
@@ -591,7 +647,12 @@ paths:
         "404":
           description: A teacher with the specified teacherID was not found.
     put:
-      description: Updates/creates a student signed up for an exam by studentID.
+      description: Updates/creates a teacher by teacherID.
+      parameters:
+        - in: body
+          name: teacher
+          schema:
+            $ref: "#/definitions/Teacher"
       tags:
         - /exams/{examID}/group
       responses:
@@ -617,7 +678,7 @@ paths:
     parameters:
       - $ref: "#/parameters/teacherID"
     get:
-      description: Returns the exams a teacher partecipates to.
+      description: Returns the exams a teacher was assigned to.
       parameters:
         - $ref: "#/parameters/limit"
         - $ref: "#/parameters/offset"
@@ -625,12 +686,14 @@ paths:
         - /teachers
       responses:
         "200":
-          description: A list of exams.
+          description: A list of exams a teacher was assigned to.
           schema:
             type: object
             properties:
               tot_exams:
+                description: Total number of exams a teacher was assigned to
                 type: integer
+                minimum: 0
               exams:
                 type: array
                 items:
@@ -647,9 +710,7 @@ paths:
       parameters:
         - $ref: "#/parameters/limit"
         - $ref: "#/parameters/offset"
-        - in: query
-          name: email
-          type: string
+        - $ref: "#/parameters/email"
       tags:
         - /students
       responses:
@@ -659,7 +720,9 @@ paths:
             type: object
             properties:
               tot_students:
+                description: Total number of students
                 type: integer
+                minimum: 0
               students:
                 type: array
                 items:
@@ -678,9 +741,10 @@ paths:
               - email
               - firstname
               - lastname
-            properties:  
-              email:  
+            properties:
+              email:
                 type: string
+                format: email
               firstname:
                 type: string
               lastname:
@@ -716,6 +780,11 @@ paths:
           description: A student with the specified studentID was not found.
     put:
       description: Updates/creates a student by studentID.
+      parameters:
+        - in: body
+          name: student
+          schema:
+            $ref: "#/definitions/Student"
       tags:
         - /students
       responses:
@@ -741,7 +810,7 @@ paths:
     parameters:
       - $ref: "#/parameters/studentID"
     get:
-      description: Returns the exams a student is signed up for.
+      description: Returns the exams a student signed up for.
       parameters:
         - $ref: "#/parameters/limit"
         - $ref: "#/parameters/offset"
@@ -749,12 +818,14 @@ paths:
         - /students
       responses:
         "200":
-          description: A list of exams.
+          description: A list of exams a student signed up for.
           schema:
             type: object
             properties:
               tot_exams:
+                description: Total number of exams a student signed up for
                 type: integer
+                minimum: 0
               exams:
                 type: array
                 items:
@@ -777,12 +848,14 @@ paths:
         - /students
       responses:
         "200":
-          description: A list of submissions.
+          description: A list of submissions a student has sent.
           schema:
             type: object
             properties:
               tot_submissions:
+                description: Total number of submissions a student has sent
                 type: integer
+                minimum: 0
               submissions:
                 type: array
                 items:
@@ -810,7 +883,9 @@ paths:
             type: object
             properties:
               tot_reviews:
+                description: Total number of reviews a student has sent
                 type: integer
+                minimum: 0
               reviews:
                 type: array
                 items:
@@ -833,7 +908,9 @@ paths:
             type: object
             properties:
               tot_tasks:
+                description: Total number of tasks
                 type: integer
+                minimum: 0
               tasks:
                 type: array
                 items:
@@ -852,11 +929,11 @@ paths:
               - type
               - question
               - possible_answers
-            properties:  
+            properties:
               type:
                 type: string
                 enum: ["choice", "open"]
-              question:  
+              question:
                 type: string
               possible_answers:
                 type: array
@@ -891,6 +968,11 @@ paths:
           description: A task with the specified taskID was not found.
     put:
       description: Updates/creates a task by taskID.
+      parameters:
+        - in: body
+          name: task
+          schema:
+            $ref: "#/definitions/Task"
       tags:
         - /tasks
       responses:
@@ -927,7 +1009,9 @@ paths:
             type: object
             properties:
               tot_exams:
+                description: Total number of exams
                 type: integer
+                minimum: 0
               exams:
                 type: array
                 items:
@@ -955,7 +1039,9 @@ paths:
             type: object
             properties:
               tot_submissions:
+                description: Total number of submissions sent regarding a given task
                 type: integer
+                minimum: 0
               submissions:
                 type: array
                 items:
@@ -992,22 +1078,37 @@ tags:
 definitions:
   Exam:
     title: Exam
+    description: Object containing all the information about an exam
     type: object
     properties:
       id:
+        description: Uniquely identifies an exam
         type: integer
+        minimum: 1
       date:
+        description: Defines the starting time of the exam
         type: string
+        format: date-time
       deadline:
+        description: Submissions to the exam are not allowed past this time
         type: string
+        format: date-time
       review_deadline:
+        description: Every student must do a review for each assigned submission before this time
         type: string
+        format: date-time
       n_teachers:
+        description: Number of teachers monitoring the exam
         type: integer
+        minimum: 0
       n_students:
+        description: Number of students registered to the exam
         type: integer
+        minimum: 0
       n_tasks:
+        description: Number of tasks used in the exam
         type: integer
+        minimum: 0
     required:
       - id
       - date
@@ -1019,15 +1120,22 @@ definitions:
 
   Student:
     title: Student
+    description: Object containing all the information about a student
     type: object
     properties:
       id:
+        description: Student's identifier
         type: integer
+        minimum: 1
       email:
+        description: Student's email
         type: string
+        format: email
       firstname:
+        description: First name of the student
         type: string
       lastname:
+        description: Last name of the student
         type: string
     required:
       - id
@@ -1037,23 +1145,35 @@ definitions:
 
   Task:
     title: Task
+    description: Object containing information about a task
     type: object
     properties:
       id:
+        description: Task identifier
         type: integer
+        minimum: 1
       type:
+        description: Tasks can be of different types
         type: string
         enum: ["choice", "open"]
       question:
+        description: Actual task is described
         type: string
       possible_answers:
+        description: Contains acceptable answers to the task
         type: array
         items:
           type: string
       n_votes:
+        description: Number of votes the task received from either students or teachers
         type: integer
+        minimum: 0
       rating:
+        description: Average vote
         type: number
+        multipleOf: 0.01
+        minimum: 0
+        maximum: 30
     required:
       - id
       - type
@@ -1064,19 +1184,27 @@ definitions:
 
   Review:
     title: Review
+    description: Object containing information about a review of a student for a submission
     type: object
     properties:
       id:
+        description: Review's identifier
         type: integer
+        minimum: 1
       student:
-        description: studentID
+        description: The student who has done the review
         type: integer
+        minimum: 1
       submission:
-        description: submissionID
+        description: The submission of which the student has done the review
         type: integer
+        minimum: 1
       mark:
-        description: mark given by the student to this submission
+        description: Mark given by the student to this submission
         type: number
+        multipleOf: 0.01
+        minimum: 0
+        maximum: 30
     required:
       - id
       - student
@@ -1085,29 +1213,44 @@ definitions:
 
   Submission:
     title: Submission
+    description: Object containing information about a submission
     type: object
     properties:
       id:
+        description: Identifies a submission
         type: integer
+        minimum: 1
       student:
-        description: studentID
+        description: The student who submitted this object
         type: integer
+        minimum: 1
       task:
-        description: taskID
+        description: The task for which the submission was sent
         type: integer
+        minimum: 1
       exam:
-        description: examID
+        description: The exam where the student submitted for a given task
         type: integer
+        minimum: 1
       answer:
-        description: (If open question)
+        description: In case of an open question, answer is written here
         type: string
       chosen_answer:
-        description: (If multiple-choice question, else -1)
+        description: For multiple-choice question the answer is given as an integer, else -1
         type: integer
+        minimum: -1
       review_points:
+        description: Rating given by the peer-review phase
         type: number
+        multipleOf: 0.01
+        minimum: 0
+        maximum: 30
       final_points:
+        description: Final rating assigned to the submission
         type: number
+        multipleOf: 0.01
+        minimum: 0
+        maximum: 30
     required:
       - id
       - student
@@ -1118,14 +1261,24 @@ definitions:
       - review_points
       - final_points
 
-  Example:
-    title: Example
+  Teacher:
+    title: Teacher
+    description: Object containing information about a teacher
     type: object
     properties:
-      votes:
+      id:
+        description: Teacher's identifier
         type: integer
-        format: int32
-      choice:
+        minimum: 1
+      email:
+        description: Email of the teacher
+        type: string
+        format: email
+      firstname:
+        description: First name of the teacher
+        type: string
+      lastname:
+        description: Last name of the teacher
         type: string
     required:
       - id
@@ -1133,43 +1286,64 @@ definitions:
       - firstname
       - lastname
 
-
 parameters:
   limit:
-    name: limit
+    description: Limits the number of objects returned
     in: query
+    name: limit
     type: integer
+    minimum: 0
   offset:
+    description: The first n elements compliant to the request will not be in the response message (where offset=n)
     in: query
     name: offset
     type: integer
+    minimum: 0
+  email:
+    description: Filters for email the list of objects requested (the objects must naturally have the email attribute)
+    in: query
+    name: email
+    type: string
+    format: email
   examID:
+    description: Exam's identifier
     in: path
     name: examID
     type: integer
+    minimum: 1
     required: true
   submissionID:
+    description: Submission's identifier
     in: path
     name: submissionID
     type: integer
+    minimum: 1
     required: true
   taskID:
+    description: Identifies a task
     in: path
     name: taskID
     type: integer
+    minimum: 1
     required: true
   reviewID:
+    description: Identifies a review
     in: path
     name: reviewID
     type: integer
+    minimum: 1
     required: true
   studentID:
+    description: Identifies a student
     in: path
     name: studentID
     type: integer
+    minimum: 1
     required: true
   teacherID:
+    description: Identifies a teacher
     in: path
     name: teacherID
     type: integer
+    minimum: 1
     required: true
