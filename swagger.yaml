@@ -93,7 +93,21 @@ paths:
         - in: body
           name: exam
           schema:
-            $ref: "#/definitions/Exam"
+            type: object
+            required:
+              - date
+              - deadline
+              - review_deadline
+            properties:
+              date:
+                type: string
+                format: date-time
+              deadline:
+                type: string
+                format: date-time
+              review_deadline:
+                type: string
+                format: date-time
       tags:
         - /exams
       responses:
@@ -374,7 +388,7 @@ paths:
         "424":
           description: One of the foreign keys can't be resolved.
         "451":
-          description: "Review deadline reached: cannot submit an other review."
+          description: "Cannot submit the review right now: too early ( < exam/deadline ) or too late ( >= exam/review_deadline)."
 
   /reviews/{reviewID}:
     parameters:
@@ -401,7 +415,23 @@ paths:
         - in: body
           name: review
           schema:
-            $ref: "#/definitions/Review"
+            type: object
+            required:
+              - studentID
+              - submissionID
+              - mark
+            properties:
+              studentID:
+                type: integer
+                minimum: 1
+              submissionID:
+                type: integer
+                minimum: 1
+              mark:
+                type: number
+                multipleOf: 0.01
+                minimum: 0
+                maximum: 30
       tags:
         - /exams/{examID}/tasks
       responses:
@@ -511,7 +541,7 @@ paths:
         "424":
           description: One of the foreign keys can't be resolved.
         "451":
-          description: "Deadline reached: cannot submit another submission."
+          description: "Cannot submit the submission right now: too early ( < exam/date ) or too late ( >= exam/deadline)."
 
   /submissions/{submissionID}:
     parameters:
@@ -538,7 +568,30 @@ paths:
         - in: body
           name: submission
           schema:
-            $ref: "#/definitions/Submission"
+            type: object
+            required:
+              - studentID
+              - taskID
+              - examID
+              - answer
+              - chosen_answer
+            properties:
+              studentID:
+                type: integer
+                minimum: 1
+              taskID:
+                type: integer
+                minimum: 1
+              examID:
+                type: integer
+                minimum: 1
+              answer:
+                description: If it is a m-choice then ""
+                type: string
+              chosen_answer:
+                type: integer
+                minimum: -1
+                description: If it is an open question then -1
       tags:
         - /exams/{examID}/TeacherAssistants
       responses:
@@ -676,7 +729,19 @@ paths:
         - in: body
           name: teacher
           schema:
-            $ref: "#/definitions/Teacher"
+            type: object
+            required:
+              - email
+              - firstname
+              - lastname
+            properties:
+              email:
+                type: string
+                format: email
+              firstname:
+                type: string
+              lastname:
+                type: string
       tags:
         - /exams/{examID}/group
       responses:
@@ -808,7 +873,19 @@ paths:
         - in: body
           name: student
           schema:
-            $ref: "#/definitions/Student"
+            type: object
+            required:
+              - email
+              - firstname
+              - lastname
+            properties:
+              email:
+                type: string
+                format: email
+              firstname:
+                type: string
+              lastname:
+                type: string
       tags:
         - /students
       responses:
@@ -996,7 +1073,21 @@ paths:
         - in: body
           name: task
           schema:
-            $ref: "#/definitions/Task"
+            type: object
+            required:
+              - type
+              - question
+              - possible_answers
+            properties:
+              type:
+                type: string
+                enum: ["choice", "open"]
+              question:
+                type: string
+              possible_answers:
+                type: array
+                items:
+                  type: string
       tags:
         - /tasks
       responses:
