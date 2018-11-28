@@ -37,6 +37,8 @@ paths:
             required:
               - tot_exams
               - exams
+        "400":
+          description: Bad request.
     post:
       description: Adds an exam.
       parameters:
@@ -156,6 +158,10 @@ paths:
             required:
               - tot_students
               - students
+        "400":
+          description: Bad request.
+        "404":
+          description: Exam not found.
     post:
       description: Sign up a student for an exam.
       parameters:
@@ -217,6 +223,10 @@ paths:
             required:
               - tot_teachers
               - teachers
+        "400":
+          description: Bad request.
+        "404":
+          description: Exam not found.
     post:
       description: Add a teacher to an exam.
       parameters:
@@ -274,6 +284,10 @@ paths:
             required:
               - tot_tasks
               - tasks
+        "400":
+          description: Bad request.
+        "404":
+          description: Exam not found.
     post:
       description: Add a task to the exam.
       parameters:
@@ -328,6 +342,10 @@ paths:
             required:
               - tot_submissions
               - submissions
+        "400":
+          description: Bad request.
+        "404":
+          description: Exam not found.
 
   /reviews:
     get:
@@ -351,6 +369,8 @@ paths:
             required:
               - tot_reviews
               - reviews
+        "400":
+          description: Bad request.
     post:
       description: Adds a review.
       parameters:
@@ -499,6 +519,8 @@ paths:
             required:
               - tot_subimssions
               - submissions
+        "400":
+          description: Bad request.
     post:
       description: Adds a submission / Overrides a submission if the same student has already submitted that task during this exam.
       parameters:
@@ -563,7 +585,7 @@ paths:
         "200":
           description: A TeacherAssistant object.
         "404":
-          description: A submission with the specified submissionID was not found for the given exam.
+          description: A submission with the specified submissionID was not found.
     put:
       description: Updates/creates a submission of an exam by submissionID.
       parameters:
@@ -648,7 +670,7 @@ paths:
               - tot_reviews
               - reviews
         "404":
-          description: A submission with the specified submissionID was not found for the given exam.
+          description: Submission not found.
 
   /teachers:
     get:
@@ -676,6 +698,8 @@ paths:
             required:
               - tot_teachers
               - teachers
+        "400":
+          description: Bad request.
     post:
       description: Adds a teacher.
       parameters:
@@ -825,6 +849,8 @@ paths:
             required:
               - tot_students
               - students
+        "400":
+          description: Bad request.
     post:
       description: Adds a student.
       parameters:
@@ -941,6 +967,8 @@ paths:
             required:
               - tot_exams
               - exams
+        "400":
+          description: Bad request.
         "404":
           description: A student with the specified studentID was not found.
 
@@ -971,6 +999,8 @@ paths:
             required:
               - tot_submissions
               - submissions
+        "400":
+          description: Bad request.
         "404":
           description: A student with the specified studentID was not found.
 
@@ -1001,6 +1031,8 @@ paths:
             required:
               - tot_reviews
               - reviews
+        "400":
+          description: Bad request.
         "404":
           description: A student with the specified studentID was not found.
 
@@ -1026,6 +1058,8 @@ paths:
             required:
               - tot_tasks
               - tasks
+        "400":
+          description: Bad request.
     post:
       description: Adds a task.
       parameters:
@@ -1142,6 +1176,8 @@ paths:
             required:
               - tot_exams
               - exams
+        "400":
+          description: Bad request.
         "404":
           description: A task with the specified taskID was not found.
 
@@ -1172,6 +1208,8 @@ paths:
             required:
               - tot_submissions
               - submissions
+        "400":
+          description: Bad request.
         "404":
           description: A task with the specified taskID was not found.
 
