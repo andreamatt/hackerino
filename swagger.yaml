@@ -422,9 +422,11 @@ paths:
               - mark
             properties:
               studentID:
+                description: This parameter will be IGNORED if doing a put-update because it is part of a unique key constraint.
                 type: integer
                 minimum: 1
               submissionID:
+                description: This parameter will be IGNORED if doing a put-update because it is part of a unique key constraint.
                 type: integer
                 minimum: 1
               mark:
@@ -577,12 +579,15 @@ paths:
               - chosen_answer
             properties:
               studentID:
+                description: This parameter will be IGNORED if doing a put-update because it is part of a unique key constraint.
                 type: integer
                 minimum: 1
               taskID:
+                description: This parameter will be IGNORED if doing a put-update because it is part of a unique key constraint.
                 type: integer
                 minimum: 1
               examID:
+                description: This parameter will be IGNORED if doing a put-update because it is part of a unique key constraint.
                 type: integer
                 minimum: 1
               answer:
@@ -736,6 +741,7 @@ paths:
               - lastname
             properties:
               email:
+                description: This parameter will be IGNORED if doing a put-update because it is part of a unique key constraint.
                 type: string
                 format: email
               firstname:
@@ -880,6 +886,7 @@ paths:
               - lastname
             properties:
               email:
+                description: This parameter will be IGNORED if doing a put-update because it is part of a unique key constraint.
                 type: string
                 format: email
               firstname:
@@ -1083,6 +1090,7 @@ paths:
                 type: string
                 enum: ["choice", "open"]
               question:
+                description: This parameter will be IGNORED if doing a put-update because it is part of a unique key constraint.
                 type: string
               possible_answers:
                 type: array
