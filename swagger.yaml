@@ -2,7 +2,7 @@ swagger: "2.0"
 info:
   version: "1.0"
   title: "hackerino"
-  description: Polls is a simple API allowing consumers to view polls and vote in them.
+  description: API that manages students, teachers, exams, reviews...
   license:
     name: MIT
     url: https://github.com/apiaryio/polls-api/blob/master/LICENSE
@@ -18,6 +18,9 @@ paths:
   /exams:
     get:
       description: Returns exams list.
+      parameters:
+        - $ref: "#/parameters/limit"
+        - $ref: "#/parameters/offset"
       tags:
         - /exams
       responses:
@@ -74,10 +77,7 @@ paths:
 
   /exams/{examID}:
     parameters:
-      - in: path
-        name: examID
-        type: integer
-        required: true
+      - $ref: "#/parameters/examID"
     get:
       description: Returns an exam by examID.
       tags:
@@ -131,16 +131,16 @@ paths:
         "404":
           description: Could not delete exam with the specified examID (exam not found).
 
-  /exams/{examID}/reviews:
+  /exams/{examID}/students:
     parameters:
-      - in: path
-        name: examID
-        type: integer
-        required: true
+      - $ref: "#/parameters/examID"
     get:
-      description: Returns submission reviews for given exam.
+      description: Returns the students taking the exam.
+      parameters:
+        - $ref: "#/parameters/limit"
+        - $ref: "#/parameters/offset"
       tags:
-        - /exams/{examID}/reviews
+        - /exams
       responses:
         "200":
           description: A list of students taking an exam.
@@ -176,7 +176,7 @@ paths:
                 type: integer
                 minimum: 1
       tags:
-        - /exams/{examID}/reviews
+        - /exams
       responses:
         "204":
           description: Student added to exam.
@@ -191,21 +191,14 @@ paths:
 
   /exams/{examID}/teachers:
     parameters:
-      - in: path
-        name: examID
-        type: integer
-        required: true
-      - in: path
-        name: reviewID
-        type: integer
-        required: true
+      - $ref: "#/parameters/examID"
     get:
       description: Returns the teachers assigned to the exam.
       parameters:
         - $ref: "#/parameters/limit"
         - $ref: "#/parameters/offset"
       tags:
-        - /exams/{examID}/reviews
+        - /exams
       responses:
         "200":
           description: A list of teachers assigned to an exam
@@ -241,7 +234,7 @@ paths:
                 type: integer
                 minimum: 1
       tags:
-        - /exams/{examID}/reviews
+        - /exams
       responses:
         "204":
           description: Teacher added to exam.
@@ -254,19 +247,16 @@ paths:
         "424":
           description: One of the foreign keys can't be resolved.
 
-  /exams/{examID}/submissions:
+  /exams/{examID}/tasks:
     parameters:
-      - in: path
-        name: examID
-        type: integer
-        required: true
+      - $ref: "#/parameters/examID"
     get:
       description: Returns the list of tasks used in this exam.
       parameters:
         - $ref: "#/parameters/limit"
         - $ref: "#/parameters/offset"
       tags:
-        - /exams/{examID}/submissions
+        - /exams
       responses:
         "200":
           description: A list of tasks used in an exam
@@ -302,7 +292,7 @@ paths:
                 type: integer
                 minimum: 1
       tags:
-        - /exams/{examID}/submissions
+        - /exams
       responses:
         "204":
           description: Task added to exam.
@@ -349,12 +339,15 @@ paths:
 
   /reviews:
     get:
-      description: Returns a submission by examID and submissionID.
+      description: Returns reviews.
+      parameters:
+        - $ref: "#/parameters/limit"
+        - $ref: "#/parameters/offset"
       tags:
-        - /exams/{examID}/submissions
+        - /reviews
       responses:
         "200":
-          description: A submission of an exam.
+          description: A reviews list.
           schema:
             type: object
             properties:
@@ -395,7 +388,7 @@ paths:
                 minimum: 0
                 maximum: 30
       tags:
-        - /exams/{examID}/tasks
+        - /reviews
       responses:
         "201":
           description: Review submitted.
@@ -412,21 +405,16 @@ paths:
 
   /reviews/{reviewID}:
     parameters:
-      - in: path
-        name: examID
-        type: integer
-        required: true
-      - in: path
-        name: taskID
-        type: integer
-        required: true
+      - $ref: "#/parameters/reviewID"
     get:
-      description: Returns a task by examID and taskID.
+      description: Returns a review by reviewID.
       tags:
-        - /exams/{examID}/tasks
+        - /reviews
       responses:
         "200":
-          description: A task of an exam.
+          description: A review.
+          schema:
+            $ref: "#/definitions/Exam"
         "404":
           description: A review with the specified reviewID was not found.
     put:
@@ -455,10 +443,10 @@ paths:
                 minimum: 0
                 maximum: 30
       tags:
-        - /exams/{examID}/tasks
+        - /reviews
       responses:
         "200":
-          description: Task updated.
+          description: Review updated.
         "201":
           description: Review created.
         "400":
@@ -468,21 +456,16 @@ paths:
         "424":
           description: One of the foreign keys can't be resolved.
     delete:
-      description: Deletes a task from an exam by taskID.
+      description: Deletes a submission review from an exam by reviewID.
       tags:
-        - /exams/{examID}/tasks
+        - /reviews
       responses:
         "204":
-          description: Task removed from exam.
+          description: Review deleted.
         "404":
           description: Could not delete review with the specified reviewID (review not found).
 
-  /exams/{examID}/TeacherAssistants:
-    parameters:
-      - in: path
-        name: examID
-        type: integer
-        required: true
+  /submissions:
     get:
       description: Returns submissions list
       parameters:
@@ -501,7 +484,7 @@ paths:
           type: integer
           minimum: 1
       tags:
-        - /exams/{examID}/TeacherAssistants
+        - /submissions
       responses:
         "200":
           description: A submissions list of an exam.
@@ -569,21 +552,16 @@ paths:
 
   /submissions/{submissionID}:
     parameters:
-      - in: path
-        name: examID
-        type: integer
-        required: true
-      - in: path
-        name: TeacherAssistantID
-        type: integer
-        required: true
+      - $ref: "#/parameters/submissionID"
     get:
-      description: Returns a TeacherAssistant by TeacherAssistantID.
+      description: Returns a submission by examID and submissionID.
       tags:
-        - /exams/{examID}/TeacherAssistants
+        - /submissions
       responses:
         "200":
-          description: A TeacherAssistant object.
+          description: A submission of an exam.
+          schema:
+            $ref: "#/definitions/Submission"
         "404":
           description: A submission with the specified submissionID was not found.
     put:
@@ -620,10 +598,10 @@ paths:
                 minimum: -1
                 description: If it is an open question then -1
       tags:
-        - /exams/{examID}/TeacherAssistants
+        - /submissions
       responses:
         "200":
-          description: TeacherAssistant updated.
+          description: Submission updated.
         "201":
           description: Submission added to the exam.
         "400":
@@ -633,12 +611,12 @@ paths:
         "424":
           description: One of the foreign keys can't be resolved.
     delete:
-      description: Removes a TeacherAssistant by TeacherAssistantID.
+      description: Deletes a submission from an exam by ID.
       tags:
-        - /exams/{examID}/TeacherAssistants
+        - /submissions
       responses:
         "204":
-          description: TeacherAssistant removed.
+          description: Submission removed.
         "404":
           description: Could not remove the submission with the specified submissionID (submission not found).
 
@@ -680,7 +658,7 @@ paths:
         - $ref: "#/parameters/offset"
         - $ref: "#/parameters/email"
       tags:
-        - /exams/{examID}/group
+        - /teachers
       responses:
         "200":
           description: A teacher list.
@@ -720,7 +698,7 @@ paths:
               lastname:
                 type: string
       tags:
-        - /exams/{examID}/group
+        - /teachers
       responses:
         "201":
           description: teacher created.
@@ -733,18 +711,11 @@ paths:
 
   /teachers/{teacherID}:
     parameters:
-      - in: path
-        name: examID
-        type: integer
-        required: true
-      - in: path
-        name: studentID
-        type: integer
-        required: true
+      - $ref: "#/parameters/teacherID"
     get:
-      description: Returns a student signed up for an exam by studentID.
+      description: Returns a teacher by teacherID.
       tags:
-        - /exams/{examID}/group
+        - /teachers
       responses:
         "200":
           description: A teacher.
@@ -773,10 +744,10 @@ paths:
               lastname:
                 type: string
       tags:
-        - /exams/{examID}/group
+        - /teachers
       responses:
         "200":
-          description: Updated a student signed up for the exam.
+          description: teacher updated.
         "201":
           description: teacher created.
         "400":
@@ -784,12 +755,12 @@ paths:
         "423":
           description: A teacher with such email already exists.
     delete:
-      description: Removes a student from an exam by studentID.
+      description: Removes a teacher by teacherID.
       tags:
-        - /exams/{examID}/group
+        - /teachers
       responses:
         "204":
-          description: Student removed from exam.
+          description: teacher removed.
         "404":
           description: Could not remove the teacher with the specified teacherID (teacher not found).
 
@@ -884,10 +855,7 @@ paths:
 
   /students/{studentID}:
     parameters:
-      - in: path
-        name: studentID
-        type: integer
-        required: true
+      - $ref: "#/parameters/studentID"
     get:
       description: Returns a student by id.
       tags:
@@ -1039,6 +1007,9 @@ paths:
   /tasks:
     get:
       description: Returns a tasks list.
+      parameters:
+        - $ref: "#/parameters/limit"
+        - $ref: "#/parameters/offset"
       tags:
         - /tasks
       responses:
@@ -1093,10 +1064,7 @@ paths:
 
   /tasks/{taskID}:
     parameters:
-      - in: path
-        name: taskID
-        type: integer
-        required: true
+      - $ref: "#/parameters/taskID"
     get:
       description: Returns a task by taskID.
       tags:
@@ -1228,11 +1196,9 @@ paths:
 
 tags:
   - name: /exams
-  - name: /exams/{examID}/reviews
-  - name: /exams/{examID}/submissions
-  - name: /exams/{examID}/tasks
-  - name: /exams/{examID}/TeacherAssistants
-  - name: /exams/{examID}/group
+  - name: /reviews
+  - name: /submissions
+  - name: /teachers
   - name: /students
   - name: /tasks
 
