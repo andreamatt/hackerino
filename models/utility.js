@@ -17,6 +17,28 @@ function isArray(value) {
 	return false;
 }
 
+function isTask(task) {
+	if (!task) return false;
+	if (Object.keys(task).length !== 4 && Object.keys(task).length !== 5) return false;
+	if (!Number.isInteger(task.id) || task.id <= 0) return false;
+	if (!isString(task.question)) return false;
+	if (task.answers) {
+		if (!isArray(task.answers.possible_answers)) return false;
+		if (task.answers.possible_answers.length < 2) return false;
+		if (!task.answers.possible_answers.every(possible_answer => isString(possible_answer))) return false;
+
+		if (!isArray(task.answers.correct_answers)) return false;
+		if (task.answers.correct_answers.length < 2) return false;
+		if (!task.answers.correct_answers.every(correct_answer => Number.isInteger(correct_answer))) return false;
+		if (!task.answers.correct_answers.every(correct_answer => correct_answer >= 0)) return false;
+		if (!task.answers.correct_answers.every(correct_answer => correct_answer < task.answers.possible_answers.length)) return false;
+	}
+	if (!Number.isInteger(task.n_votes) || task.n_votes < 0) return false;
+	if (!isNumber(task.rating)) return false;
+	if (task.rating < 0 || task.rating > 10) return false;
+	return true;
+}
+
 function doOffset(collection, offset) {
 	if (!isArray(collection) || !isNumber(offset) || offset < 0) {
 		throw new Error("Bad doOffset parameters");
@@ -54,4 +76,4 @@ function Response(status, text, json) {
 	this.json = json;
 }
 
-module.exports = { isString, isNumber, isStringDate, isArray, doOffset, doLimit, doOffsetLimit, Request, Response };
+module.exports = { isString, isNumber, isStringDate, isArray, isTask, doOffset, doLimit, doOffsetLimit, Request, Response };
