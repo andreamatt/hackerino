@@ -26,8 +26,8 @@ test('Request and response utilities', () => {
 
 test("isString", () => {
 	expect(util.isString('asd')).toBe(true);
-	expect(util.isString('')).toBe(true);
 
+	expect(util.isString('')).toBe(false);
 	expect(util.isString(1)).toBe(false);
 	expect(util.isString(null)).toBe(false);
 	expect(util.isString(false)).toBe(false);

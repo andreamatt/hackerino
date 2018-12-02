@@ -1,5 +1,5 @@
 function isString(value) {
-	return typeof value === 'string' || value instanceof String;
+	return (typeof value === 'string' || value instanceof String) && value.length > 0;
 }
 
 function isNumber(value) {
