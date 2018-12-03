@@ -1,5 +1,8 @@
 const isInteger = Number.isInteger;
 
+/**
+ * Description: checks if passed value is a NON-EMPTY STRING
+*/
 function isString(value) {
 	return (typeof value === 'string' || value instanceof String) && value.length > 0;
 }
@@ -37,7 +40,7 @@ function isTask(task) {
 			return { bool: false, error: "possible_answers is falsy" };
 		if (Object.keys(task.answers).length > 2)
 			return { bool: false, error: "answers has invalid number of properties" };
-			
+
 		if (!isArray(task.answers.possible_answers))
 			return { bool: false, error: "possible_answers is not an array" };
 		if (task.answers.possible_answers.length < 2)
@@ -99,7 +102,7 @@ function Request() {
 }
 
 function Response(status, text, json) {
-	if (arguments.length !== 3) {
+	if (arguments.length !== 3 || (!isNumber(status) || status < 0) || (!json && !isString(text)) || (json && isString(text))) {
 		throw new Error("Wrong response parameters");
 	}
 	this.status = status;
@@ -107,4 +110,13 @@ function Response(status, text, json) {
 	this.json = json;
 }
 
-module.exports = { isString, isNumber, isStringDate, isArray, isTask, doOffset, doLimit, doOffsetLimit, Request, Response };
+function isStudent(stud) {
+	if (!stud) return false;
+	if (!isNumber(stud.id) || stud.id < 1) return false;
+	if (!isString(stud.email)) return false;
+	if (!isString(stud.firstname)) return false;
+	if (!isString(stud.lastname)) return false;
+	return true;
+}
+
+module.exports = { isString, isNumber, isStringDate, isArray, isStudent, doOffset, doLimit, doOffsetLimit, Request, Response };
