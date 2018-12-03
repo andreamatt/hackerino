@@ -39,7 +39,7 @@ function Task(question) {
     this.rating = 0;
 }
 
-function addTask(id, question, answers) {
+function createTask(id, question, answers) {
     let newTask = new Task(question);
     if (id) {
         newTask.id = id;
@@ -86,11 +86,10 @@ function tasks_POST(req) {
         return new Response(400, "request body has invalid number of properties", null);
     }
 
-    let result = addTask(null, req.body.question, req.body.answers);
+    let result = createTask(null, req.body.question, req.body.answers);
     let task = result.task;
     let isTask = result.isTask.bool;
     let errMsg = result.isTask.error;
-
     if (isTask === true) {
         tasks_list[task.id] = task;
         return new Response(201, null, task);
@@ -106,14 +105,47 @@ function tasks_taskID_GET(req) {
     if (!isInteger(id)) {
         return new Response(400, "taskID is NaN", null);
     }
-    if (id < 1) { 
+    if (id < 1) {
         return new Response(400, "taskID invalid value", null);
     }
-    if (tasks_list[id]) {
-        return new Response(200, null, tasks_list[id]);
-    } else {
+    if (!tasks_list[id]) {
         return new Response(404, "A task with the specified taskID was not found", null);
+    }
+    return new Response(200, null, tasks_list[id]);
+}
+
+function tasks_taskID_PUT(req) {
+    let id = parseInt(req.params.taskID);
+    if (!isInteger(id)) {
+        return new Response(400, "taskID is NaN", null);
+    }
+    if (id < 1) {
+        return new Response(400, "taskID invalid value", null);
+    }
+
+    let status;
+    let result;
+    if (tasks_list[id]) {
+        status = "update";
+        result = createTask(id, req.body.question, req.body.answers);
+    } else {
+        status = "create";
+        result = createTask(null, req.body.question, req.body.answers);
+    }
+
+    let task = result.task;
+    let isTask = result.isTask.bool;
+    let errMsg = result.isTask.error;
+    if (!isTask === true) {
+        return new Response(400, errMsg, null);
+    }
+    
+    tasks_list[task.id] = task;
+    if (status === "update") {
+        return new Response(200, "Task updated", null);
+    } else {
+        return new Response(201, "Task created", null);
     }
 }
 
-module.exports = { tasks_GET, tasks_POST, tasks_taskID_GET };
+module.exports = { tasks_GET, tasks_POST, tasks_taskID_GET, tasks_taskID_PUT };

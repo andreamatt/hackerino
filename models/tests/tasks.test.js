@@ -7,6 +7,7 @@ const tasks = require("../tasks.js");
 const tasks_GET = tasks.tasks_GET;
 const tasks_POST = tasks.tasks_POST;
 const tasks_taskID_GET = tasks.tasks_taskID_GET;
+const tasks_taskID_PUT = tasks.tasks_taskID_PUT;
 
 
 
@@ -275,6 +276,7 @@ test("tasks_taskID_GET with id=1", () => {
     expect(res.text).toBeNull;
     expect(res.json).toBeDefined();
     expect(isTask(res.json).bool).toBe(true);
+    expect(res.json.id).toBe(Number(req.params.taskID));
 });
 
 test("tasks_taskID_GET with non existant id", () => {
@@ -298,6 +300,7 @@ test("tasks_taskID_GET with id=50", () => {
     expect(res.text).toBeNull;
     expect(res.json).toBeDefined();
     expect(isTask(res.json).bool).toBe(true);
+    expect(res.json.id).toBe(Number(req.params.taskID));
 });
 
 test("tasks_taskID_GET with id NaN", () => {
@@ -322,3 +325,91 @@ test("tasks_taskID_GET with id=0", () => {
     expect(res.json).toBeNull();
 });
 
+test("tasks_taskID_PUT, update existing task", () => {
+    let req = new Request();
+    req.params.taskID = "50";
+    req.body = {
+        question: "Who is bigger?",
+        answers: {
+            possible_answers: ["Elyon", "Jhw"],
+            correct_answers: [0]
+        }
+    };
+    let res = tasks_taskID_PUT(req);
+
+    expect(res).toBeInstanceOf(Response);
+    expect(res.status).toBe(200);
+    expect(res.text).toMatch("Task updated");
+    expect(res.json).toBeNull();
+});
+
+test("tasks_taskID_PUT, update non existing task", () => {
+    let req = new Request();
+    req.params.taskID = "9999123";
+    req.body = {
+        question: "Who is bigger?",
+        answers: {
+            possible_answers: ["Elyon", "Jhw"],
+            correct_answers: [0]
+        }
+    };
+    let res = tasks_taskID_PUT(req);
+
+    expect(res).toBeInstanceOf(Response);
+    expect(res.status).toBe(201);
+    expect(res.text).toMatch("Task created");
+    expect(res.json).toBeNull();
+});
+
+test("tasks_taskID_PUT, with malformed request", () => {
+    let req = new Request();
+    req.params.taskID = "23";
+    req.body = {
+        question: "Who is bigger?",
+        answers: {
+            possible_answers: "Elyon",
+            correct_answers: [99]
+        }
+    };
+    let res = tasks_taskID_PUT(req);
+
+    expect(res).toBeInstanceOf(Response);
+    expect(res.status).toBe(400);
+    expect(res.json).toBeNull();
+});
+
+test("tasks_taskID_PUT, with id=0", () => {
+    let req = new Request();
+    req.params.taskID = "0";
+    req.body = {
+        question: "Who is bigger?",
+        answers: {
+            possible_answers: ["Elyon", "Jhw"],
+            correct_answers: [0]
+        }
+    };
+    let res = tasks_taskID_PUT(req);
+
+    expect(res).toBeInstanceOf(Response);
+    expect(res.status).toBe(400);
+    expect(res.text).toMatch("taskID invalid value");
+    expect(res.json).toBeNull();
+});
+
+test("tasks_taskID_PUT, with id NaN", () => {
+    let req = new Request();
+    req.params.taskID = "zero";
+    req.body = {
+        question: "Who is bigger?",
+        answers: {
+            possible_answers: ["Elyon", "Jhw"],
+            correct_answers: [0]
+        }
+    };
+    let res = tasks_taskID_PUT(req);
+
+    expect(res).toBeInstanceOf(Response);
+    expect(res.status).toBe(400);
+    expect(res.text).toMatch("taskID is NaN");
+    expect(res.json).toBeNull();
+});
