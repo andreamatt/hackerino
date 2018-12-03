@@ -4,6 +4,7 @@ const Request = util.Request;
 const students_GET = students.students_GET;
 const students_POST = students.students_POST;
 const students_studentID_GET = students.students_studentID_GET;
+const students_studentID_PUT = students.students_studentID_PUT;
 
 beforeAll(() => {
 	describe("/students GET empty", () => {
@@ -271,6 +272,22 @@ describe("students/studentID GET", () => {
 		expect(response.status).toBe(404);
 		expect(response.json).toBeNull();
 	});
+
+	test("with bad param", () => {
+		let request = new Request();
+		request.params = { studentID: 9.2 };
+		let response = students_studentID_GET(request);
+		expect(response.status).toBe(404);
+		expect(response.json).toBeNull();
+	});
+
+	test("with non-ex id", () => {
+		let request = new Request();
+		request.params = { studentID: 99999999 };
+		let response = students_studentID_GET(request);
+		expect(response.status).toBe(404);
+		expect(response.json).toBeNull();
+	});
 });
 
 describe("students/studentID DELETE", () => {
@@ -291,6 +308,14 @@ describe("students/studentID DELETE", () => {
 		expect(response.json).toBeNull();
 	});
 
+	test("with bad param", () => {
+		let request = new Request();
+		request.params = { studentID: 0.5 };
+		let response = students.students_studentID_DELETE(request);
+		expect(response.status).toBe(400);
+		expect(response.json).toBeNull();
+	});
+
 	test("with not existing studentID", () => {
 		let request = new Request();
 		request.params = { studentID: id + 5 };
@@ -305,5 +330,103 @@ describe("students/studentID DELETE", () => {
 		let response = students.students_studentID_DELETE(request);
 		expect(response.status).toBe(204);
 		expect(response.json).toBeNull();
+	});
+
+});
+
+describe("students/studentID PUT", () => {
+	let request = new Request();
+	let id = 83721897;
+	request.params = { studentID: id };
+	request.body = {
+		email: "andrea.matte2",
+		first_name: "andrea",
+		last_name: "matte"
+	};
+	let response = students_studentID_PUT(request);
+	expect(response.status).toBe(201);
+
+	test("updating with good params", () => {
+		let request = new Request();
+		request.params = { studentID: id };
+		request.body = {
+			email: "andrea.matte2",
+			first_name: "asd",
+			last_name: "mk"
+		};
+		let response = students_studentID_PUT(request);
+		expect(response.status).toBe(200);
+	});
+
+	test("updating with bad params", () => {
+		let request = new Request();
+		request.params = { studentID: id };
+		request.body = {
+			email: "andrea.matte2",
+			first_name: 1,
+			last_name: "mk"
+		};
+		let response = students_studentID_PUT(request);
+		expect(response.status).toBe(400);
+	});
+
+	test("updating with bad params", () => {
+		let request = new Request();
+		request.params = { studentID: id };
+		request.body = {
+			email: "andrea.matte2",
+			first_name: "asd",
+			last_name: null
+		};
+		let response = students_studentID_PUT(request);
+		expect(response.status).toBe(400);
+	});
+
+	test("creating with existing email", () => {
+		let request = new Request();
+		request.params = { studentID: id + 2 };
+		request.body = {
+			email: "andrea.matte",
+			first_name: "undefined",
+			last_name: "null"
+		};
+		let response = students_studentID_PUT(request);
+		expect(response.status).toBe(423);
+	});
+
+	test("creating with bad params", () => {
+		let request = new Request();
+		request.params = { studentID: id + 4 };
+		request.body = {
+			email: "andrea.matte9",
+			first_name: "asd",
+			last_name: null
+		};
+		let response = students_studentID_PUT(request);
+		expect(response.status).toBe(400);
+	});
+
+	test("creating with bad params", () => {
+		let request = new Request();
+		request.params = { studentID: 9.2 };
+		request.body = {
+			email: "andrea.matte9",
+			first_name: "asd",
+			last_name: null
+		};
+		let response = students_studentID_PUT(request);
+		expect(response.status).toBe(400);
+	});
+
+	test("creating with bad params", () => {
+		let request = new Request();
+		request.params = { studentID: id + 100 };
+		request.body = {
+			email: "",
+			first_name: "asd",
+			last_name: "be"
+		};
+		let response = students_studentID_PUT(request);
+		expect(response.status).toBe(400);
 	});
 });

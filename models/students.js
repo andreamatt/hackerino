@@ -69,18 +69,15 @@ function students_POST(req) {
 }
 
 function students_studentID_GET(req) {
-	let id = parseInt(req.params.studentID);
-	if (!isInteger(id)) {
-		return new Response(404, "Bad studentID parameter", null);
-	}
-	if (!students_list[id]) {
-		return new Response(404, "Student not found", null);
-	}
+	let id = util.toInt(req.params.studentID);
+	if (!isInteger(id)) return new Response(404, "Bad studentID parameter", null);
+	if (!students_list[id]) return new Response(404, "Student not found", null);
+
 	return new Response(200, null, students_list[id]);
 }
 
 function students_studentID_PUT(req) {
-	let id = parseInt(req.query.studentID);
+	let id = util.toInt(req.params.studentID);
 	let email = req.body.email;
 	let first_name = req.body.first_name;
 	let last_name = req.body.last_name;
@@ -93,7 +90,7 @@ function students_studentID_PUT(req) {
 	if (students_list[id]) {
 		students_list[id].first_name = first_name;
 		students_list[id].last_name = last_name;
-		return new Response(200, null, students_list[id]);
+		return new Response(200, "Student updated", null);
 	} else {
 		let withEmail = Object.values(students_list).filter(stud => stud.email === email);
 		if (withEmail.length > 0) {
@@ -102,17 +99,17 @@ function students_studentID_PUT(req) {
 		let student = new Student(email, first_name, last_name);
 		student.id = id;
 		students_list[id] = student;
-		return new Response(201, null, student);
+		return new Response(201, "Student created", null);
 	}
 }
 
 function students_studentID_DELETE(req) {
-	let id = parseInt(req.params.studentID);
+	let id = util.toInt(req.params.studentID);
 	if (!isInteger(id)) return new Response(400, "Bad id path parameter", null);
 
 	if (students_list[id]) {
 		delete students_list[id];
-		return new Response(204, "student removed", null);
+		return new Response(204, "Student removed", null);
 	} else {
 		return new Response(404, "Could not remove the student with the specified ID (student not found).", null);
 	}

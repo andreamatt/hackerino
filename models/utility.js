@@ -1,5 +1,11 @@
 const isInteger = Number.isInteger;
 
+function toInt(value) {
+	if (/^(\-|\+)?([0-9]+|Infinity)$/.test(value))
+		return Number(value);
+	return NaN;
+}
+
 /**
  * Description: checks if passed value is a NON-EMPTY STRING
 */
@@ -119,4 +125,4 @@ function isStudent(stud) {
 	return true;
 }
 
-module.exports = { isInteger, isString, isNumber, isStringDate, isArray, isStudent, doOffset, doLimit, doOffsetLimit, Request, Response };
+module.exports = { toInt, isInteger, isString, isNumber, isStringDate, isArray, isStudent, isTask, doOffset, doLimit, doOffsetLimit, Request, Response };

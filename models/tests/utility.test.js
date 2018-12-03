@@ -11,7 +11,17 @@ const doOffset = util.doOffset;
 const doOffsetLimit = util.doOffsetLimit;
 const isStudent = util.isStudent;
 
-
+test("toInt function", () => {
+	let toInt = util.toInt;
+	expect(toInt(3)).toBe(3);
+	expect(toInt("-3")).toBe(-3);
+	expect(toInt("0")).toBe(0);
+	expect(toInt(9.3)).toBeNaN();
+	expect(toInt("9.3")).toBeNaN();
+	expect(toInt(null)).toBeNaN();
+	expect(toInt("Infinity")).toBe(Infinity);
+	expect(toInt(Infinity)).toBe(Infinity);
+});
 
 test('Request and response utilities', () => {
 	expect(new Request()).toMatchObject({
