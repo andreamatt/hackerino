@@ -1,3 +1,4 @@
+# NEED TO ADD EXAMPLES
 swagger: "2.0"
 info:
   version: "1.0"
@@ -56,12 +57,15 @@ paths:
             properties:
               date:
                 type: string
+                minLength: 1
                 format: date-time
               deadline:
                 type: string
+                minLength: 1
                 format: date-time
               review_deadline:
                 type: string
+                minLength: 1
                 format: date-time
       tags:
         - /exams
@@ -103,12 +107,15 @@ paths:
             properties:
               date:
                 type: string
+                minLength: 1
                 format: date-time
               deadline:
                 type: string
+                minLength: 1
                 format: date-time
               review_deadline:
                 type: string
+                minLength: 1
                 format: date-time
       tags:
         - /exams
@@ -383,8 +390,7 @@ paths:
                 type: integer
                 minimum: 1
               mark:
-                type: number
-                multipleOf: 0.01
+                type: integer
                 minimum: 0
                 maximum: 30
       tags:
@@ -438,8 +444,7 @@ paths:
                 type: integer
                 minimum: 1
               mark:
-                type: number
-                multipleOf: 0.01
+                type: integer
                 minimum: 0
                 maximum: 30
       tags:
@@ -505,7 +510,7 @@ paths:
         "400":
           description: Bad request.
     post:
-      description: Adds a submission / Overrides a submission if the same student has already submitted that task during this exam.
+      description: Adds a submission.
       parameters:
         - in: body
           name: submission
@@ -515,8 +520,6 @@ paths:
               - studentID
               - taskID
               - examID
-              - answer
-              - chosen_answer
             properties:
               studentID:
                 type: integer
@@ -528,12 +531,16 @@ paths:
                 type: integer
                 minimum: 1
               answer:
-                description: If it is a m-choice then ""
+                description: EITHER (NOT BOTH) THIS OR CHOSEN_ANSWERS MUST BE PRESENT. Written answer to an open question.
                 type: string
-              chosen_answer:
-                type: integer
-                minimum: -1
-                description: If it is an open question then -1
+                minLength: 1
+              chosen_answers:
+                description: EITHER (NOT BOTH) THIS OR ANSWER MUST BE PRESENT. Indexes of chosen answers from a mult-choice question.
+                type: array
+                minItems: 0
+                items:
+                  type: integer
+                  minimum: 0
       tags:
         - /submissions
       responses:
@@ -575,8 +582,6 @@ paths:
               - studentID
               - taskID
               - examID
-              - answer
-              - chosen_answer
             properties:
               studentID:
                 description: This parameter will be IGNORED if doing a put-update because it is part of a unique key constraint.
@@ -591,12 +596,16 @@ paths:
                 type: integer
                 minimum: 1
               answer:
-                description: If it is a m-choice then ""
+                description: EITHER (NOT BOTH) THIS OR CHOSEN_ANSWERS MUST BE PRESENT. Written answer to an open question.
                 type: string
-              chosen_answer:
-                type: integer
-                minimum: -1
-                description: If it is an open question then -1
+                minLength: 1
+              chosen_answers:
+                description: EITHER (NOT BOTH) THIS OR ANSWER MUST BE PRESENT. Indexes of chosen answers from a mult-choice question.
+                type: array
+                minItems: 0
+                items:
+                  type: integer
+                  minimum: 0
       tags:
         - /submissions
       responses:
@@ -692,11 +701,14 @@ paths:
             properties:
               email:
                 type: string
+                minLength: 1
                 format: email
               firstname:
                 type: string
+                minLength: 1
               lastname:
                 type: string
+                minLength: 1
       tags:
         - /teachers
       responses:
@@ -738,11 +750,14 @@ paths:
               email:
                 description: This parameter will be IGNORED if doing a put-update because it is part of a unique key constraint.
                 type: string
+                minLength: 1
                 format: email
               firstname:
                 type: string
+                minLength: 1
               lastname:
                 type: string
+                minLength: 1
       tags:
         - /teachers
       responses:
@@ -836,11 +851,14 @@ paths:
             properties:
               email:
                 type: string
+                minLength: 1
                 format: email
               firstname:
                 type: string
+                minLength: 1
               lastname:
                 type: string
+                minLength: 1
       tags:
         - /students
       responses:
@@ -882,11 +900,14 @@ paths:
               email:
                 description: This parameter will be IGNORED if doing a put-update because it is part of a unique key constraint.
                 type: string
+                minLength: 1
                 format: email
               firstname:
                 type: string
+                minLength: 1
               lastname:
                 type: string
+                minLength: 1
       tags:
         - /students
       responses:
@@ -1039,19 +1060,32 @@ paths:
           schema:
             type: object
             required:
-              - type
               - question
-              - possible_answers
             properties:
-              type:
-                type: string
-                enum: ["choice", "open"]
               question:
                 type: string
-              possible_answers:
-                type: array
-                items:
-                  type: string
+                minLength: 1
+              answers:
+                description: Multiple-choice questions have possible and correct answers.
+                type: object
+                properties:
+                  possible_answers:
+                    description: List of all answers the student can choose from
+                    type: array
+                    items:
+                      type: string
+                      minLength: 1
+                      minItems: 2
+                  correct_answers:
+                    description: Indexes of correct answers from the possible_answers array.
+                    type: array
+                    items:
+                      type: integer
+                      minimum: 0
+                      minItems: 1
+                required:
+                  - possible_answers
+                  - correct_answers
       tags:
         - /tasks
       responses:
@@ -1084,20 +1118,33 @@ paths:
           schema:
             type: object
             required:
-              - type
               - question
-              - possible_answers
             properties:
-              type:
-                type: string
-                enum: ["choice", "open"]
               question:
                 description: This parameter will be IGNORED if doing a put-update because it is part of a unique key constraint.
                 type: string
-              possible_answers:
-                type: array
-                items:
-                  type: string
+                minLength: 1
+              answers:
+                description: Multiple-choice questions have possible and correct answers.
+                type: object
+                properties:
+                  possible_answers:
+                    description: List of all answers the student can choose from
+                    type: array
+                    items:
+                      type: string
+                      minLength: 1
+                      minItems: 2
+                  correct_answers:
+                    description: Indexes of correct answers from the possible_answers array.
+                    type: array
+                    items:
+                      type: integer
+                      minimum: 0
+                      minItems: 1
+                required:
+                  - possible_answers
+                  - correct_answers
       tags:
         - /tasks
       responses:
@@ -1186,11 +1233,26 @@ paths:
       - $ref: "#/parameters/taskID"
     post:
       description: Send a review vote for a given task.
+      parameters:
+        - in: body
+          name: vote
+          required: true
+          schema:
+            type: object
+            properties:
+              vote:
+                type: integer
+                minimum: 0
+                maximum: 10
+            required:
+              - vote
       tags:
         - /tasks
       responses:
         "204":
           description: Your vote was received and the task's rating is updated.
+        "400":
+          description: Bad request.
         "404":
           description: A task with the specified taskID was not found.
 
@@ -1215,14 +1277,17 @@ definitions:
       date:
         description: Defines the starting time of the exam
         type: string
+        minLength: 1
         format: date-time
       deadline:
         description: Submissions to the exam are not allowed past this time
         type: string
+        minLength: 1
         format: date-time
       review_deadline:
         description: Every student must do a review for each assigned submission before this time
         type: string
+        minLength: 1
         format: date-time
       n_teachers:
         description: Number of teachers monitoring the exam
@@ -1257,13 +1322,16 @@ definitions:
       email:
         description: Student's email
         type: string
+        minLength: 1
         format: email
       firstname:
         description: First name of the student
         type: string
+        minLength: 1
       lastname:
         description: Last name of the student
         type: string
+        minLength: 1
     required:
       - id
       - email
@@ -1279,18 +1347,31 @@ definitions:
         description: Task identifier
         type: integer
         minimum: 1
-      type:
-        description: Tasks can be of different types
-        type: string
-        enum: ["choice", "open"]
       question:
-        description: Actual task is described
+        description: Written question
         type: string
-      possible_answers:
-        description: Contains acceptable answers to the task
-        type: array
-        items:
-          type: string
+        minLength: 1
+      answers:
+        description: Multiple-choice questions have possible and correct answers.
+        type: object
+        properties:
+          possible_answers:
+            description: List of all answers the student can choose from
+            type: array
+            items:
+              type: string
+              minLength: 1
+              minItems: 2
+          correct_answers:
+            description: Indexes of correct answers from the possible_answers array.
+            type: array
+            items:
+              type: integer
+              minimum: 0
+              minItems: 1
+        required:
+          - possible_answers
+          - correct_answers
       n_votes:
         description: Number of votes the task received from either students or teachers
         type: integer
@@ -1298,14 +1379,11 @@ definitions:
       rating:
         description: Average vote
         type: number
-        multipleOf: 0.01
         minimum: 0
-        maximum: 30
+        maximum: 10
     required:
       - id
-      - type
       - question
-      - possible_answers
       - n_votes
       - rating
 
@@ -1328,8 +1406,7 @@ definitions:
         minimum: 1
       mark:
         description: Mark given by the student to this submission
-        type: number
-        multipleOf: 0.01
+        type: integer
         minimum: 0
         maximum: 30
     required:
@@ -1360,22 +1437,24 @@ definitions:
         type: integer
         minimum: 1
       answer:
-        description: In case of an open question, answer is written here
+        description: EITHER (NOT BOTH) THIS OR CHOSEN_ANSWERS MUST BE PRESENT. Written answer to an open question.
         type: string
-      chosen_answer:
-        description: For multiple-choice question the answer is given as an integer, else -1
-        type: integer
-        minimum: -1
+        minLength: 1
+      chosen_answers:
+        description: EITHER (NOT BOTH) THIS OR ANSWER MUST BE PRESENT. Indexes of chosen answers from a mult-choice question.
+        type: array
+        minItems: 0
+        items:
+          type: integer
+          minimum: 0
       review_points:
         description: Rating given by the peer-review phase
-        type: number
-        multipleOf: 0.01
+        type: integer
         minimum: 0
         maximum: 30
       final_points:
         description: Final rating assigned to the submission
-        type: number
-        multipleOf: 0.01
+        type: integer
         minimum: 0
         maximum: 30
     required:
@@ -1383,8 +1462,6 @@ definitions:
       - student
       - task
       - exam
-      - answer
-      - chosen_answer
       - review_points
       - final_points
 
@@ -1400,13 +1477,16 @@ definitions:
       email:
         description: Email of the teacher
         type: string
+        minLength: 1
         format: email
       firstname:
         description: First name of the teacher
         type: string
+        minLength: 1
       lastname:
         description: Last name of the teacher
         type: string
+        minLength: 1
     required:
       - id
       - email
@@ -1431,6 +1511,7 @@ parameters:
     in: query
     name: email
     type: string
+    minLength: 1
     format: email
   examID:
     description: Exam's identifier
