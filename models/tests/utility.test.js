@@ -10,6 +10,7 @@ const doLimit = util.doLimit;
 const doOffset = util.doOffset;
 const doOffsetLimit = util.doOffsetLimit;
 const isStudent = util.isStudent;
+const isTeacher = util.isTeacher;
 
 test("toInt function", () => {
 	let toInt = util.toInt;
@@ -344,4 +345,55 @@ test("isStudent", () => {
 	expect(isStudent({})).toBe(false);
 	expect(isStudent(1)).toBe(false);
 	expect(isStudent(JSON.stringify(stud))).toBe(false);
+});
+
+test("isTeacher", () => {
+	let teach = {
+		id: 1,
+		email: "andrea@iossa",
+		first_name: "andrea",
+		last_name: "iossa"
+	};
+	expect(isTeacher(teach)).toBe(true);
+	teach.id = -1;
+	expect(isTeacher(teach)).toBe(false);
+	teach.id = 0;
+	expect(isTeacher(teach)).toBe(false);
+	teach.id = "asd";
+	expect(isTeacher(teach)).toBe(false);
+	teach.id = null;
+	expect(isTeacher(teach)).toBe(false);
+	delete teach["id"];
+	expect(isTeacher(teach)).toBe(false);
+	teach.id = undefined;
+	expect(isTeacher(teach)).toBe(false);
+	teach.id = "1";
+	expect(isTeacher(teach)).toBe(false);
+	teach.id = 1;
+	teach.email = undefined;
+	expect(isTeacher(teach)).toBe(false);
+	delete teach["email"];
+	expect(isTeacher(teach)).toBe(false);
+	teach.email = null;
+	expect(isTeacher(teach)).toBe(false);
+	teach.email = 123;
+	expect(isTeacher(teach)).toBe(false);
+	teach.email = "";
+	expect(isTeacher(teach)).toBe(false);
+	teach.email = "a.b@c";
+	teach.first_name = null;
+	expect(isTeacher(teach)).toBe(false);
+	teach.first_name = undefined;
+	expect(isTeacher(teach)).toBe(false);
+	teach.first_name = "asd";
+	teach.last_name = null;
+	expect(isTeacher(teach)).toBe(false);
+	teach.last_name = "b";
+	expect(isTeacher(teach)).toBe(true);
+	expect(isTeacher(null)).toBe(false);
+	expect(isTeacher()).toBe(false);
+	expect(isTeacher([])).toBe(false);
+	expect(isTeacher({})).toBe(false);
+	expect(isTeacher(1)).toBe(false);
+	expect(isTeacher(JSON.stringify(teach))).toBe(false);
 });

@@ -125,4 +125,13 @@ function isStudent(stud) {
 	return true;
 }
 
-module.exports = { toInt, isInteger, isString, isNumber, isStringDate, isArray, isStudent, isTask, doOffset, doLimit, doOffsetLimit, Request, Response };
+function isTeacher(teach) {
+	if (!teach) return false;
+	if (!isInteger(teach.id) || teach.id < 1) return false;
+	if (!isString(teach.email)) return false;
+	if (!isString(teach.first_name)) return false;
+	if (!isString(teach.last_name)) return false;
+	return true;
+}
+
+module.exports = { toInt, isInteger, isString, isNumber, isStringDate, isArray, isStudent, isTeacher, isTask, doOffset, doLimit, doOffsetLimit, Request, Response };
