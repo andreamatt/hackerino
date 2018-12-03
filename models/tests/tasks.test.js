@@ -6,6 +6,7 @@ const isTask = util.isTask;
 const tasks = require("../tasks.js");
 const tasks_GET = tasks.tasks_GET;
 const tasks_POST = tasks.tasks_POST;
+const tasks_taskID_GET = tasks.tasks_taskID_GET;
 
 
 
@@ -27,7 +28,7 @@ test("generic tasks_GET", () => {
 test("tasks_GET with limit and empty tasks_list", () => {
     let req = new Request();
     let res = tasks_GET(req);
-    req.query.limit = 10;
+    req.query.limit = "10";
 
     expect(res).toBeInstanceOf(Response);
     expect(res.status).toBe(200);
@@ -44,7 +45,7 @@ test("tasks_GET with limit and empty tasks_list", () => {
 test("tasks_GET with offset", () => {
     let req = new Request();
     let res = tasks_GET(req);
-    req.query.offset = 0;
+    req.query.offset = "0";
 
     expect(res).toBeInstanceOf(Response);
     expect(res.status).toBe(200);
@@ -59,8 +60,8 @@ test("tasks_GET with offset", () => {
 
 test("tasks_GET with offset and limit", () => {
     let req = new Request();
-    req.query.offset = 1;
-    req.query.limit = 10;
+    req.query.offset = "1";
+    req.query.limit = "10";
     let res = tasks_GET(req);
 
     expect(res).toBeInstanceOf(Response);
@@ -76,7 +77,7 @@ test("tasks_GET with offset and limit", () => {
 
 test("tasks_GET with negative limit", () => {
     let req = new Request();
-    req.query.limit = -2;
+    req.query.limit = "-2";
     let res = tasks_GET(req);
 
     expect(res).toBeInstanceOf(Response);
@@ -87,7 +88,7 @@ test("tasks_GET with negative limit", () => {
 
 test("tasks_GET with limit Nan", () => {
     let req = new Request();
-    req.query.limit = "10";
+    req.query.limit = "notAnumber";
     let res = tasks_GET(req);
 
     expect(res).toBeInstanceOf(Response);
@@ -98,7 +99,7 @@ test("tasks_GET with limit Nan", () => {
 
 test("tasks_GET with negative offset", () => {
     let req = new Request();
-    req.query.offset = -2;
+    req.query.offset = "-2";
     let res = tasks_GET(req);
 
     expect(res).toBeInstanceOf(Response);
@@ -109,7 +110,7 @@ test("tasks_GET with negative offset", () => {
 
 test("tasks_GET with offset Nan", () => {
     let req = new Request();
-    req.query.offset = "10";
+    req.query.offset = "notAnumber";
     let res = tasks_GET(req);
 
     expect(res).toBeInstanceOf(Response);
@@ -175,8 +176,7 @@ test("tasks_POST with open question task (no answers property)", () => {
 
     expect(res).toBeInstanceOf(Response);
     expect(res.status).toBe(201);
-    expect(res.json).toBeDefined();
-    expect(res.text).toBe(null);
+    expect(res.text).toBeNull;
     expect(res.json).toBeDefined();
     expect(isTask(res.json).bool).toBe(true);
 });
@@ -264,3 +264,61 @@ test("tasks_POST with extra properties in answers", () => {
     expect(res.text).toMatch("answers has invalid number of properties");
     expect(res.json).toBeNull();
 });
+
+test("tasks_taskID_GET with id=1", () => {
+    let req = new Request();
+    req.params.taskID = "1";
+    let res = tasks_taskID_GET(req);
+
+    expect(res).toBeInstanceOf(Response);
+    expect(res.status).toBe(200);
+    expect(res.text).toBeNull;
+    expect(res.json).toBeDefined();
+    expect(isTask(res.json).bool).toBe(true);
+});
+
+test("tasks_taskID_GET with non existant id", () => {
+    let req = new Request();
+    req.params.taskID = "12345678";
+    let res = tasks_taskID_GET(req);
+
+    expect(res).toBeInstanceOf(Response);
+    expect(res.status).toBe(404);
+    expect(res.text).toMatch("A task with the specified taskID was not found");
+    expect(res.json).toBeNull();
+});
+
+test("tasks_taskID_GET with id=50", () => {
+    let req = new Request();
+    req.params.taskID = "50";
+    let res = tasks_taskID_GET(req);
+
+    expect(res).toBeInstanceOf(Response);
+    expect(res.status).toBe(200);
+    expect(res.text).toBeNull;
+    expect(res.json).toBeDefined();
+    expect(isTask(res.json).bool).toBe(true);
+});
+
+test("tasks_taskID_GET with id NaN", () => {
+    let req = new Request();
+    req.params.taskID = "task12";
+    let res = tasks_taskID_GET(req);
+
+    expect(res).toBeInstanceOf(Response);
+    expect(res.status).toBe(400);
+    expect(res.text).toMatch("taskID is NaN");
+    expect(res.json).toBeNull();
+});
+
+test("tasks_taskID_GET with id=0", () => {
+    let req = new Request();
+    req.params.taskID = "0";
+    let res = tasks_taskID_GET(req);
+
+    expect(res).toBeInstanceOf(Response);
+    expect(res.status).toBe(400);
+    expect(res.text).toMatch("taskID invalid value");
+    expect(res.json).toBeNull();
+});
+

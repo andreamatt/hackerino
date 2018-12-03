@@ -55,12 +55,11 @@ Task.prototype.toString = function () {
 };
 
 function tasks_GET(req) {
-    let limit = req.query.limit;
-    let offset = req.query.offset;
     let tasks = Object.values(tasks_list);
     let tot_tasks = tasks.length;
 
-    if (limit !== undefined) {
+    if (req.query.limit !== undefined) {
+        let limit = parseInt(req.query.limit);
         if (!isInteger(limit)) {
             return new Response(400, "limit is NaN", null);
         }
@@ -69,7 +68,8 @@ function tasks_GET(req) {
         }
         tasks = doLimit(tasks, limit);
     }
-    if (offset !== undefined) {
+    if (req.query.offset !== undefined) {
+        let offset = parseInt(req.query.offset);
         if (!isInteger(offset)) {
             return new Response(400, "offset is NaN", null);
         }
@@ -100,4 +100,20 @@ function tasks_POST(req) {
     }
 }
 
-module.exports = { Task, tasks_GET, tasks_POST };
+function tasks_taskID_GET(req) {
+    let id = parseInt(req.params.taskID);
+
+    if (!isInteger(id)) {
+        return new Response(400, "taskID is NaN", null);
+    }
+    if (id < 1) { 
+        return new Response(400, "taskID invalid value", null);
+    }
+    if (tasks_list[id]) {
+        return new Response(200, null, tasks_list[id]);
+    } else {
+        return new Response(404, "A task with the specified taskID was not found", null);
+    }
+}
+
+module.exports = { tasks_GET, tasks_POST, tasks_taskID_GET };
