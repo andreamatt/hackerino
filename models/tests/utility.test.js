@@ -49,6 +49,7 @@ test('Request and response utilities', () => {
 
 test("isString", () => {
 	expect(isString('asd')).toBe(true);
+	expect(isString('0')).toBe(true);
 
 	expect(isString('')).toBe(false);
 	expect(isString(1)).toBe(false);
@@ -262,25 +263,25 @@ test('doLimit', () => {
 });
 
 test('doOffsetLimit', () => {
-	expect(util.doOffsetLimit([1, {}, [1, 2], "a", 3, 4, 5], 2, 0)).toEqual([]);
-	expect(util.doOffsetLimit([1, {}, [1, 2], "a", 3, 4, 5], 2, 1)).toEqual([[1, 2]]);
-	expect(util.doOffsetLimit([1, {}, [1, 2], "a", 3, 4, 5], 2, 3)).toEqual([[1, 2], "a", 3]);
-	expect(util.doOffsetLimit([1, {}, [1, 2], "a", 3, 4, 5], 0, 99999)).toEqual([1, {}, [1, 2], "a", 3, 4, 5]);
-	expect(util.doOffsetLimit([1, {}, [1, 2], "a", 3, 4, 5], 0, 6)).toEqual([1, {}, [1, 2], "a", 3, 4]);
-	expect(util.doOffsetLimit([1, {}, [1, 2], "a", 3, 4, 5], 99999, 99999)).toEqual([]);
-	expect(util.doOffsetLimit([1, {}, [1, 2], "a", 3, 4, 5], 0, 99999).length).toBe(7);
+	expect(doOffsetLimit([1, {}, [1, 2], "a", 3, 4, 5], 2, 0)).toEqual([]);
+	expect(doOffsetLimit([1, {}, [1, 2], "a", 3, 4, 5], 2, 1)).toEqual([[1, 2]]);
+	expect(doOffsetLimit([1, {}, [1, 2], "a", 3, 4, 5], 2, 3)).toEqual([[1, 2], "a", 3]);
+	expect(doOffsetLimit([1, {}, [1, 2], "a", 3, 4, 5], 0, 99999)).toEqual([1, {}, [1, 2], "a", 3, 4, 5]);
+	expect(doOffsetLimit([1, {}, [1, 2], "a", 3, 4, 5], 0, 6)).toEqual([1, {}, [1, 2], "a", 3, 4]);
+	expect(doOffsetLimit([1, {}, [1, 2], "a", 3, 4, 5], 99999, 99999)).toEqual([]);
+	expect(doOffsetLimit([1, {}, [1, 2], "a", 3, 4, 5], 0, 99999).length).toBe(7);
 
-	expect(() => util.doOffsetLimit([1, {}, [1, 2], "a", 3, 4, 5], -1, 10)).toThrow();
-	expect(() => util.doOffsetLimit([1, {}, [1, 2], "a", 3, 4, 5], null, 10)).toThrow();
-	expect(() => util.doOffsetLimit([1, {}, [1, 2], "a", 3, 4, 5], 10, null)).toThrow();
-	expect(() => util.doOffsetLimit([1, {}, [1, 2], "a", 3, 4, 5], 10, -1)).toThrow();
-	expect(() => util.doOffsetLimit([1, {}, [1, 2], "a", 3, 4, 5], undefined, 10, 10)).toThrow();
-	expect(() => util.doOffsetLimit([1, {}, [1, 2], "a", 3, 4, 5], 1 / 0, 10)).toThrow();
-	expect(() => util.doOffsetLimit([1, {}, [1, 2], "a", 3, 4, 5])).toThrow();
-	expect(() => util.doOffsetLimit(null, 1, 1)).toThrow();
-	expect(() => util.doOffsetLimit("a", 1, 1)).toThrow();
-	expect(() => util.doOffsetLimit(1, 1, 1)).toThrow();
-	expect(() => util.doOffsetLimit(1, null, null)).toThrow();
+	expect(() => doOffsetLimit([1, {}, [1, 2], "a", 3, 4, 5], -1, 10)).toThrow();
+	expect(() => doOffsetLimit([1, {}, [1, 2], "a", 3, 4, 5], null, 10)).toThrow();
+	expect(() => doOffsetLimit([1, {}, [1, 2], "a", 3, 4, 5], 10, null)).toThrow();
+	expect(() => doOffsetLimit([1, {}, [1, 2], "a", 3, 4, 5], 10, -1)).toThrow();
+	expect(() => doOffsetLimit([1, {}, [1, 2], "a", 3, 4, 5], undefined, 10, 10)).toThrow();
+	expect(() => doOffsetLimit([1, {}, [1, 2], "a", 3, 4, 5], 1 / 0, 10)).toThrow();
+	expect(() => doOffsetLimit([1, {}, [1, 2], "a", 3, 4, 5])).toThrow();
+	expect(() => doOffsetLimit(null, 1, 1)).toThrow();
+	expect(() => doOffsetLimit("a", 1, 1)).toThrow();
+	expect(() => doOffsetLimit(1, 1, 1)).toThrow();
+	expect(() => doOffsetLimit(1, null, null)).toThrow();
 });
 
 
@@ -288,8 +289,8 @@ test("isStudent", () => {
 	let stud = {
 		id: 1,
 		email: "andrea@mat",
-		firstname: "andrea",
-		lastname: "matte"
+		first_name: "andrea",
+		last_name: "matte"
 	};
 	expect(isStudent(stud)).toBe(true);
 	stud.id = -1;
@@ -318,14 +319,14 @@ test("isStudent", () => {
 	stud.email = "";
 	expect(isStudent(stud)).toBe(false);
 	stud.email = "a.b@c";
-	stud.firstname = null;
+	stud.first_name = null;
 	expect(isStudent(stud)).toBe(false);
-	stud.firstname = undefined;
+	stud.first_name = undefined;
 	expect(isStudent(stud)).toBe(false);
-	stud.firstname = "asd";
-	stud.lastname = null;
+	stud.first_name = "asd";
+	stud.last_name = null;
 	expect(isStudent(stud)).toBe(false);
-	stud.lastname = "b";
+	stud.last_name = "b";
 	expect(isStudent(stud)).toBe(true);
 	expect(isStudent(null)).toBe(false);
 	expect(isStudent()).toBe(false);

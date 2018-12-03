@@ -74,21 +74,21 @@ function isTask(task) {
 }
 
 function doOffset(collection, offset) {
-	if (!isArray(collection) || !isNumber(offset) || offset < 0) {
+	if (!isArray(collection) || !isInteger(offset) || offset < 0) {
 		throw new Error("Bad doOffset parameters");
 	}
 	return collection.slice(offset);
 }
 
 function doLimit(collection, limit) {
-	if (!isArray(collection) || !isNumber(limit) || limit < 0) {
+	if (!isArray(collection) || !isInteger(limit) || limit < 0) {
 		throw new Error("Bad doLimit parameters");
 	}
 	return collection.slice(0, limit);
 }
 
 function doOffsetLimit(collection, offset, limit) {
-	if (!isArray(collection) || !isNumber(offset) || offset < 0 || !isNumber(limit) || limit < 0) {
+	if (!isArray(collection) || !isInteger(offset) || offset < 0 || !isInteger(limit) || limit < 0) {
 		throw new Error("Bad doOffsetLimit parameters");
 	}
 	let withOffset = doOffset(collection, offset);
@@ -102,7 +102,7 @@ function Request() {
 }
 
 function Response(status, text, json) {
-	if (arguments.length !== 3 || (!isNumber(status) || status < 0) || (!json && !isString(text)) || (json && isString(text))) {
+	if (arguments.length !== 3 || (!isInteger(status) || status < 0) || (!json && !isString(text)) || (json && isString(text))) {
 		throw new Error("Wrong response parameters");
 	}
 	this.status = status;
@@ -112,11 +112,11 @@ function Response(status, text, json) {
 
 function isStudent(stud) {
 	if (!stud) return false;
-	if (!isNumber(stud.id) || stud.id < 1) return false;
+	if (!isInteger(stud.id) || stud.id < 1) return false;
 	if (!isString(stud.email)) return false;
-	if (!isString(stud.firstname)) return false;
-	if (!isString(stud.lastname)) return false;
+	if (!isString(stud.first_name)) return false;
+	if (!isString(stud.last_name)) return false;
 	return true;
 }
 
-module.exports = { isString, isNumber, isStringDate, isArray, isStudent, doOffset, doLimit, doOffsetLimit, Request, Response };
+module.exports = { isInteger, isString, isNumber, isStringDate, isArray, isStudent, doOffset, doLimit, doOffsetLimit, Request, Response };
