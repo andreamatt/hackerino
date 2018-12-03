@@ -696,17 +696,17 @@ paths:
             type: object
             required:
               - email
-              - firstname
-              - lastname
+              - first_name
+              - last_name
             properties:
               email:
                 type: string
                 minLength: 1
                 format: email
-              firstname:
+              first_name:
                 type: string
                 minLength: 1
-              lastname:
+              last_name:
                 type: string
                 minLength: 1
       tags:
@@ -744,18 +744,18 @@ paths:
             type: object
             required:
               - email
-              - firstname
-              - lastname
+              - first_name
+              - last_name
             properties:
               email:
                 description: This parameter will be IGNORED if doing a put-update because it is part of a unique key constraint.
                 type: string
                 minLength: 1
                 format: email
-              firstname:
+              first_name:
                 type: string
                 minLength: 1
-              lastname:
+              last_name:
                 type: string
                 minLength: 1
       tags:
@@ -846,17 +846,17 @@ paths:
             type: object
             required:
               - email
-              - firstname
-              - lastname
+              - first_name
+              - last_name
             properties:
               email:
                 type: string
                 minLength: 1
                 format: email
-              firstname:
+              first_name:
                 type: string
                 minLength: 1
-              lastname:
+              last_name:
                 type: string
                 minLength: 1
       tags:
@@ -894,18 +894,18 @@ paths:
             type: object
             required:
               - email
-              - firstname
-              - lastname
+              - first_name
+              - last_name
             properties:
               email:
                 description: This parameter will be IGNORED if doing a put-update because it is part of a unique key constraint.
                 type: string
                 minLength: 1
                 format: email
-              firstname:
+              first_name:
                 type: string
                 minLength: 1
-              lastname:
+              last_name:
                 type: string
                 minLength: 1
       tags:
@@ -1324,19 +1324,19 @@ definitions:
         type: string
         minLength: 1
         format: email
-      firstname:
+      first_name:
         description: First name of the student
         type: string
         minLength: 1
-      lastname:
+      last_name:
         description: Last name of the student
         type: string
         minLength: 1
     required:
       - id
       - email
-      - firstname
-      - lastname
+      - first_name
+      - last_name
 
   Task:
     title: Task
@@ -1479,19 +1479,19 @@ definitions:
         type: string
         minLength: 1
         format: email
-      firstname:
+      first_name:
         description: First name of the teacher
         type: string
         minLength: 1
-      lastname:
+      last_name:
         description: Last name of the teacher
         type: string
         minLength: 1
     required:
       - id
       - email
-      - firstname
-      - lastname
+      - first_name
+      - last_name
 
 parameters:
   limit:
