@@ -3,6 +3,7 @@ const util = require('../utility');
 const Request = util.Request;
 const students_GET = students.students_GET;
 const students_POST = students.students_POST;
+const students_studentID_GET = students.students_studentID_GET;
 
 beforeAll(() => {
 	describe("/students GET empty", () => {
@@ -244,4 +245,65 @@ describe("students POST with bad parameters", () => {
 	expect(response.status).toBe(400);
 	expect(util.isString(response.text)).toBe(true);
 	expect(response.json).toBeNull();
+});
+
+describe("students/studentID GET", () => {
+	let request = new Request();
+	request.body = {
+		email: "andrea.matte",
+		first_name: "andrea",
+		last_name: "matte"
+	};
+	let response = students_POST(request);
+	let id = response.json.id;
+	test("with ok param", () => {
+		let request = new Request();
+		request.params = { studentID: id };
+		let response = students_studentID_GET(request);
+		expect(response.status).toBe(200);
+		expect(response.json.id).toBe(id);
+	});
+
+	test("with bad param", () => {
+		let request = new Request();
+		request.params = { studentID: "asd" };
+		let response = students_studentID_GET(request);
+		expect(response.status).toBe(404);
+		expect(response.json).toBeNull();
+	});
+});
+
+describe("students/studentID DELETE", () => {
+	let request = new Request();
+	request.body = {
+		email: "andrea.iossa",
+		first_name: "andrea",
+		last_name: "iossa"
+	};
+	let response = students_POST(request);
+	let id = response.json.id;
+
+	test("with bad param", () => {
+		let request = new Request();
+		request.params = { studentID: "asd" };
+		let response = students.students_studentID_DELETE(request);
+		expect(response.status).toBe(400);
+		expect(response.json).toBeNull();
+	});
+
+	test("with not existing studentID", () => {
+		let request = new Request();
+		request.params = { studentID: id + 5 };
+		let response = students.students_studentID_DELETE(request);
+		expect(response.status).toBe(404);
+		expect(response.json).toBeNull();
+	});
+
+	test("with ok param", () => {
+		let request = new Request();
+		request.params = { studentID: id };
+		let response = students.students_studentID_DELETE(request);
+		expect(response.status).toBe(204);
+		expect(response.json).toBeNull();
+	});
 });

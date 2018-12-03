@@ -58,14 +58,25 @@ function students_POST(req) {
 	if (!isString(first_name)) return new Response(400, "Bad first_name body parameter", null);
 	if (!isString(last_name)) return new Response(400, "Bad last_name body parameter", null);
 
-	let withEmail = Object.values(students_list).filter(stud => stud.email === email);
-	if (withEmail.length > 0) {
+	let byEmail = Object.values(students_list).filter(stud => stud.email === email);
+	if (byEmail.length > 0) {
 		return new Response(423, "A student with such email already exists", null);
 	}
 
 	let stud = new Student(email, first_name, last_name);
 	students_list[stud.id] = stud;
 	return new Response(201, null, stud);
+}
+
+function students_studentID_GET(req) {
+	let id = parseInt(req.params.studentID);
+	if (!isInteger(id)) {
+		return new Response(404, "Bad studentID parameter", null);
+	}
+	if (!students_list[id]) {
+		return new Response(404, "Student not found", null);
+	}
+	return new Response(200, null, students_list[id]);
 }
 
 function students_studentID_PUT(req) {
@@ -107,4 +118,4 @@ function students_studentID_DELETE(req) {
 	}
 }
 
-module.exports = { students_GET, students_POST, students_studentID_PUT, students_studentID_DELETE };
+module.exports = { students_GET, students_POST, students_studentID_GET, students_studentID_PUT, students_studentID_DELETE };
