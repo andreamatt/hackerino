@@ -30,51 +30,51 @@ function isArray(value) {
 
 function isTask(task) {
 	if (!task)
-		return { bool: false, error: "task is falsy" };
+		return { bool: false, error: "Task is falsy" };
 	if (!isInteger(task.id))
-		return { bool: false, error: "task id is not an integer" };
+		return { bool: false, error: "Task id is not an integer" };
 	if (task.id <= 0)
-		return { bool: false, error: "task id is negative" };
+		return { bool: false, error: "Task id is negative" };
 
 	if (!task.question)
-		return { bool: false, error: "question is falsy" };
+		return { bool: false, error: "Question is falsy" };
 	if (!isString(task.question))
-		return { bool: false, error: "question is not a string or an empty one" };
+		return { bool: false, error: "Question is not a string or an empty one" };
 
 	if (task.answers) {
-		if (!task.answers.possible_answers)
-			return { bool: false, error: "possible_answers is falsy" };
 		if (Object.keys(task.answers).length > 2)
-			return { bool: false, error: "answers has invalid number of properties" };
+			return { bool: false, error: "Answers has invalid number of properties" };
 
+		if (!task.answers.possible_answers)
+			return { bool: false, error: "Possible_answers is falsy" };
 		if (!isArray(task.answers.possible_answers))
-			return { bool: false, error: "possible_answers is not an array" };
+			return { bool: false, error: "Possible_answers is not an array" };
 		if (task.answers.possible_answers.length < 2)
-			return { bool: false, error: "possible_answers must have at least two answers" };
+			return { bool: false, error: "Possible_answers must have at least two answers" };
 		if (!task.answers.possible_answers.every(possible_answer => isString(possible_answer)))
-			return { bool: false, error: "some possible answers are not strings or are empty strings" };
+			return { bool: false, error: "Some possible answers are not strings or are empty strings" };
 
 		if (!task.answers.correct_answers)
-			return { bool: false, error: "correct_answers is falsy" };
+			return { bool: false, error: "Correct_answers is falsy" };
 		if (!isArray(task.answers.correct_answers))
-			return { bool: false, error: "correct_answers is not an array" };
+			return { bool: false, error: "Correct_answers is not an array" };
 		if (task.answers.correct_answers.length < 1)
-			return { bool: false, error: "there must be at least one correct answer" };
+			return { bool: false, error: "There must be at least one correct answer" };
 		if (!task.answers.correct_answers.every(correct_answer => isInteger(correct_answer)))
-			return { bool: false, error: "some correct_answers indices are not integers" };
+			return { bool: false, error: "Some correct_answers indices are not integers" };
 		if (!task.answers.correct_answers.every(correct_answer => correct_answer >= 0))
-			return { bool: false, error: "some correct_answers indices are negative" };
+			return { bool: false, error: "Some correct_answers indices are negative" };
 		if (!task.answers.correct_answers.every(correct_answer => correct_answer < task.answers.possible_answers.length))
-			return { bool: false, error: "some correct_answers indices are out of range" };
+			return { bool: false, error: "Some correct_answers indices are out of range" };
 	}
 	if (!isInteger(task.n_votes) || task.n_votes < 0)
-		return { bool: false, error: "n_votes is not an integer" };
+		return { bool: false, error: "N_votes is not an integer" };
 	if (!isNumber(task.rating))
-		return { bool: false, error: "rating is not a number" };
+		return { bool: false, error: "Rating is not a number" };
 	if (task.rating < 0 || task.rating > 10)
-		return { bool: false, error: "rating is out of range" };
+		return { bool: false, error: "Rating is out of range" };
 	if (Object.keys(task).length !== 4 && Object.keys(task).length !== 5)
-		return { bool: false, error: "task has invalid number of properties" };
+		return { bool: false, error: "Task has invalid number of properties" };
 
 	return { bool: true, error: null };
 }

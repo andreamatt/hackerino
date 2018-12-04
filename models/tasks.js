@@ -52,20 +52,20 @@ function tasks_GET(req) {
     if (req.query.limit !== undefined) {
         let limit = toInt(req.query.limit);
         if (!isInteger(limit)) {
-            return new Response(400, "limit is NaN", null);
+            return new Response(400, "Limit is NaN", null);
         }
         if (limit < 0) {
-            return new Response(400, "limit is negative", null);
+            return new Response(400, "Limit is negative", null);
         }
         tasks = doLimit(tasks, limit);
     }
     if (req.query.offset !== undefined) {
         let offset = toInt(req.query.offset);
         if (!isInteger(offset)) {
-            return new Response(400, "offset is NaN", null);
+            return new Response(400, "Offset is NaN", null);
         }
         if (offset < 0) {
-            return new Response(400, "offset is negative", null);
+            return new Response(400, "Offset is negative", null);
         }
         tasks = doOffset(tasks, offset);
     }
@@ -74,30 +74,34 @@ function tasks_GET(req) {
 
 function tasks_POST(req) {
     if (Object.keys(req.body).length > 2) {
-        return new Response(400, "request body has invalid number of properties", null);
+        return new Response(400, "Request body has invalid number of properties", null);
     }
 
     let result = createTask(null, req.body.question, req.body.answers);
     let task = result.task;
     let isTask = result.isTask.bool;
     let errMsg = result.isTask.error;
-    if (isTask === true) {
-        tasks_list[task.id] = task;
-        return new Response(201, null, task);
-    }
-    else {
+    if (!isTask === true) {
         return new Response(400, errMsg, null);
     }
+
+    let byQuestion = Object.values(tasks_list).filter(t => t.question === task.question);
+    if (byQuestion.length > 0) {
+        return new Response(423, "A task with such question already exists", null);
+    }
+
+    tasks_list[task.id] = task;
+    return new Response(201, null, task);
 }
 
 function tasks_taskID_GET(req) {
     let id = toInt(req.params.taskID);
 
     if (!isInteger(id)) {
-        return new Response(400, "taskID is NaN", null);
+        return new Response(400, "TaskID is NaN", null);
     }
     if (id < 1) {
-        return new Response(400, "taskID invalid value", null);
+        return new Response(400, "TaskID invalid value", null);
     }
     if (!tasks_list[id]) {
         return new Response(404, "A task with the specified taskID was not found", null);
@@ -108,10 +112,10 @@ function tasks_taskID_GET(req) {
 function tasks_taskID_PUT(req) {
     let id = toInt(req.params.taskID);
     if (!isInteger(id)) {
-        return new Response(400, "taskID is NaN", null);
+        return new Response(400, "TaskID is NaN", null);
     }
     if (id < 1) {
-        return new Response(400, "taskID invalid value", null);
+        return new Response(400, "TaskID invalid value", null);
     }
 
     let status;
@@ -131,6 +135,11 @@ function tasks_taskID_PUT(req) {
         return new Response(400, errMsg, null);
     }
 
+    let byQuestion = Object.values(tasks_list).filter(t => t.question === task.question);
+    if (byQuestion.length > 0) {
+        return new Response(423, "A task with such question already exists", null);
+    }
+
     tasks_list[task.id] = task;
     if (status === "update") {
         return new Response(200, "Task updated", null);
@@ -143,10 +152,10 @@ function tasks_taskID_DELETE(req) {
     let id = toInt(req.params.taskID);
 
     if (!isInteger(id)) {
-        return new Response(400, "taskID is NaN", null);
+        return new Response(400, "TaskID is NaN", null);
     }
     if (id < 1) {
-        return new Response(400, "taskID invalid value", null);
+        return new Response(400, "TaskID invalid value", null);
     }
     if (!tasks_list[id]) {
         return new Response(404, "A task with the specified taskID was not found", null);

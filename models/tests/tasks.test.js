@@ -84,7 +84,7 @@ describe("/tasks GET", () => {
 
         expect(res).toBeInstanceOf(Response);
         expect(res.status).toBe(400);
-        expect(res.text).toMatch("limit is negative");
+        expect(res.text).toMatch("Limit is negative");
         expect(res.json).toBeNull();
     });
 
@@ -95,7 +95,7 @@ describe("/tasks GET", () => {
 
         expect(res).toBeInstanceOf(Response);
         expect(res.status).toBe(400);
-        expect(res.text).toMatch("limit is NaN");
+        expect(res.text).toMatch("Limit is NaN");
         expect(res.json).toBeNull();
     });
 
@@ -106,7 +106,7 @@ describe("/tasks GET", () => {
 
         expect(res).toBeInstanceOf(Response);
         expect(res.status).toBe(400);
-        expect(res.text).toMatch("offset is negative");
+        expect(res.text).toMatch("Offset is negative");
         expect(res.json).toBeNull();
     });
 
@@ -117,7 +117,7 @@ describe("/tasks GET", () => {
 
         expect(res).toBeInstanceOf(Response);
         expect(res.status).toBe(400);
-        expect(res.text).toMatch("offset is NaN");
+        expect(res.text).toMatch("Offset is NaN");
         expect(res.json).toBeNull();
     });
 });
@@ -134,6 +134,7 @@ describe("/tasks POST", () => {
             }
         };
         for (let i = 1; i < 100; i++) {
+            req_POST.body.question = "How old is Earth?" + i;
             let res_POST = tasks_POST(req_POST);
             expect(res_POST).toBeInstanceOf(Response);
             expect(res_POST.status).toBe(201);
@@ -155,6 +156,19 @@ describe("/tasks POST", () => {
         }
     });
 
+    test("tasks_POST with open with arleady existing question", () => {
+        let req = new Request();
+        req.body = {
+            question: "How old is Earth?1"
+        };
+        let res = tasks_POST(req);
+
+        expect(res).toBeInstanceOf(Response);
+        expect(res.status).toBe(423);
+        expect(res.text).toMatch("A task with such question already exists");
+        expect(res.json).toBeNull();
+    });
+
     test("tasks_POST with no question", () => {
         let req = new Request();
         req.body = {
@@ -167,7 +181,7 @@ describe("/tasks POST", () => {
 
         expect(res).toBeInstanceOf(Response);
         expect(res.status).toBe(400);
-        expect(res.text).toMatch("question is falsy");
+        expect(res.text).toMatch("Question is falsy");
         expect(res.json).toBeNull();
     });
 
@@ -197,7 +211,7 @@ describe("/tasks POST", () => {
 
         expect(res).toBeInstanceOf(Response);
         expect(res.status).toBe(400);
-        expect(res.text).toMatch("correct_answers is falsy");
+        expect(res.text).toMatch("Correct_answers is falsy");
         expect(res.json).toBeNull();
     });
 
@@ -213,7 +227,7 @@ describe("/tasks POST", () => {
 
         expect(res).toBeInstanceOf(Response);
         expect(res.status).toBe(400);
-        expect(res.text).toMatch("possible_answers is falsy");
+        expect(res.text).toMatch("Possible_answers is falsy");
         expect(res.json).toBeNull();
     });
 
@@ -227,7 +241,7 @@ describe("/tasks POST", () => {
 
         expect(res).toBeInstanceOf(Response);
         expect(res.status).toBe(400);
-        expect(res.text).toMatch("possible_answers is falsy");
+        expect(res.text).toMatch("Possible_answers is falsy");
         expect(res.json).toBeNull();
     });
 
@@ -247,7 +261,7 @@ describe("/tasks POST", () => {
 
         expect(res).toBeInstanceOf(Response);
         expect(res.status).toBe(400);
-        expect(res.text).toMatch("request body has invalid number of properties");
+        expect(res.text).toMatch("Request body has invalid number of properties");
         expect(res.json).toBeNull();
     });
 
@@ -265,7 +279,7 @@ describe("/tasks POST", () => {
 
         expect(res).toBeInstanceOf(Response);
         expect(res.status).toBe(400);
-        expect(res.text).toMatch("answers has invalid number of properties");
+        expect(res.text).toMatch("Answers has invalid number of properties");
         expect(res.json).toBeNull();
     });
 });
@@ -315,7 +329,7 @@ describe("/tasks/taskID GET", () => {
 
         expect(res).toBeInstanceOf(Response);
         expect(res.status).toBe(400);
-        expect(res.text).toMatch("taskID is NaN");
+        expect(res.text).toMatch("TaskID is NaN");
         expect(res.json).toBeNull();
     });
 
@@ -326,7 +340,7 @@ describe("/tasks/taskID GET", () => {
 
         expect(res).toBeInstanceOf(Response);
         expect(res.status).toBe(400);
-        expect(res.text).toMatch("taskID invalid value");
+        expect(res.text).toMatch("TaskID invalid value");
         expect(res.json).toBeNull();
     });
 });
@@ -350,11 +364,29 @@ describe("/tasks/taskID PUT", () => {
         expect(res.json).toBeNull();
     });
 
-    test("tasks_taskID_PUT, update non existing task", () => {
+    test("tasks_taskID_PUT, update existing task with existing question", () => {
+        let req = new Request();
+        req.params.taskID = "2";
+        req.body = {
+            question: "Who is bigger?",
+            answers: {
+                possible_answers: ["Elyon", "Jhw", "Holla"],
+                correct_answers: [0]
+            }
+        };
+        let res = tasks_taskID_PUT(req);
+
+        expect(res).toBeInstanceOf(Response);
+        expect(res.status).toBe(423);
+        expect(res.text).toMatch("A task with such question already exists");
+        expect(res.json).toBeNull();
+    });
+
+    test("tasks_taskID_PUT, create task", () => {
         let req = new Request();
         req.params.taskID = "9999123";
         req.body = {
-            question: "Who is bigger?",
+            question: "Who is smaller?",
             answers: {
                 possible_answers: ["Elyon", "Jhw"],
                 correct_answers: [0]
@@ -365,6 +397,24 @@ describe("/tasks/taskID PUT", () => {
         expect(res).toBeInstanceOf(Response);
         expect(res.status).toBe(201);
         expect(res.text).toMatch("Task created");
+        expect(res.json).toBeNull();
+    });
+
+    test("tasks_taskID_PUT, create task with existing question", () => {
+        let req = new Request();
+        req.params.taskID = "9999124";
+        req.body = {
+            question: "Who is smaller?",
+            answers: {
+                possible_answers: ["Enoch", "Elyon", "Jhw"],
+                correct_answers: [0]
+            }
+        };
+        let res = tasks_taskID_PUT(req);
+
+        expect(res).toBeInstanceOf(Response);
+        expect(res.status).toBe(423);
+        expect(res.text).toMatch("A task with such question already exists");
         expect(res.json).toBeNull();
     });
 
@@ -399,7 +449,7 @@ describe("/tasks/taskID PUT", () => {
 
         expect(res).toBeInstanceOf(Response);
         expect(res.status).toBe(400);
-        expect(res.text).toMatch("taskID invalid value");
+        expect(res.text).toMatch("TaskID invalid value");
         expect(res.json).toBeNull();
     });
 
@@ -417,7 +467,7 @@ describe("/tasks/taskID PUT", () => {
 
         expect(res).toBeInstanceOf(Response);
         expect(res.status).toBe(400);
-        expect(res.text).toMatch("taskID is NaN");
+        expect(res.text).toMatch("TaskID is NaN");
         expect(res.json).toBeNull();
     });
 });
@@ -452,7 +502,7 @@ describe("/tasks/taskID DELETE", () => {
 
         expect(res).toBeInstanceOf(Response);
         expect(res.status).toBe(400);
-        expect(res.text).toMatch("taskID invalid value");
+        expect(res.text).toMatch("TaskID invalid value");
         expect(res.json).toBeNull();
     });
 
@@ -463,7 +513,7 @@ describe("/tasks/taskID DELETE", () => {
 
         expect(res).toBeInstanceOf(Response);
         expect(res.status).toBe(400);
-        expect(res.text).toMatch("taskID is NaN");
+        expect(res.text).toMatch("TaskID is NaN");
         expect(res.json).toBeNull();
     });
 });
