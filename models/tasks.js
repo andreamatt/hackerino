@@ -5,6 +5,7 @@ const doLimit = util.doLimit;
 const doOffset = util.doOffset;
 const isTask = util.isTask;
 const toInt = util.toInt;
+const isNumber = util.isNumber;
 const isInteger = Number.isInteger;
 
 const tasks_list = {
@@ -52,7 +53,7 @@ function tasks_GET(req) {
     if (req.query.limit !== undefined) {
         let limit = toInt(req.query.limit);
         if (!isInteger(limit)) {
-            return new Response(400, "Limit is NaN", null);
+            return new Response(400, "Limit is not an integer", null);
         }
         if (limit < 0) {
             return new Response(400, "Limit is negative", null);
@@ -62,7 +63,7 @@ function tasks_GET(req) {
     if (req.query.offset !== undefined) {
         let offset = toInt(req.query.offset);
         if (!isInteger(offset)) {
-            return new Response(400, "Offset is NaN", null);
+            return new Response(400, "Offset is not an integer", null);
         }
         if (offset < 0) {
             return new Response(400, "Offset is negative", null);
@@ -98,7 +99,7 @@ function tasks_taskID_GET(req) {
     let id = toInt(req.params.taskID);
 
     if (!isInteger(id)) {
-        return new Response(400, "TaskID is NaN", null);
+        return new Response(400, "TaskID is not an integer", null);
     }
     if (id < 1) {
         return new Response(400, "TaskID invalid value", null);
@@ -112,7 +113,7 @@ function tasks_taskID_GET(req) {
 function tasks_taskID_PUT(req) {
     let id = toInt(req.params.taskID);
     if (!isInteger(id)) {
-        return new Response(400, "TaskID is NaN", null);
+        return new Response(400, "TaskID is not an integer", null);
     }
     if (id < 1) {
         return new Response(400, "TaskID invalid value", null);
@@ -152,7 +153,7 @@ function tasks_taskID_DELETE(req) {
     let id = toInt(req.params.taskID);
 
     if (!isInteger(id)) {
-        return new Response(400, "TaskID is NaN", null);
+        return new Response(400, "TaskID is not an integer", null);
     }
     if (id < 1) {
         return new Response(400, "TaskID invalid value", null);
@@ -165,4 +166,35 @@ function tasks_taskID_DELETE(req) {
     return new Response(204, "Task removed", null);
 }
 
-module.exports = { tasks_GET, tasks_POST, tasks_taskID_GET, tasks_taskID_PUT, tasks_taskID_DELETE };
+function tasks_taskID_vote_POST(req) {
+    if (Object.keys(req.body).length > 1) {
+        return new Response(400, "Request body has invalid number of properties", null);
+    }
+
+    let id = toInt(req.params.taskID);
+    if (!isInteger(id)) {
+        return new Response(400, "TaskID is not an integer", null);
+    }
+    if (id < 1) {
+        return new Response(400, "TaskID invalid value", null);
+    }
+    if (!tasks_list[id]) {
+        return new Response(404, "A task with the specified taskID was not found", null);
+    }
+
+    let vote = req.body.vote;
+    if (!isNumber(vote)) {
+        return new Response(400, "Vote is NaN", null);
+    }
+    if (vote < 0 || vote > 10) {
+        return new Response(400, "Vote is out of valid range", null);
+    }
+
+    let n_votes = tasks_list[id].n_votes;
+    let rating = tasks_list[id].rating;
+    tasks_list[id].n_votes++;
+    tasks_list[id].rating = (n_votes * rating + vote) / (n_votes + 1);
+    return new Response(204, "Your vote was received and the task’s rating is updated", null);
+}
+
+module.exports = { tasks_GET, tasks_POST, tasks_taskID_GET, tasks_taskID_PUT, tasks_taskID_DELETE, tasks_taskID_vote_POST };

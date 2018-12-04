@@ -9,6 +9,7 @@ const tasks_POST = tasks.tasks_POST;
 const tasks_taskID_GET = tasks.tasks_taskID_GET;
 const tasks_taskID_PUT = tasks.tasks_taskID_PUT;
 const tasks_taskID_DELETE = tasks.tasks_taskID_DELETE;
+const tasks_taskID_vote_POST = tasks.tasks_taskID_vote_POST;
 
 
 describe("/tasks GET", () => {
@@ -27,7 +28,7 @@ describe("/tasks GET", () => {
         });
     });
 
-    test("tasks_GET with limit and empty tasks_list", () => {
+    test("with limit and empty tasks_list", () => {
         let req = new Request();
         let res = tasks_GET(req);
         req.query.limit = "10";
@@ -44,7 +45,7 @@ describe("/tasks GET", () => {
         });
     });
 
-    test("tasks_GET with offset", () => {
+    test("with offset", () => {
         let req = new Request();
         let res = tasks_GET(req);
         req.query.offset = "0";
@@ -60,7 +61,7 @@ describe("/tasks GET", () => {
         });
     });
 
-    test("tasks_GET with offset and limit", () => {
+    test("with offset and limit", () => {
         let req = new Request();
         req.query.offset = "1";
         req.query.limit = "10";
@@ -77,7 +78,7 @@ describe("/tasks GET", () => {
         });
     });
 
-    test("tasks_GET with negative limit", () => {
+    test("with negative limit", () => {
         let req = new Request();
         req.query.limit = "-2";
         let res = tasks_GET(req);
@@ -88,18 +89,18 @@ describe("/tasks GET", () => {
         expect(res.json).toBeNull();
     });
 
-    test("tasks_GET with limit Nan", () => {
+    test("with limit not an integer", () => {
         let req = new Request();
         req.query.limit = "notAnumber";
         let res = tasks_GET(req);
 
         expect(res).toBeInstanceOf(Response);
         expect(res.status).toBe(400);
-        expect(res.text).toMatch("Limit is NaN");
+        expect(res.text).toMatch("Limit is not an integer");
         expect(res.json).toBeNull();
     });
 
-    test("tasks_GET with negative offset", () => {
+    test("with negative offset", () => {
         let req = new Request();
         req.query.offset = "-2";
         let res = tasks_GET(req);
@@ -110,14 +111,14 @@ describe("/tasks GET", () => {
         expect(res.json).toBeNull();
     });
 
-    test("tasks_GET with offset Nan", () => {
+    test("with offset not an integer", () => {
         let req = new Request();
         req.query.offset = "notAnumber";
         let res = tasks_GET(req);
 
         expect(res).toBeInstanceOf(Response);
         expect(res.status).toBe(400);
-        expect(res.text).toMatch("Offset is NaN");
+        expect(res.text).toMatch("Offset is not an integer");
         expect(res.json).toBeNull();
     });
 });
@@ -156,7 +157,7 @@ describe("/tasks POST", () => {
         }
     });
 
-    test("tasks_POST with open with arleady existing question", () => {
+    test("with open with arleady existing question", () => {
         let req = new Request();
         req.body = {
             question: "How old is Earth?1"
@@ -169,7 +170,7 @@ describe("/tasks POST", () => {
         expect(res.json).toBeNull();
     });
 
-    test("tasks_POST with no question", () => {
+    test("with no question", () => {
         let req = new Request();
         req.body = {
             answers: {
@@ -185,7 +186,7 @@ describe("/tasks POST", () => {
         expect(res.json).toBeNull();
     });
 
-    test("tasks_POST with open question task (no answers property)", () => {
+    test("with open question task (no answers property)", () => {
         let req = new Request();
         req.body = {
             question: "Tell me about it."
@@ -194,12 +195,12 @@ describe("/tasks POST", () => {
 
         expect(res).toBeInstanceOf(Response);
         expect(res.status).toBe(201);
-        expect(res.text).toBeNull;
+        expect(res.text).toBeNull();
         expect(res.json).toBeDefined();
         expect(isTask(res.json).bool).toBe(true);
     });
 
-    test("tasks_POST with answers but no correct answers", () => {
+    test("with answers but no correct answers", () => {
         let req = new Request();
         req.body = {
             question: "How old is Earth?",
@@ -215,7 +216,7 @@ describe("/tasks POST", () => {
         expect(res.json).toBeNull();
     });
 
-    test("tasks_POST with answers but no possible answers", () => {
+    test("with answers but no possible answers", () => {
         let req = new Request();
         req.body = {
             question: "How old is Earth?",
@@ -231,7 +232,7 @@ describe("/tasks POST", () => {
         expect(res.json).toBeNull();
     });
 
-    test("tasks_POST with answers empty", () => {
+    test("with answers empty", () => {
         let req = new Request();
         req.body = {
             question: "How old is Earth?",
@@ -245,7 +246,7 @@ describe("/tasks POST", () => {
         expect(res.json).toBeNull();
     });
 
-    test("tasks_POST with extra properties", () => {
+    test("with extra properties", () => {
         let req = new Request();
         req.body = {
             question: "How old is Earth?",
@@ -265,7 +266,7 @@ describe("/tasks POST", () => {
         expect(res.json).toBeNull();
     });
 
-    test("tasks_POST with extra properties in answers", () => {
+    test("with extra properties in answers", () => {
         let req = new Request();
         req.body = {
             question: "How old is Earth?",
@@ -285,20 +286,20 @@ describe("/tasks POST", () => {
 });
 
 describe("/tasks/taskID GET", () => {
-    test("tasks_taskID_GET with id=1", () => {
+    test("with id=1", () => {
         let req = new Request();
         req.params.taskID = "1";
         let res = tasks_taskID_GET(req);
 
         expect(res).toBeInstanceOf(Response);
         expect(res.status).toBe(200);
-        expect(res.text).toBeNull;
+        expect(res.text).toBeNull();
         expect(res.json).toBeDefined();
         expect(isTask(res.json).bool).toBe(true);
         expect(res.json.id).toBe(Number(req.params.taskID));
     });
 
-    test("tasks_taskID_GET with non existant id", () => {
+    test("with non existant id", () => {
         let req = new Request();
         req.params.taskID = "12345678";
         let res = tasks_taskID_GET(req);
@@ -309,31 +310,31 @@ describe("/tasks/taskID GET", () => {
         expect(res.json).toBeNull();
     });
 
-    test("tasks_taskID_GET with id=50", () => {
+    test("with id=50", () => {
         let req = new Request();
         req.params.taskID = "50";
         let res = tasks_taskID_GET(req);
 
         expect(res).toBeInstanceOf(Response);
         expect(res.status).toBe(200);
-        expect(res.text).toBeNull;
+        expect(res.text).toBeNull();
         expect(res.json).toBeDefined();
         expect(isTask(res.json).bool).toBe(true);
         expect(res.json.id).toBe(Number(req.params.taskID));
     });
 
-    test("tasks_taskID_GET with id NaN", () => {
+    test("with id not an integer", () => {
         let req = new Request();
         req.params.taskID = "task12";
         let res = tasks_taskID_GET(req);
 
         expect(res).toBeInstanceOf(Response);
         expect(res.status).toBe(400);
-        expect(res.text).toMatch("TaskID is NaN");
+        expect(res.text).toMatch("TaskID is not an integer");
         expect(res.json).toBeNull();
     });
 
-    test("tasks_taskID_GET with id=0", () => {
+    test("with id=0", () => {
         let req = new Request();
         req.params.taskID = "0";
         let res = tasks_taskID_GET(req);
@@ -418,7 +419,7 @@ describe("/tasks/taskID PUT", () => {
         expect(res.json).toBeNull();
     });
 
-    test("tasks_taskID_PUT with malformed request", () => {
+    test("with malformed request", () => {
         let req = new Request();
         req.params.taskID = "23";
         req.body = {
@@ -435,7 +436,7 @@ describe("/tasks/taskID PUT", () => {
         expect(res.json).toBeNull();
     });
 
-    test("tasks_taskID_PUT with taskID=0", () => {
+    test("with taskID=0", () => {
         let req = new Request();
         req.params.taskID = "0";
         req.body = {
@@ -453,7 +454,7 @@ describe("/tasks/taskID PUT", () => {
         expect(res.json).toBeNull();
     });
 
-    test("tasks_taskID_PUT with taskID NaN", () => {
+    test("with taskID not an integer", () => {
         let req = new Request();
         req.params.taskID = "zero";
         req.body = {
@@ -467,13 +468,13 @@ describe("/tasks/taskID PUT", () => {
 
         expect(res).toBeInstanceOf(Response);
         expect(res.status).toBe(400);
-        expect(res.text).toMatch("TaskID is NaN");
+        expect(res.text).toMatch("TaskID is not an integer");
         expect(res.json).toBeNull();
     });
 });
 
 describe("/tasks/taskID DELETE", () => {
-    test("tasks_taskID_DELETE existing task", () => {
+    test("existing task", () => {
         let req = new Request();
         req.params.taskID = "50";
         let res = tasks_taskID_DELETE(req);
@@ -484,7 +485,7 @@ describe("/tasks/taskID DELETE", () => {
         expect(res.json).toBeNull();
     });
 
-    test("tasks_taskID_DELETE non existing task", () => {
+    test("non existing task", () => {
         let req = new Request();
         req.params.taskID = "24998850";
         let res = tasks_taskID_DELETE(req);
@@ -495,7 +496,7 @@ describe("/tasks/taskID DELETE", () => {
         expect(res.json).toBeNull();
     });
 
-    test("tasks_taskID_DELETE with taskID=0", () => {
+    test("with taskID=0", () => {
         let req = new Request();
         req.params.taskID = "0";
         let res = tasks_taskID_DELETE(req);
@@ -506,14 +507,180 @@ describe("/tasks/taskID DELETE", () => {
         expect(res.json).toBeNull();
     });
 
-    test("tasks_taskID_DELETE with taskID NaN", () => {
+    test("with taskID not an integer", () => {
         let req = new Request();
         req.params.taskID = "three";
         let res = tasks_taskID_DELETE(req);
 
         expect(res).toBeInstanceOf(Response);
         expect(res.status).toBe(400);
-        expect(res.text).toMatch("TaskID is NaN");
+        expect(res.text).toMatch("TaskID is not an integer");
         expect(res.json).toBeNull();
     });
 });
+
+describe("/tasks/taskID/vote POST", () => {
+    test("with valid vote for existing task without votes", () => {
+        let req = new Request();
+        req.params.taskID = "5";
+        req.body.vote = 9.5;
+        let res = tasks_taskID_vote_POST(req);
+
+        expect(res).toBeInstanceOf(Response);
+        expect(res.status).toBe(204);
+        expect(res.json).toBeNull();
+
+        // checking for updated rating
+        res = tasks_taskID_GET(req);
+        expect(res).toBeInstanceOf(Response);
+        expect(res.status).toBe(200);
+        expect(res.text).toBeNull();
+        expect(res.json).toBeDefined();
+        expect(isTask(res.json).bool).toBe(true);
+        expect(res.json.rating).toBe(req.body.vote);
+    });
+
+    test("with valid vote for existing task having one vote", () => {
+        let req = new Request();
+        req.params.taskID = "5";
+        req.body.vote = 0;
+        let res = tasks_taskID_vote_POST(req);
+
+        expect(res).toBeInstanceOf(Response);
+        expect(res.status).toBe(204);
+        expect(res.json).toBeNull();
+
+        // checking for updated rating
+        res = tasks_taskID_GET(req);
+        expect(res).toBeInstanceOf(Response);
+        expect(res.status).toBe(200);
+        expect(res.text).toBeNull();
+        expect(res.json).toBeDefined();
+        expect(isTask(res.json).bool).toBe(true);
+        expect(res.json.rating).toBe(4.75);
+    });
+
+    test("with valid vote for non existing task", () => {
+        let req = new Request();
+        req.params.taskID = "31245";
+        req.body.vote = 0;
+        let res = tasks_taskID_vote_POST(req);
+
+        expect(res).toBeInstanceOf(Response);
+        expect(res.status).toBe(404);
+        expect(res.json).toBeNull();
+    });
+
+    test("with vote NaN", () => {
+        let req = new Request();
+        req.params.taskID = "5";
+        req.body.vote = "Africa";
+        let res = tasks_taskID_vote_POST(req);
+
+        expect(res).toBeInstanceOf(Response);
+        expect(res.status).toBe(400);
+        expect(res.text).toMatch("Vote is NaN");
+        expect(res.json).toBeNull();
+    });
+
+    test("with vote > 10", () => {
+        let req = new Request();
+        req.params.taskID = "5";
+        req.body.vote = 10.01;
+        let res = tasks_taskID_vote_POST(req);
+
+        expect(res).toBeInstanceOf(Response);
+        expect(res.status).toBe(400);
+        expect(res.text).toMatch("Vote is out of valid range");
+        expect(res.json).toBeNull();
+    });
+
+    test("with vote < 0", () => {
+        let req = new Request();
+        req.params.taskID = "5";
+        req.body.vote = -1;
+        let res = tasks_taskID_vote_POST(req);
+
+        expect(res).toBeInstanceOf(Response);
+        expect(res.status).toBe(400);
+        expect(res.text).toMatch("Vote is out of valid range");
+        expect(res.json).toBeNull();
+    });
+
+    test("update tasks rating many times", () => {
+        let req_GET = new Request();
+        let req_POST = new Request();
+        req_POST.params.taskID = 2;
+
+        // check old average
+        let res_GET1 = tasks_taskID_GET(req_POST);
+        expect(res_GET1).toBeInstanceOf(Response);
+        expect(res_GET1.status).toBe(200);
+        expect(res_GET1.text).toBeNull();
+        expect(res_GET1.json).toBeDefined();
+        expect(isTask(res_GET1.json).bool).toBe(true);
+        let rating = res_GET1.json.rating;
+        let n_votes = res_GET1.json.n_votes;
+
+        for (let i = 0; i <= 10; i++) {
+            // modify average
+            req_POST.body.vote = i;
+            let res_POST = tasks_taskID_vote_POST(req_POST);
+            expect(res_POST).toBeInstanceOf(Response);
+            expect(res_POST.status).toBe(204);
+            expect(res_POST.json).toBeNull();
+
+            // check new average
+            let res_GET2 = tasks_taskID_GET(req_POST);
+            expect(res_GET2).toBeInstanceOf(Response);
+            expect(res_GET2.status).toBe(200);
+            expect(res_GET2.text).toBeNull();
+            expect(res_GET2.json).toBeDefined();
+            expect(isTask(res_GET2.json).bool).toBe(true);
+
+            rating = (n_votes * rating + i) / (n_votes + 1);
+            n_votes++;
+            expect(res_GET2.json.rating).toBe(rating);
+        }
+    });
+
+    test("with malformed body", () => {
+        let req = new Request();
+        req.params.taskID = "5";
+        req.body.vote = 2;
+        req.body.extra = "extra";
+        let res = tasks_taskID_vote_POST(req);
+
+        expect(res).toBeInstanceOf(Response);
+        expect(res.status).toBe(400);
+        expect(res.text).toMatch("Request body has invalid number of properties");
+        expect(res.json).toBeNull();
+    });
+
+    test("with taskID not an integer", () => {
+        let req = new Request();
+        req.params.taskID = "two";
+        req.body.vote = 2;
+        let res = tasks_taskID_vote_POST(req);
+
+        expect(res).toBeInstanceOf(Response);
+        expect(res.status).toBe(400);
+        expect(res.text).toMatch("TaskID is not an integer");
+        expect(res.json).toBeNull();
+    });
+
+    test("with invalid taskID", () => {
+        let req = new Request();
+        req.params.taskID = "0";
+        req.body.vote = 2;
+        let res = tasks_taskID_vote_POST(req);
+
+        expect(res).toBeInstanceOf(Response);
+        expect(res.status).toBe(400);
+        expect(res.text).toMatch("TaskID invalid value");
+        expect(res.json).toBeNull();
+    });
+});
+
+
+
