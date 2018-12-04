@@ -24,7 +24,7 @@ describe("/tasks GET", () => {
         expect(res.json.tot_tasks).toBeGreaterThanOrEqual(0);
         expect(res.json.tasks).toBeDefined();
         res.json.tasks.every(task => {
-            expect(isTask(task)).toBe(true);
+            expect(isTask(task).bool).toBe(true);
         });
     });
 
@@ -41,7 +41,7 @@ describe("/tasks GET", () => {
         expect(res.json.tasks).toBeDefined();
         expect(res.json.tasks.length).toBe(0);
         res.json.tasks.every(task => {
-            expect(isTask(task)).toBe(true);
+            expect(isTask(task).bool).toBe(true);
         });
     });
 
@@ -57,7 +57,7 @@ describe("/tasks GET", () => {
         expect(res.json.tot_tasks).toBeGreaterThanOrEqual(0);
         expect(res.json.tasks).toBeDefined();
         res.json.tasks.every(task => {
-            expect(isTask(task)).toBe(true);
+            expect(isTask(task).bool).toBe(true);
         });
     });
 
@@ -74,7 +74,7 @@ describe("/tasks GET", () => {
         expect(res.json.tot_tasks).toBeGreaterThanOrEqual(0);
         expect(res.json.tasks).toBeDefined();
         res.json.tasks.every(task => {
-            expect(isTask(task)).toBe(true);
+            expect(isTask(task).bool).toBe(true);
         });
     });
 
@@ -283,6 +283,57 @@ describe("/tasks POST", () => {
         expect(res.text).toMatch("Answers has invalid number of properties");
         expect(res.json).toBeNull();
     });
+
+    test("GET with limit = 10", () => {
+        let req = new Request();
+        req.query.limit = "10";
+        let res = tasks_GET(req);
+
+        expect(res).toBeInstanceOf(Response);
+        expect(res.status).toBe(200);
+        expect(res.text).toBeNull();
+        expect(res.json).toBeDefined();
+        expect(res.json.tot_tasks).toBeGreaterThanOrEqual(0);
+        expect(res.json.tasks).toBeDefined();
+        expect(Object.keys(res.json.tasks).length).toBe(10);
+        res.json.tasks.every(task => {
+            expect(isTask(task).bool).toBe(true);
+        });
+    });
+
+    test("GET with offset = 10000000", () => {
+        let req = new Request();
+        req.query.offset = "10000000";
+        let res = tasks_GET(req);
+
+        expect(res).toBeInstanceOf(Response);
+        expect(res.status).toBe(200);
+        expect(res.text).toBeNull();
+        expect(res.json).toBeDefined();
+        expect(res.json.tot_tasks).toBeGreaterThanOrEqual(0);
+        expect(res.json.tasks).toBeDefined();
+        expect(Object.keys(res.json.tasks).length).toBe(0);
+        res.json.tasks.every(task => {
+            expect(isTask(task).bool).toBe(true);
+        });
+    });
+
+    test("GET with offset = 10", () => {
+        let req = new Request();
+        req.query.offset = "10";
+        let res = tasks_GET(req);
+
+        expect(res).toBeInstanceOf(Response);
+        expect(res.status).toBe(200);
+        expect(res.text).toBeNull();
+        expect(res.json).toBeDefined();
+        expect(res.json.tot_tasks).toBeGreaterThanOrEqual(0);
+        expect(res.json.tasks).toBeDefined();
+        expect(Object.keys(res.json.tasks).length).toBeGreaterThan(0);
+        res.json.tasks.every(task => {
+            expect(isTask(task).bool).toBe(true);
+        });
+    });
 });
 
 describe("/tasks/taskID GET", () => {
@@ -423,7 +474,7 @@ describe("/tasks/taskID PUT", () => {
         let req = new Request();
         req.params.taskID = "23";
         req.body = {
-            question: "Who is bigger?",
+            question: "What is the reason of this?",
             answers: {
                 possible_answers: "Elyon",
                 correct_answers: [99]
