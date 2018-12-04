@@ -134,4 +134,16 @@ function isTeacher(teach) {
 	return true;
 }
 
-module.exports = { toInt, isInteger, isString, isNumber, isStringDate, isArray, isStudent, isTeacher, isTask, doOffset, doLimit, doOffsetLimit, Request, Response };
+function isExam(exam) {
+	if (!exam) return "falsy value";
+	if (!isInteger(exam.id) || exam.id < 1) return "bad id";
+	if (!isStringDate(exam.date)) return "bad date";
+	if (!isStringDate(exam.deadline)) return "bad deadline";
+	if (!isStringDate(exam.review_deadline)) return "bad review_deadline";
+	if (Date.parse(exam.date) >= Date.parse(exam.deadline)) return "deadline needs to be after date";
+	if (Date.parse(exam.deadline) >= Date.parse(exam.review_deadline)) return "review_deadline needs to be after deadline";
+
+	return "ok";
+}
+
+module.exports = { toInt, isInteger, isString, isNumber, isStringDate, isArray, isStudent, isTeacher, isTask, isExam, doOffset, doLimit, doOffsetLimit, Request, Response };
