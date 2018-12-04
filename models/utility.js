@@ -159,4 +159,15 @@ function isReview(review) {
 	return true;
 }
 
-module.exports = { toInt, isInteger, isString, isNumber, isStringDate, isArray, isStudent, isTeacher, isTask, isReview, isExam, doOffset, doLimit, doOffsetLimit, Request, Response };
+function isSubmission(sub) {
+	if (!sub) return "faalsy value";
+	if (!isInteger(sub.id) || sub.id < 1) return "Bad id body parameter";
+	if (!isInteger(sub.studentID)) return "Bad studentID body parameter";
+	if (!isInteger(sub.examID)) return "Bad examID body parameter";
+	if (!isInteger(sub.taskID)) return "Bad taskID body parameter";
+	if (!isString(sub.answer)) return "Bad answer body parameter";
+	if (!isInteger(sub.chosen_answer)) return "Bad chosen_answer body parameter";
+	return true;
+}
+
+module.exports = { toInt, isInteger, isString, isNumber, isStringDate, isArray, isStudent, isTeacher, isTask, isSubmission, isReview, isExam, doOffset, doLimit, doOffsetLimit, Request, Response };
