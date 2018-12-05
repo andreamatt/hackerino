@@ -1,4 +1,5 @@
 const util = require('./utility');
+const submissions = require('./submissions');
 const isExam = util.isExam;
 const toInt = util.toInt;
 const isInteger = util.isInteger;
@@ -63,10 +64,7 @@ function createExam(id, date, deadline, review_deadline) {
 	if (msg !== "ok") {
 		return msg;
 	}
-	exams_list[exam.id] = exam;
-	exams_students[exam.id] = [];
-	exams_teachers[exam.id] = [];
-	exams_tasks[exam.id] = [];
+
 	return exam;
 }
 
@@ -106,6 +104,10 @@ function exams_POST(req) {
 	if (isString(exam)) { // if exam is an error msg
 		return new Response(400, exam, null);
 	}
+	exams_list[exam.id] = exam;
+	exams_students[exam.id] = [];
+	exams_teachers[exam.id] = [];
+	exams_tasks[exam.id] = [];
 	return new Response(201, null, exam);
 }
 
@@ -120,6 +122,28 @@ function exams_examID_GET(req) {
 	return new Response(200, null, exams_list[id]);
 }
 
+function exams_examID_PUT(req) {
+	let id = toInt(req.params.examID);
+	if (!isInteger(id) || id < 1) {
+		return new Response(404, "Bad id parameter", null);
+	}
+	if (exams_list[id]) {
+		let updated = createExam(id, req.body.date, req.body.deadline, req.body.review_deadline);
+		if (isString(updated)) { // there is an error msg
+			return new Response(400, updated, null);
+		}
+		exams_list[exam.id] = updated;
+		return new Response(200, null, updated);
+	} else {
+		let created = createExam(id, req.body.date, req.body.deadline, req.body.review_deadline);
+		if (isString(updated)) { // there is an error msg
+			return new Response(400, updated, null);
+		}
+		exams_list[exam.id] = created;
+		return new Response(201, null, created);
+	}
+}
+
 function exams_examID_DELETE(req) {
 	let id = toInt(req.params.examID);
 	if (!isInteger(id) || id < 1) {
@@ -128,7 +152,25 @@ function exams_examID_DELETE(req) {
 	if (!exams_list[id]) {
 		return new Response(404, "Exam not found", null);
 	}
-	// cancela tuto
+	// delete exam
+	delete exams_list[id];
+	delete exams_students[id];
+	delete exams_teachers[id];
+	delete exams_tasks[id];
+
+	// delete submissions
+	let sub_req = new Request();
+	sub_req.params.examID = id;
+	let filtered_subs = exams_examID_submissions_GET(sub_req).submissions;
+	for (sub of filtered_subs) {
+		let req = new Request();
+		req.params.submissionID = sub.id;
+		submissions.submissions_submissionID_DELETE(req);
+	}
+
+	return new Response(204, "Deleted", null);
 }
 
-module.exports = { exams_GET, exams_POST, exams_examID_GET };
+
+
+module.exports = { exams_GET, exams_POST, exams_examID_GET, exams_examID_PUT, exams_examID_DELETE };
