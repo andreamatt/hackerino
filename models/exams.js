@@ -295,6 +295,45 @@ function exams_examID_tasks_GET(req) {
 	return new Response(200, null, { tot_tasks: tot, tasks: result });
 }
 
+function exams_examID_submissions_GET(req) {
+	let id = toInt(req.params.examID);
+	if (!isInteger(id) || id < 1) {
+		return new Response(404, "Bad id parameter", null);
+	}
+	if (!exams_list[id]) {
+		return new Response(404, "Exam not found", null);
+	}
+
+	let sub_req = new Request();
+	let result = submissions.submissions_GET(sub_req).submissions;
+	result = result.filter(sub => sub.examID === id);
+
+	let tot = result.length;
+	let offset = req.query.offset;
+	if (offset !== undefined) {
+		offset = toInt(offset);
+		if (!isInteger(offset)) {
+			return new Response(400, "Offset is not an integer", null);
+		}
+		if (offset < 0) {
+			return new Response(400, "Offset is negative", null);
+		}
+		result = doOffset(result, offset);
+	}
+	let limit = req.query.limit;
+	if (limit !== undefined) {
+		limit = toInt(limit);
+		if (!isInteger(limit)) {
+			return new Response(400, "Limit is not an integer", null);
+		}
+		if (limit < 0) {
+			return new Response(400, "Limit is negative", null);
+		}
+		result = doLimit(result, limit);
+	}
+	return new Response(200, null, { tot_submissions: tot, submissions: result });
+}
+
 module.exports = {
 	exams_GET,
 	exams_POST,
@@ -303,5 +342,6 @@ module.exports = {
 	exams_examID_DELETE,
 	exams_examID_students_GET,
 	exams_examID_teachers_GET,
-	exams_examID_tasks_GET
+	exams_examID_tasks_GET,
+	exams_examID_submissions_GET
 };
