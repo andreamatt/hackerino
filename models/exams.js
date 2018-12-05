@@ -76,10 +76,10 @@ function exams_GET(req) {
 	if (offset !== undefined) {
 		offset = toInt(offset);
 		if (!isInteger(offset)) {
-			return new Response(400, "Offset is not an integer", null);
+			return new Response(400, "Offset is not an integer");
 		}
 		if (offset < 0) {
-			return new Response(400, "Offset is negative", null);
+			return new Response(400, "Offset is negative");
 		}
 		result = doOffset(result, offset);
 	}
@@ -87,14 +87,14 @@ function exams_GET(req) {
 	if (limit !== undefined) {
 		limit = toInt(limit);
 		if (!isInteger(limit)) {
-			return new Response(400, "Limit is not an integer", null);
+			return new Response(400, "Limit is not an integer");
 		}
 		if (limit < 0) {
-			return new Response(400, "Limit is negative", null);
+			return new Response(400, "Limit is negative");
 		}
 		result = doLimit(result, limit);
 	}
-	return new Response(200, null, { tot_exams: tot, exams: result });
+	return new Response(200, { tot_exams: tot, exams: result });
 }
 
 function exams_POST(req) {
@@ -103,55 +103,55 @@ function exams_POST(req) {
 	let review_deadline = req.body.review_deadline;
 	let exam = createExam(null, date, deadline, review_deadline);
 	if (isString(exam)) { // if exam is an error msg
-		return new Response(400, exam, null);
+		return new Response(400, exam);
 	}
 	exams_list[exam.id] = exam;
 	exams_students[exam.id] = [];
 	exams_teachers[exam.id] = [];
 	exams_tasks[exam.id] = [];
-	return new Response(201, null, exam);
+	return new Response(201, exam);
 }
 
 function exams_examID_GET(req) {
 	let id = toInt(req.params.examID);
 	if (!isInteger(id) || id < 1) {
-		return new Response(404, "Bad id parameter", null);
+		return new Response(404, "Bad id parameter");
 	}
 	if (!exams_list[id]) {
-		return new Response(404, "Exam not found", null);
+		return new Response(404, "Exam not found");
 	}
-	return new Response(200, null, exams_list[id]);
+	return new Response(200, exams_list[id]);
 }
 
 function exams_examID_PUT(req) {
 	let id = toInt(req.params.examID);
 	if (!isInteger(id) || id < 1) {
-		return new Response(404, "Bad id parameter", null);
+		return new Response(404, "Bad id parameter");
 	}
 	if (exams_list[id]) {
 		let updated = createExam(id, req.body.date, req.body.deadline, req.body.review_deadline);
 		if (isString(updated)) { // there is an error msg
-			return new Response(400, updated, null);
+			return new Response(400, updated);
 		}
 		exams_list[exam.id] = updated;
-		return new Response(200, null, updated);
+		return new Response(200, updated);
 	} else {
 		let created = createExam(id, req.body.date, req.body.deadline, req.body.review_deadline);
 		if (isString(updated)) { // there is an error msg
-			return new Response(400, updated, null);
+			return new Response(400, updated);
 		}
 		exams_list[exam.id] = created;
-		return new Response(201, null, created);
+		return new Response(201, created);
 	}
 }
 
 function exams_examID_DELETE(req) {
 	let id = toInt(req.params.examID);
 	if (!isInteger(id) || id < 1) {
-		return new Response(404, "Bad id parameter", null);
+		return new Response(404, "Bad id parameter");
 	}
 	if (!exams_list[id]) {
-		return new Response(404, "Exam not found", null);
+		return new Response(404, "Exam not found");
 	}
 	// delete exam
 	delete exams_list[id];
@@ -169,16 +169,16 @@ function exams_examID_DELETE(req) {
 		submissions.submissions_submissionID_DELETE(req);
 	}
 
-	return new Response(204, "Deleted", null);
+	return new Response(204, "Deleted");
 }
 
 function exams_examID_students_GET(req) {
 	let id = toInt(req.params.examID);
 	if (!isInteger(id) || id < 1) {
-		return new Response(404, "Bad id parameter", null);
+		return new Response(404, "Bad id parameter");
 	}
 	if (!exams_list[id]) {
-		return new Response(404, "Exam not found", null);
+		return new Response(404, "Exam not found");
 	}
 
 	let result = exams_students[id];
@@ -187,10 +187,10 @@ function exams_examID_students_GET(req) {
 	if (offset !== undefined) {
 		offset = toInt(offset);
 		if (!isInteger(offset)) {
-			return new Response(400, "Offset is not an integer", null);
+			return new Response(400, "Offset is not an integer");
 		}
 		if (offset < 0) {
-			return new Response(400, "Offset is negative", null);
+			return new Response(400, "Offset is negative");
 		}
 		result = doOffset(result, offset);
 	}
@@ -198,10 +198,10 @@ function exams_examID_students_GET(req) {
 	if (limit !== undefined) {
 		limit = toInt(limit);
 		if (!isInteger(limit)) {
-			return new Response(400, "Limit is not an integer", null);
+			return new Response(400, "Limit is not an integer");
 		}
 		if (limit < 0) {
-			return new Response(400, "Limit is negative", null);
+			return new Response(400, "Limit is negative");
 		}
 		result = doLimit(result, limit);
 	}
@@ -210,43 +210,43 @@ function exams_examID_students_GET(req) {
 		r.params.studentID = studID;
 		return students.students_GET(r);
 	});
-	return new Response(200, null, { tot_students: tot, students: result });
+	return new Response(200, { tot_students: tot, students: result });
 }
 
 function exams_examID_students_POST(req) {
 	let id = toInt(req.params.examID);
 	if (!isInteger(id) || id < 1) {
-		return new Response(404, "Bad id parameter", null);
+		return new Response(404, "Bad id parameter");
 	}
 	if (!exams_list[id]) {
-		return new Response(404, "Exam not found", null);
+		return new Response(404, "Exam not found");
 	}
 
 	let studentID = req.body.studentID;
 	if (!isInteger(studentID) || studentID < 1) {
-		return new Response(400, "Bad studentID parameter", null);
+		return new Response(400, "Bad studentID parameter");
 	}
 	if (exams_students[id].includes(studentID)) {
-		return new Response(423, "Student already signed up", null);
+		return new Response(423, "Student already signed up");
 	}
 	let stud_req = new Request();
 	stud_req.params.studentID = studentID;
 	let stud_res = students.students_studentID_GET(stud_req);
 	if (stud_res.status !== 200) {
-		return new Response(424, "Student not found therefore not added", null);
+		return new Response(424, "Student not found therefore not added");
 	} else {
 		exams_students[id].push(studentID);
-		return new Response(204, "Student added to exam", null);
+		return new Response(204, "Student added to exam");
 	}
 }
 
 function exams_examID_teachers_GET(req) {
 	let id = toInt(req.params.examID);
 	if (!isInteger(id) || id < 1) {
-		return new Response(404, "Bad id parameter", null);
+		return new Response(404, "Bad id parameter");
 	}
 	if (!exams_list[id]) {
-		return new Response(404, "Exam not found", null);
+		return new Response(404, "Exam not found");
 	}
 
 	let result = exams_teachers[id];
@@ -255,10 +255,10 @@ function exams_examID_teachers_GET(req) {
 	if (offset !== undefined) {
 		offset = toInt(offset);
 		if (!isInteger(offset)) {
-			return new Response(400, "Offset is not an integer", null);
+			return new Response(400, "Offset is not an integer");
 		}
 		if (offset < 0) {
-			return new Response(400, "Offset is negative", null);
+			return new Response(400, "Offset is negative");
 		}
 		result = doOffset(result, offset);
 	}
@@ -266,10 +266,10 @@ function exams_examID_teachers_GET(req) {
 	if (limit !== undefined) {
 		limit = toInt(limit);
 		if (!isInteger(limit)) {
-			return new Response(400, "Limit is not an integer", null);
+			return new Response(400, "Limit is not an integer");
 		}
 		if (limit < 0) {
-			return new Response(400, "Limit is negative", null);
+			return new Response(400, "Limit is negative");
 		}
 		result = doLimit(result, limit);
 	}
@@ -278,43 +278,43 @@ function exams_examID_teachers_GET(req) {
 		r.params.teacherID = teacherID;
 		return teachers.teachers_GET(r);
 	});
-	return new Response(200, null, { tot_teachers: tot, teachers: result });
+	return new Response(200, { tot_teachers: tot, teachers: result });
 }
 
 function exams_examID_teachers_POST(req) {
 	let id = toInt(req.params.examID);
 	if (!isInteger(id) || id < 1) {
-		return new Response(404, "Bad id parameter", null);
+		return new Response(404, "Bad id parameter");
 	}
 	if (!exams_list[id]) {
-		return new Response(404, "Exam not found", null);
+		return new Response(404, "Exam not found");
 	}
 
 	let teacherID = req.body.teacherID;
 	if (!isInteger(teacherID) || teacherID < 1) {
-		return new Response(400, "Bad teacherID parameter", null);
+		return new Response(400, "Bad teacherID parameter");
 	}
 	if (exams_teachers[id].includes(teacherID)) {
-		return new Response(423, "Teacher already signed up", null);
+		return new Response(423, "Teacher already signed up");
 	}
 	let stud_req = new Request();
 	stud_req.params.teacherID = teacherID;
 	let stud_res = teachers.teachers_teacherID_GET(stud_req);
 	if (stud_res.status !== 200) {
-		return new Response(424, "Teacher not found therefore not added", null);
+		return new Response(424, "Teacher not found therefore not added");
 	} else {
 		exams_teachers[id].push(teacherID);
-		return new Response(204, "Teacher added to exam", null);
+		return new Response(204, "Teacher added to exam");
 	}
 }
 
 function exams_examID_tasks_GET(req) {
 	let id = toInt(req.params.examID);
 	if (!isInteger(id) || id < 1) {
-		return new Response(404, "Bad id parameter", null);
+		return new Response(404, "Bad id parameter");
 	}
 	if (!exams_list[id]) {
-		return new Response(404, "Exam not found", null);
+		return new Response(404, "Exam not found");
 	}
 
 	let result = exams_tasks[id];
@@ -323,10 +323,10 @@ function exams_examID_tasks_GET(req) {
 	if (offset !== undefined) {
 		offset = toInt(offset);
 		if (!isInteger(offset)) {
-			return new Response(400, "Offset is not an integer", null);
+			return new Response(400, "Offset is not an integer");
 		}
 		if (offset < 0) {
-			return new Response(400, "Offset is negative", null);
+			return new Response(400, "Offset is negative");
 		}
 		result = doOffset(result, offset);
 	}
@@ -334,10 +334,10 @@ function exams_examID_tasks_GET(req) {
 	if (limit !== undefined) {
 		limit = toInt(limit);
 		if (!isInteger(limit)) {
-			return new Response(400, "Limit is not an integer", null);
+			return new Response(400, "Limit is not an integer");
 		}
 		if (limit < 0) {
-			return new Response(400, "Limit is negative", null);
+			return new Response(400, "Limit is negative");
 		}
 		result = doLimit(result, limit);
 	}
@@ -346,16 +346,43 @@ function exams_examID_tasks_GET(req) {
 		r.params.taskID = taskID;
 		return tasks.tasks_GET(r);
 	});
-	return new Response(200, null, { tot_tasks: tot, tasks: result });
+	return new Response(200, { tot_tasks: tot, tasks: result });
+}
+
+function exams_examID_tasks_POST(req) {
+	let id = toInt(req.params.examID);
+	if (!isInteger(id) || id < 1) {
+		return new Response(404, "Bad id parameter");
+	}
+	if (!exams_list[id]) {
+		return new Response(404, "Exam not found");
+	}
+
+	let taskID = req.body.taskID;
+	if (!isInteger(taskID) || taskID < 1) {
+		return new Response(400, "Bad taskID parameter");
+	}
+	if (exams_tasks[id].includes(taskID)) {
+		return new Response(423, "Task already signed up");
+	}
+	let stud_req = new Request();
+	stud_req.params.taskID = taskID;
+	let stud_res = tasks.tasks_taskID_GET(stud_req);
+	if (stud_res.status !== 200) {
+		return new Response(424, "Task not found therefore not added");
+	} else {
+		exams_tasks[id].push(taskID);
+		return new Response(204, "Task added to exam");
+	}
 }
 
 function exams_examID_submissions_GET(req) {
 	let id = toInt(req.params.examID);
 	if (!isInteger(id) || id < 1) {
-		return new Response(404, "Bad id parameter", null);
+		return new Response(404, "Bad id parameter");
 	}
 	if (!exams_list[id]) {
-		return new Response(404, "Exam not found", null);
+		return new Response(404, "Exam not found");
 	}
 
 	let sub_req = new Request();
@@ -367,10 +394,10 @@ function exams_examID_submissions_GET(req) {
 	if (offset !== undefined) {
 		offset = toInt(offset);
 		if (!isInteger(offset)) {
-			return new Response(400, "Offset is not an integer", null);
+			return new Response(400, "Offset is not an integer");
 		}
 		if (offset < 0) {
-			return new Response(400, "Offset is negative", null);
+			return new Response(400, "Offset is negative");
 		}
 		result = doOffset(result, offset);
 	}
@@ -378,14 +405,14 @@ function exams_examID_submissions_GET(req) {
 	if (limit !== undefined) {
 		limit = toInt(limit);
 		if (!isInteger(limit)) {
-			return new Response(400, "Limit is not an integer", null);
+			return new Response(400, "Limit is not an integer");
 		}
 		if (limit < 0) {
-			return new Response(400, "Limit is negative", null);
+			return new Response(400, "Limit is negative");
 		}
 		result = doLimit(result, limit);
 	}
-	return new Response(200, null, { tot_submissions: tot, submissions: result });
+	return new Response(200, { tot_submissions: tot, submissions: result });
 }
 
 module.exports = {
@@ -399,5 +426,6 @@ module.exports = {
 	exams_examID_teachers_GET,
 	exams_examID_teachers_POST,
 	exams_examID_tasks_GET,
+	exams_examID_tasks_POST,
 	exams_examID_submissions_GET
 };
