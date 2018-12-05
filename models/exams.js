@@ -281,6 +281,33 @@ function exams_examID_teachers_GET(req) {
 	return new Response(200, null, { tot_teachers: tot, teachers: result });
 }
 
+function exams_examID_teachers_POST(req) {
+	let id = toInt(req.params.examID);
+	if (!isInteger(id) || id < 1) {
+		return new Response(404, "Bad id parameter", null);
+	}
+	if (!exams_list[id]) {
+		return new Response(404, "Exam not found", null);
+	}
+
+	let teacherID = req.body.teacherID;
+	if (!isInteger(teacherID) || teacherID < 1) {
+		return new Response(400, "Bad teacherID parameter", null);
+	}
+	if (exams_teachers[id].includes(teacherID)) {
+		return new Response(423, "Teacher already signed up", null);
+	}
+	let stud_req = new Request();
+	stud_req.params.teacherID = teacherID;
+	let stud_res = teachers.teachers_teacherID_GET(stud_req);
+	if (stud_res.status !== 200) {
+		return new Response(424, "Teacher not found therefore not added", null);
+	} else {
+		exams_teachers[id].push(teacherID);
+		return new Response(204, "Teacher added to exam", null);
+	}
+}
+
 function exams_examID_tasks_GET(req) {
 	let id = toInt(req.params.examID);
 	if (!isInteger(id) || id < 1) {
@@ -370,6 +397,7 @@ module.exports = {
 	exams_examID_students_GET,
 	exams_examID_students_POST,
 	exams_examID_teachers_GET,
+	exams_examID_teachers_POST,
 	exams_examID_tasks_GET,
 	exams_examID_submissions_GET
 };
