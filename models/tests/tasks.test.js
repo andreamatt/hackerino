@@ -19,12 +19,11 @@ describe("/tasks GET", () => {
 
         expect(res).toBeInstanceOf(Response);
         expect(res.status).toBe(200);
-        expect(res.text).toBeNull();
         expect(res.json).toBeDefined();
         expect(res.json.tot_tasks).toBeGreaterThanOrEqual(0);
         expect(res.json.tasks).toBeDefined();
         res.json.tasks.every(task => {
-            expect(isTask(task).bool).toBe(true);
+            expect(isTask(task)).toBe(true);
         });
     });
 
@@ -35,13 +34,12 @@ describe("/tasks GET", () => {
 
         expect(res).toBeInstanceOf(Response);
         expect(res.status).toBe(200);
-        expect(res.text).toBeNull();
         expect(res.json).toBeDefined();
         expect(res.json.tot_tasks).toBeGreaterThanOrEqual(0);
         expect(res.json.tasks).toBeDefined();
         expect(res.json.tasks.length).toBe(0);
         res.json.tasks.every(task => {
-            expect(isTask(task).bool).toBe(true);
+            expect(isTask(task)).toBe(true);
         });
     });
 
@@ -52,12 +50,11 @@ describe("/tasks GET", () => {
 
         expect(res).toBeInstanceOf(Response);
         expect(res.status).toBe(200);
-        expect(res.text).toBeNull();
         expect(res.json).toBeDefined();
         expect(res.json.tot_tasks).toBeGreaterThanOrEqual(0);
         expect(res.json.tasks).toBeDefined();
         res.json.tasks.every(task => {
-            expect(isTask(task).bool).toBe(true);
+            expect(isTask(task)).toBe(true);
         });
     });
 
@@ -69,12 +66,11 @@ describe("/tasks GET", () => {
 
         expect(res).toBeInstanceOf(Response);
         expect(res.status).toBe(200);
-        expect(res.text).toBeNull();
         expect(res.json).toBeDefined();
         expect(res.json.tot_tasks).toBeGreaterThanOrEqual(0);
         expect(res.json.tasks).toBeDefined();
         res.json.tasks.every(task => {
-            expect(isTask(task).bool).toBe(true);
+            expect(isTask(task)).toBe(true);
         });
     });
 
@@ -86,7 +82,6 @@ describe("/tasks GET", () => {
         expect(res).toBeInstanceOf(Response);
         expect(res.status).toBe(400);
         expect(res.text).toMatch("Limit is negative");
-        expect(res.json).toBeNull();
     });
 
     test("with limit not an integer", () => {
@@ -97,7 +92,6 @@ describe("/tasks GET", () => {
         expect(res).toBeInstanceOf(Response);
         expect(res.status).toBe(400);
         expect(res.text).toMatch("Limit is not an integer");
-        expect(res.json).toBeNull();
     });
 
     test("with negative offset", () => {
@@ -108,7 +102,6 @@ describe("/tasks GET", () => {
         expect(res).toBeInstanceOf(Response);
         expect(res.status).toBe(400);
         expect(res.text).toMatch("Offset is negative");
-        expect(res.json).toBeNull();
     });
 
     test("with offset not an integer", () => {
@@ -119,7 +112,6 @@ describe("/tasks GET", () => {
         expect(res).toBeInstanceOf(Response);
         expect(res.status).toBe(400);
         expect(res.text).toMatch("Offset is not an integer");
-        expect(res.json).toBeNull();
     });
 });
 
@@ -139,20 +131,18 @@ describe("/tasks POST", () => {
             let res_POST = tasks_POST(req_POST);
             expect(res_POST).toBeInstanceOf(Response);
             expect(res_POST.status).toBe(201);
-            expect(res_POST.text).toBeNull();
             expect(res_POST.json).toBeDefined();
-            expect(isTask(res_POST.json).bool).toBe(true);
+            expect(isTask(res_POST.json)).toBe(true);
 
             let res_GET = tasks_GET(req_GET);
             expect(res_GET).toBeInstanceOf(Response);
             expect(res_GET.status).toBe(200);
-            expect(res_GET.text).toBeNull();
             expect(res_GET.json).toBeDefined();
             expect(res_GET.json.tot_tasks).toBeGreaterThanOrEqual(0);
             expect(res_GET.json.tasks).toBeDefined();
             expect(res_GET.json.tasks.length).toBe(i);
             res_GET.json.tasks.every(task => {
-                expect(isTask(task).bool).toBe(true);
+                expect(isTask(task)).toBe(true);
             });
         }
     });
@@ -167,7 +157,6 @@ describe("/tasks POST", () => {
         expect(res).toBeInstanceOf(Response);
         expect(res.status).toBe(423);
         expect(res.text).toMatch("A task with such question already exists");
-        expect(res.json).toBeNull();
     });
 
     test("with no question", () => {
@@ -183,7 +172,6 @@ describe("/tasks POST", () => {
         expect(res).toBeInstanceOf(Response);
         expect(res.status).toBe(400);
         expect(res.text).toMatch("Question is falsy");
-        expect(res.json).toBeNull();
     });
 
     test("with open question task (no answers property)", () => {
@@ -195,9 +183,8 @@ describe("/tasks POST", () => {
 
         expect(res).toBeInstanceOf(Response);
         expect(res.status).toBe(201);
-        expect(res.text).toBeNull();
         expect(res.json).toBeDefined();
-        expect(isTask(res.json).bool).toBe(true);
+        expect(isTask(res.json)).toBe(true);
     });
 
     test("with answers but no correct answers", () => {
@@ -213,7 +200,6 @@ describe("/tasks POST", () => {
         expect(res).toBeInstanceOf(Response);
         expect(res.status).toBe(400);
         expect(res.text).toMatch("Correct_answers is falsy");
-        expect(res.json).toBeNull();
     });
 
     test("with answers but no possible answers", () => {
@@ -229,7 +215,6 @@ describe("/tasks POST", () => {
         expect(res).toBeInstanceOf(Response);
         expect(res.status).toBe(400);
         expect(res.text).toMatch("Possible_answers is falsy");
-        expect(res.json).toBeNull();
     });
 
     test("with answers empty", () => {
@@ -243,7 +228,6 @@ describe("/tasks POST", () => {
         expect(res).toBeInstanceOf(Response);
         expect(res.status).toBe(400);
         expect(res.text).toMatch("Possible_answers is falsy");
-        expect(res.json).toBeNull();
     });
 
     test("with extra properties", () => {
@@ -263,7 +247,6 @@ describe("/tasks POST", () => {
         expect(res).toBeInstanceOf(Response);
         expect(res.status).toBe(400);
         expect(res.text).toMatch("Request body has invalid number of properties");
-        expect(res.json).toBeNull();
     });
 
     test("with extra properties in answers", () => {
@@ -281,7 +264,6 @@ describe("/tasks POST", () => {
         expect(res).toBeInstanceOf(Response);
         expect(res.status).toBe(400);
         expect(res.text).toMatch("Answers has invalid number of properties");
-        expect(res.json).toBeNull();
     });
 
     test("GET with limit = 10", () => {
@@ -291,13 +273,12 @@ describe("/tasks POST", () => {
 
         expect(res).toBeInstanceOf(Response);
         expect(res.status).toBe(200);
-        expect(res.text).toBeNull();
         expect(res.json).toBeDefined();
         expect(res.json.tot_tasks).toBeGreaterThanOrEqual(0);
         expect(res.json.tasks).toBeDefined();
         expect(Object.keys(res.json.tasks).length).toBe(10);
         res.json.tasks.every(task => {
-            expect(isTask(task).bool).toBe(true);
+            expect(isTask(task)).toBe(true);
         });
     });
 
@@ -308,13 +289,12 @@ describe("/tasks POST", () => {
 
         expect(res).toBeInstanceOf(Response);
         expect(res.status).toBe(200);
-        expect(res.text).toBeNull();
         expect(res.json).toBeDefined();
         expect(res.json.tot_tasks).toBeGreaterThanOrEqual(0);
         expect(res.json.tasks).toBeDefined();
         expect(Object.keys(res.json.tasks).length).toBe(0);
         res.json.tasks.every(task => {
-            expect(isTask(task).bool).toBe(true);
+            expect(isTask(task)).toBe(true);
         });
     });
 
@@ -325,13 +305,12 @@ describe("/tasks POST", () => {
 
         expect(res).toBeInstanceOf(Response);
         expect(res.status).toBe(200);
-        expect(res.text).toBeNull();
         expect(res.json).toBeDefined();
         expect(res.json.tot_tasks).toBeGreaterThanOrEqual(0);
         expect(res.json.tasks).toBeDefined();
         expect(Object.keys(res.json.tasks).length).toBeGreaterThan(0);
         res.json.tasks.every(task => {
-            expect(isTask(task).bool).toBe(true);
+            expect(isTask(task)).toBe(true);
         });
     });
 });
@@ -344,9 +323,8 @@ describe("/tasks/taskID GET", () => {
 
         expect(res).toBeInstanceOf(Response);
         expect(res.status).toBe(200);
-        expect(res.text).toBeNull();
         expect(res.json).toBeDefined();
-        expect(isTask(res.json).bool).toBe(true);
+        expect(isTask(res.json)).toBe(true);
         expect(res.json.id).toBe(Number(req.params.taskID));
     });
 
@@ -358,7 +336,6 @@ describe("/tasks/taskID GET", () => {
         expect(res).toBeInstanceOf(Response);
         expect(res.status).toBe(404);
         expect(res.text).toMatch("A task with the specified taskID was not found");
-        expect(res.json).toBeNull();
     });
 
     test("with id=50", () => {
@@ -368,9 +345,8 @@ describe("/tasks/taskID GET", () => {
 
         expect(res).toBeInstanceOf(Response);
         expect(res.status).toBe(200);
-        expect(res.text).toBeNull();
         expect(res.json).toBeDefined();
-        expect(isTask(res.json).bool).toBe(true);
+        expect(isTask(res.json)).toBe(true);
         expect(res.json.id).toBe(Number(req.params.taskID));
     });
 
@@ -382,7 +358,6 @@ describe("/tasks/taskID GET", () => {
         expect(res).toBeInstanceOf(Response);
         expect(res.status).toBe(400);
         expect(res.text).toMatch("TaskID is not an integer");
-        expect(res.json).toBeNull();
     });
 
     test("with id=0", () => {
@@ -393,7 +368,6 @@ describe("/tasks/taskID GET", () => {
         expect(res).toBeInstanceOf(Response);
         expect(res.status).toBe(400);
         expect(res.text).toMatch("TaskID invalid value");
-        expect(res.json).toBeNull();
     });
 });
 
@@ -413,7 +387,6 @@ describe("/tasks/taskID PUT", () => {
         expect(res).toBeInstanceOf(Response);
         expect(res.status).toBe(200);
         expect(res.text).toMatch("Task updated");
-        expect(res.json).toBeNull();
     });
 
     test("tasks_taskID_PUT, update existing task with existing question", () => {
@@ -431,7 +404,6 @@ describe("/tasks/taskID PUT", () => {
         expect(res).toBeInstanceOf(Response);
         expect(res.status).toBe(423);
         expect(res.text).toMatch("A task with such question already exists");
-        expect(res.json).toBeNull();
     });
 
     test("tasks_taskID_PUT, create task", () => {
@@ -449,7 +421,6 @@ describe("/tasks/taskID PUT", () => {
         expect(res).toBeInstanceOf(Response);
         expect(res.status).toBe(201);
         expect(res.text).toMatch("Task created");
-        expect(res.json).toBeNull();
     });
 
     test("tasks_taskID_PUT, create task with existing question", () => {
@@ -467,7 +438,6 @@ describe("/tasks/taskID PUT", () => {
         expect(res).toBeInstanceOf(Response);
         expect(res.status).toBe(423);
         expect(res.text).toMatch("A task with such question already exists");
-        expect(res.json).toBeNull();
     });
 
     test("with malformed request", () => {
@@ -484,7 +454,6 @@ describe("/tasks/taskID PUT", () => {
 
         expect(res).toBeInstanceOf(Response);
         expect(res.status).toBe(400);
-        expect(res.json).toBeNull();
     });
 
     test("with taskID=0", () => {
@@ -502,7 +471,6 @@ describe("/tasks/taskID PUT", () => {
         expect(res).toBeInstanceOf(Response);
         expect(res.status).toBe(400);
         expect(res.text).toMatch("TaskID invalid value");
-        expect(res.json).toBeNull();
     });
 
     test("with taskID not an integer", () => {
@@ -520,7 +488,6 @@ describe("/tasks/taskID PUT", () => {
         expect(res).toBeInstanceOf(Response);
         expect(res.status).toBe(400);
         expect(res.text).toMatch("TaskID is not an integer");
-        expect(res.json).toBeNull();
     });
 });
 
@@ -533,7 +500,6 @@ describe("/tasks/taskID DELETE", () => {
         expect(res).toBeInstanceOf(Response);
         expect(res.status).toBe(204);
         expect(res.text).toMatch("Task removed");
-        expect(res.json).toBeNull();
     });
 
     test("non existing task", () => {
@@ -544,7 +510,6 @@ describe("/tasks/taskID DELETE", () => {
         expect(res).toBeInstanceOf(Response);
         expect(res.status).toBe(404);
         expect(res.text).toMatch("A task with the specified taskID was not found");
-        expect(res.json).toBeNull();
     });
 
     test("with taskID=0", () => {
@@ -555,7 +520,6 @@ describe("/tasks/taskID DELETE", () => {
         expect(res).toBeInstanceOf(Response);
         expect(res.status).toBe(400);
         expect(res.text).toMatch("TaskID invalid value");
-        expect(res.json).toBeNull();
     });
 
     test("with taskID not an integer", () => {
@@ -566,7 +530,6 @@ describe("/tasks/taskID DELETE", () => {
         expect(res).toBeInstanceOf(Response);
         expect(res.status).toBe(400);
         expect(res.text).toMatch("TaskID is not an integer");
-        expect(res.json).toBeNull();
     });
 });
 
@@ -579,15 +542,13 @@ describe("/tasks/taskID/vote POST", () => {
 
         expect(res).toBeInstanceOf(Response);
         expect(res.status).toBe(204);
-        expect(res.json).toBeNull();
 
         // checking for updated rating
         res = tasks_taskID_GET(req);
         expect(res).toBeInstanceOf(Response);
         expect(res.status).toBe(200);
-        expect(res.text).toBeNull();
         expect(res.json).toBeDefined();
-        expect(isTask(res.json).bool).toBe(true);
+        expect(isTask(res.json)).toBe(true);
         expect(res.json.rating).toBe(req.body.vote);
     });
 
@@ -599,15 +560,13 @@ describe("/tasks/taskID/vote POST", () => {
 
         expect(res).toBeInstanceOf(Response);
         expect(res.status).toBe(204);
-        expect(res.json).toBeNull();
 
         // checking for updated rating
         res = tasks_taskID_GET(req);
         expect(res).toBeInstanceOf(Response);
         expect(res.status).toBe(200);
-        expect(res.text).toBeNull();
         expect(res.json).toBeDefined();
-        expect(isTask(res.json).bool).toBe(true);
+        expect(isTask(res.json)).toBe(true);
         expect(res.json.rating).toBe(4.75);
     });
 
@@ -619,7 +578,6 @@ describe("/tasks/taskID/vote POST", () => {
 
         expect(res).toBeInstanceOf(Response);
         expect(res.status).toBe(404);
-        expect(res.json).toBeNull();
     });
 
     test("with vote NaN", () => {
@@ -631,7 +589,6 @@ describe("/tasks/taskID/vote POST", () => {
         expect(res).toBeInstanceOf(Response);
         expect(res.status).toBe(400);
         expect(res.text).toMatch("Vote is NaN");
-        expect(res.json).toBeNull();
     });
 
     test("with vote > 10", () => {
@@ -643,7 +600,6 @@ describe("/tasks/taskID/vote POST", () => {
         expect(res).toBeInstanceOf(Response);
         expect(res.status).toBe(400);
         expect(res.text).toMatch("Vote is out of valid range");
-        expect(res.json).toBeNull();
     });
 
     test("with vote < 0", () => {
@@ -655,7 +611,6 @@ describe("/tasks/taskID/vote POST", () => {
         expect(res).toBeInstanceOf(Response);
         expect(res.status).toBe(400);
         expect(res.text).toMatch("Vote is out of valid range");
-        expect(res.json).toBeNull();
     });
 
     test("update tasks rating many times", () => {
@@ -667,9 +622,8 @@ describe("/tasks/taskID/vote POST", () => {
         let res_GET1 = tasks_taskID_GET(req_POST);
         expect(res_GET1).toBeInstanceOf(Response);
         expect(res_GET1.status).toBe(200);
-        expect(res_GET1.text).toBeNull();
         expect(res_GET1.json).toBeDefined();
-        expect(isTask(res_GET1.json).bool).toBe(true);
+        expect(isTask(res_GET1.json)).toBe(true);
         let rating = res_GET1.json.rating;
         let n_votes = res_GET1.json.n_votes;
 
@@ -679,15 +633,13 @@ describe("/tasks/taskID/vote POST", () => {
             let res_POST = tasks_taskID_vote_POST(req_POST);
             expect(res_POST).toBeInstanceOf(Response);
             expect(res_POST.status).toBe(204);
-            expect(res_POST.json).toBeNull();
 
             // check new average
             let res_GET2 = tasks_taskID_GET(req_POST);
             expect(res_GET2).toBeInstanceOf(Response);
             expect(res_GET2.status).toBe(200);
-            expect(res_GET2.text).toBeNull();
             expect(res_GET2.json).toBeDefined();
-            expect(isTask(res_GET2.json).bool).toBe(true);
+            expect(isTask(res_GET2.json)).toBe(true);
 
             rating = (n_votes * rating + i) / (n_votes + 1);
             n_votes++;
@@ -705,7 +657,6 @@ describe("/tasks/taskID/vote POST", () => {
         expect(res).toBeInstanceOf(Response);
         expect(res.status).toBe(400);
         expect(res.text).toMatch("Request body has invalid number of properties");
-        expect(res.json).toBeNull();
     });
 
     test("with taskID not an integer", () => {
@@ -717,7 +668,6 @@ describe("/tasks/taskID/vote POST", () => {
         expect(res).toBeInstanceOf(Response);
         expect(res.status).toBe(400);
         expect(res.text).toMatch("TaskID is not an integer");
-        expect(res.json).toBeNull();
     });
 
     test("with invalid taskID", () => {
@@ -729,7 +679,6 @@ describe("/tasks/taskID/vote POST", () => {
         expect(res).toBeInstanceOf(Response);
         expect(res.status).toBe(400);
         expect(res.text).toMatch("TaskID invalid value");
-        expect(res.json).toBeNull();
     });
 });
 
