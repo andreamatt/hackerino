@@ -1,5 +1,6 @@
 const util = require('./utility');
 const submissions = require('./submissions');
+const students = require('./students');
 const isExam = util.isExam;
 const toInt = util.toInt;
 const isInteger = util.isInteger;
@@ -171,6 +172,45 @@ function exams_examID_DELETE(req) {
 	return new Response(204, "Deleted", null);
 }
 
+function exams_examID_students_GET(req) {
+	let id = toInt(req.params.examID);
+	if (!isInteger(id) || id < 1) {
+		return new Response(404, "Bad id parameter", null);
+	}
+	if (!exams_list[id]) {
+		return new Response(404, "Exam not found", null);
+	}
 
+	let result = exams_students[id];
+	let tot = result.length;
+	let offset = req.query.offset;
+	if (offset !== undefined) {
+		offset = toInt(offset);
+		if (!isInteger(offset)) {
+			return new Response(400, "Offset is not an integer", null);
+		}
+		if (offset < 0) {
+			return new Response(400, "Offset is negative", null);
+		}
+		result = doOffset(result, offset);
+	}
+	let limit = req.query.limit;
+	if (limit !== undefined) {
+		limit = toInt(limit);
+		if (!isInteger(limit)) {
+			return new Response(400, "Limit is not an integer", null);
+		}
+		if (limit < 0) {
+			return new Response(400, "Limit is negative", null);
+		}
+		result = doLimit(result, limit);
+	}
+	result = result.map(studID => {
+		let r = new Request();
+		r.params.studentID = studID;
+		return students.students_GET(r);
+	});
+	return new Response(200, null, { tot_students: tot, students: result });
+}
 
-module.exports = { exams_GET, exams_POST, exams_examID_GET, exams_examID_PUT, exams_examID_DELETE };
+module.exports = { exams_GET, exams_POST, exams_examID_GET, exams_examID_PUT, exams_examID_DELETE, exams_examID_students_GET };
