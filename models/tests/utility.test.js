@@ -33,28 +33,23 @@ test('Request and response utilities', () => {
 	});
 
 	expect(() => new Response()).toThrow();
-	expect(() => new Response(400, "Bad request")).toThrow();
-	expect(() => new Response(200, null, {}, "nothing")).toThrow();
-	expect(() => new Response(200, null, null)).toThrow();
-	expect(() => new Response(200, 1, null)).toThrow();
+	expect(() => new Response(200, null)).toThrow();
+	expect(() => new Response(200)).toThrow();
+	expect(() => new Response(200, 1)).toThrow();
 
-	expect({ obj: "a" }).toBeTruthy();
-	expect({}).toBeTruthy();
 	expect(() => new Response(200, "msg", true)).toThrow();
 
-	let valid = new Response(200, null, { someproperty: "somevalue" });
+	let valid = new Response(200, { someproperty: "somevalue" });
 	expect(valid).toEqual({
 		status: 200,
-		text: null,
 		json: {
 			someproperty: "somevalue"
 		}
 	});
-	valid = new Response(400, "Bad request", null);
+	valid = new Response(400, "Bad request");
 	expect(valid).toEqual({
 		status: 400,
-		text: "Bad request",
-		json: null
+		text: "Bad request"
 	});
 });
 

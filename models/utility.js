@@ -107,13 +107,18 @@ function Request() {
 	this.body = {};
 }
 
-function Response(status, text, json) {
-	if (arguments.length !== 3 || (!isInteger(status) || status < 0) || (!json && !isString(text)) || (json && isString(text))) {
+function Response(status, result) {
+	if (arguments.length > 2 || !isInteger(status) || status < 0 || result === undefined || result === null) {
 		throw new Error("Wrong response parameters");
 	}
 	this.status = status;
-	this.text = text;
-	this.json = json;
+	if (isString(result)) {
+		this.text = result;
+	} else if (typeof result === 'object' && result.constructor === Object) {
+		this.json = result;
+	} else {
+		throw new Error("Wrong response parameter");
+	}
 }
 
 function isStudent(stud) {
