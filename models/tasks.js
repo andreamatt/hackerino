@@ -179,6 +179,7 @@ function tasks_taskID_DELETE(req) {
 
     // delete submissions with this task
     let subReq = new Request();
+    /* TODO: add when function is done /////////////
     for (sub of subsList) {
         subReq.params.submissionID = sub.id;
         submissions_submissionID_DELETE(subReq);
@@ -189,6 +190,8 @@ function tasks_taskID_DELETE(req) {
     for (exam of examsList) {
         exams.removeTask(exam.id, taskID);
     }
+    ///////////////////////////////////////////////*/
+
 
     delete tasks_list[taskID];
     return new Response(204, "Task removed");

@@ -11,6 +11,7 @@ const doOffset = util.doOffset;
 const doOffsetLimit = util.doOffsetLimit;
 const isStudent = util.isStudent;
 const isTeacher = util.isTeacher;
+const isReview = util.isReview;
 
 test("toInt function", () => {
 	let toInt = util.toInt;
@@ -392,3 +393,78 @@ test("isTeacher", () => {
 	expect(isTeacher(1)).toBe(false);
 	expect(isTeacher(JSON.stringify(teach))).toBe(false);
 });
+
+test("isReview", () => {
+	let review = {
+		id: 1,
+		studentID: 1,
+		submissionID: 1,
+		mark: 29
+	};
+	expect(isReview(review)).toBe(true);
+	review.id = 0;
+	expect(isReview(review)).not.toBe(true);
+	review.id = -1;
+	expect(isReview(review)).not.toBe(true);
+	review.id = "asd";
+	expect(isReview(review)).not.toBe(true);
+	review.id = null;
+	expect(isReview(review)).not.toBe(true);
+	delete review.id;
+	expect(isReview(review)).not.toBe(true);
+	review.id = undefined;
+	expect(isReview(review)).not.toBe(true);
+	review.id = 1.1;
+	expect(isReview(review)).not.toBe(true);
+	review.id = 1;
+	review.studentID = 0;
+	expect(isReview(review)).not.toBe(true);
+	review.studentID = -1;
+	expect(isReview(review)).not.toBe(true);
+	review.studentID = "1";
+	expect(isReview(review)).not.toBe(true);
+	review.studentID = 30000;
+	expect(isReview(review)).toBe(true);
+	delete review.studentID;
+	expect(isReview(review)).not.toBe(true);
+	review.studentID = 30.9;
+	expect(isReview(review)).not.toBe(true);
+	review.studentID = 1;
+	review.submissionID = 0;
+	expect(isReview(review)).not.toBe(true);
+	review.submissionID = -1;
+	expect(isReview(review)).not.toBe(true);
+	review.submissionID = 30.5;
+	expect(isReview(review)).not.toBe(true);
+	review.submissionID = "one";
+	expect(isReview(review)).not.toBe(true);
+	review.submissionID = null;
+	expect(isReview(review)).not.toBe(true);
+	delete review.submissionID;
+	expect(isReview(review)).not.toBe(true);
+	review.submissionID = 1;
+	review.mark = 0;
+	expect(isReview(review)).toBe(true);
+	review.mark = 25.5;
+	expect(isReview(review)).not.toBe(true);
+	review.mark = 31;
+	expect(isReview(review)).not.toBe(true);
+	review.mark = -1;
+	expect(isReview(review)).not.toBe(true);
+	review.mark = "mark";
+	expect(isReview(review)).not.toBe(true);
+	delete review.mark;
+	expect(isReview(review)).not.toBe(true);
+	review.mark = 29;
+	expect(isReview(review)).toBe(true);
+	review.comment = "nice";
+	expect(isReview(review)).not.toBe(true);
+	delete review.comment;
+	expect(isReview(null)).not.toBe(true);
+	expect(isReview()).not.toBe(true);
+	expect(isReview([])).not.toBe(true);
+	expect(isReview({})).not.toBe(true);
+	expect(isReview(1)).not.toBe(true);
+	expect(isReview(JSON.stringify(review))).not.toBe(true);
+});
+
