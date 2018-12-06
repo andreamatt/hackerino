@@ -76,8 +76,6 @@ paths:
             $ref: "#/definitions/Exam"
         "400":
           description: Bad request.
-        "424":
-          description: One of the foreign keys can't be resolved.
 
   /exams/{examID}:
     parameters:
@@ -126,8 +124,8 @@ paths:
           description: Exam created.
         "400":
           description: Bad request.
-        "424":
-          description: One of the foreign keys can't be resolved.
+        "451":
+          description: "Cannot modify because current date is >= exam date"
     delete:
       description: Deletes an exam by examID.
       tags:
@@ -420,7 +418,7 @@ paths:
         "200":
           description: A review.
           schema:
-            $ref: "#/definitions/Exam"
+            $ref: "#/definitions/Review"
         "404":
           description: A review with the specified reviewID was not found.
     put:
@@ -460,6 +458,8 @@ paths:
           description: This student has already reviewed that submission.
         "424":
           description: One of the foreign keys can't be resolved.
+        "451":
+          description: "Cannot submit the review right now: too early ( < exam/deadline ) or too late ( >= exam/review_deadline)."
     delete:
       description: Deletes a submission review from an exam by reviewID.
       tags:
@@ -476,18 +476,6 @@ paths:
       parameters:
         - $ref: "#/parameters/limit"
         - $ref: "#/parameters/offset"
-        - in: query
-          name: examID
-          type: integer
-          minimum: 1
-        - in: query
-          name: taskID
-          type: integer
-          minimum: 1
-        - in: query
-          name: studentID
-          type: integer
-          minimum: 1
       tags:
         - /submissions
       responses:
@@ -619,6 +607,8 @@ paths:
           description: The ID was not resolved => tried to create a new submission. Another submission with the same student, exam and task already exists.
         "424":
           description: One of the foreign keys can't be resolved.
+        "451":
+          description: "Cannot submit the submission right now: too early ( < exam/date ) or too late ( >= exam/deadline)."
     delete:
       description: Deletes a submission from an exam by ID.
       tags:
@@ -1396,11 +1386,11 @@ definitions:
         description: Review's identifier
         type: integer
         minimum: 1
-      student:
+      studentID:
         description: The student who has done the review
         type: integer
         minimum: 1
-      submission:
+      submissionID:
         description: The submission of which the student has done the review
         type: integer
         minimum: 1
@@ -1411,8 +1401,8 @@ definitions:
         maximum: 30
     required:
       - id
-      - student
-      - submission
+      - studentID
+      - submissionID
       - mark
 
   Submission:
@@ -1424,15 +1414,15 @@ definitions:
         description: Identifies a submission
         type: integer
         minimum: 1
-      student:
+      studentID:
         description: The student who submitted this object
         type: integer
         minimum: 1
-      task:
+      taskID:
         description: The task for which the submission was sent
         type: integer
         minimum: 1
-      exam:
+      examID:
         description: The exam where the student submitted for a given task
         type: integer
         minimum: 1
@@ -1459,9 +1449,9 @@ definitions:
         maximum: 30
     required:
       - id
-      - student
-      - task
-      - exam
+      - studentID
+      - taskID
+      - examID
       - review_points
       - final_points
 
