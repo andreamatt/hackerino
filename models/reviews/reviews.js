@@ -27,9 +27,13 @@ function Review(studentID, submissionID, mark) {
 function createReview(id, studentID, submissionID, mark) {
     let review = new Review(studentID, submissionID, mark);
 
-    // update condition
+    // update mode
     if (id && reviews_list[id]) {
-        review.id = id;
+        if (review.studentID === studentID && review.submissionID === submissionID) {
+            review.id = id;
+        } else {
+            return "Unique identifiers in your request body differ from existent review";
+        }
     }
 
     let result = isReview(review);
@@ -41,5 +45,16 @@ function createReview(id, studentID, submissionID, mark) {
     }
 }
 
-module.exports = { reviews_list, createReview };
+function isUnique(studentID, submissionID) {
+    let byStudent = Object.values(reviews_list).filter(review => review.studentID === studentID);
+    let byStudentAndSubmission = byStudent.filter(review => review.submissionID === submissionID);
+
+    if (byStudentAndSubmission.length === 0) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+module.exports = { reviews_list, createReview, isUnique };
 

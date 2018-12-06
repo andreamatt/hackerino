@@ -2,6 +2,7 @@ const util = require("../utility");
 const Request = util.Request;
 const Response = util.Response;
 
+
 //const exams_examID_GET = require("../exams/exams_examID_GET");
 //const students_studentID_GET = require("../students/students_studentID_GET");
 //const submissions_submissionID_GET = require("../submissions/submissions_submissionID_GET");
@@ -21,7 +22,7 @@ function reviews_POST(req) {
     // check review uniqueness
     let byStudent = Object.values(reviews_list).filter(review => review.studentID === studentID);
     let byStudentAndSubmission = byStudent.filter(review => review.submissionID === submissionID);
-    if (byStudentAndSubmission.length > 0) {
+    if (!reviews.isUnique(studentID, submissionID)) {
         return new Response(423, "This student has already reviewed that submission");
     }
 

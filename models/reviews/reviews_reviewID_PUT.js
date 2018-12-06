@@ -28,9 +28,7 @@ function reviews_reviewID_PUT(req) {
     }
 
     // check review uniqueness
-    let byStudent = Object.values(reviews_list).filter(review => review.studentID === studentID);
-    let byStudentAndSubmission = byStudent.filter(review => review.submissionID === submissionID);
-    if (byStudentAndSubmission.length > 0) {
+    if (!reviews.isUnique(studentID, submissionID)) {
         return new Response(423, "This student has already reviewed that submission");
     }
 
@@ -63,7 +61,7 @@ function reviews_reviewID_PUT(req) {
     let review_deadline = new Date(examRes.body.review_deadline);
     let actualTime = new Date();
     if (deadline > actualTime || review_deadline < actualTime) {
-        return new Response(451, "Cannot submit the review right now");
+        return new Response(451, "Cannot submit the review right now: too early or too late");
     }
 
     // finally create/update the review
