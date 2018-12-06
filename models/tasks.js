@@ -1,4 +1,3 @@
-
 const util = require("./utility");
 const Request = util.Request;
 const Response = util.Response;
@@ -12,8 +11,8 @@ const isInteger = Number.isInteger;
 
 const exams = require("./exams");
 
-const submissions = require("./submissions");
-const submissions_submissionID_DELETE = submissions.submissions_submissionID_DELETE;
+//const submissions = require("./submissions");
+//const submissions_submissionID_DELETE = submissions.submissions_submissionID_DELETE;
 
 const tasks_list = {
     /*

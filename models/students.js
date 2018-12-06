@@ -22,7 +22,7 @@ function students_GET(req) {
 	let email = req.query.email;
 	if (email !== undefined) {
 		if (!isString(email)) {
-			return new Response(400, "Bad email query", null);
+			return new Response(400, "Bad email query");
 		}
 		result = result.filter(stud => stud.email === email);
 	}
@@ -30,50 +30,50 @@ function students_GET(req) {
 	let offset = req.query.offset;
 	if (offset !== undefined) {
 		if (!isInteger(offset)) {
-			return new Response(400, "Bad offset query", null);
+			return new Response(400, "Bad offset query");
 		}
 		if (offset < 0) {
-			return new Response(400, "Offset is negative", null);
+			return new Response(400, "Offset is negative");
 		}
 		result = doOffset(result, offset);
 	}
 	let limit = req.query.limit;
 	if (limit !== undefined) {
 		if (!isInteger(limit)) {
-			return new Response(400, "Bad limit query", null);
+			return new Response(400, "Bad limit query");
 		}
 		if (limit < 0) {
-			return new Response(400, "Limit is negative", null);
+			return new Response(400, "Limit is negative");
 		}
 		result = doLimit(result, limit);
 	}
-	return new Response(200, null, { tot_students: tot, students: result });
+	return new Response(200, { tot_students: tot, students: result });
 }
 
 function students_POST(req) {
 	let email = req.body.email;
 	let first_name = req.body.first_name;
 	let last_name = req.body.last_name;
-	if (!isString(email)) return new Response(400, "Bad email body parameter", null);
-	if (!isString(first_name)) return new Response(400, "Bad first_name body parameter", null);
-	if (!isString(last_name)) return new Response(400, "Bad last_name body parameter", null);
+	if (!isString(email)) return new Response(400, "Bad email body parameter");
+	if (!isString(first_name)) return new Response(400, "Bad first_name body parameter");
+	if (!isString(last_name)) return new Response(400, "Bad last_name body parameter");
 
 	let byEmail = Object.values(students_list).filter(stud => stud.email === email);
 	if (byEmail.length > 0) {
-		return new Response(423, "A student with such email already exists", null);
+		return new Response(423, "A student with such email already exists");
 	}
 
 	let stud = new Student(email, first_name, last_name);
 	students_list[stud.id] = stud;
-	return new Response(201, null, stud);
+	return new Response(201, stud);
 }
 
 function students_studentID_GET(req) {
 	let id = util.toInt(req.params.studentID);
-	if (!isInteger(id)) return new Response(404, "Bad studentID parameter", null);
-	if (!students_list[id]) return new Response(404, "Student not found", null);
+	if (!isInteger(id)) return new Response(404, "Bad studentID parameter");
+	if (!students_list[id]) return new Response(404, "Student not found");
 
-	return new Response(200, null, students_list[id]);
+	return new Response(200, students_list[id]);
 }
 
 function students_studentID_PUT(req) {
@@ -82,36 +82,36 @@ function students_studentID_PUT(req) {
 	let first_name = req.body.first_name;
 	let last_name = req.body.last_name;
 
-	if (!isInteger(id)) return new Response(400, "Bad id path parameter", null);
-	if (!isString(email)) return new Response(400, "Bad email body parameter", null);
-	if (!isString(first_name)) return new Response(400, "Bad first_name body parameter", null);
-	if (!isString(last_name)) return new Response(400, "Bad last_name body parameter", null);
+	if (!isInteger(id)) return new Response(400, "Bad id path parameter");
+	if (!isString(email)) return new Response(400, "Bad email body parameter");
+	if (!isString(first_name)) return new Response(400, "Bad first_name body parameter");
+	if (!isString(last_name)) return new Response(400, "Bad last_name body parameter");
 
 	if (students_list[id]) {
 		students_list[id].first_name = first_name;
 		students_list[id].last_name = last_name;
-		return new Response(200, "Student updated", null);
+		return new Response(200, "Student updated");
 	} else {
 		let withEmail = Object.values(students_list).filter(stud => stud.email === email);
 		if (withEmail.length > 0) {
-			return new Response(423, "A student with such email already exists", null);
+			return new Response(423, "A student with such email already exists");
 		}
 		let student = new Student(email, first_name, last_name);
 		student.id = id;
 		students_list[id] = student;
-		return new Response(201, "Student created", null);
+		return new Response(201, "Student created");
 	}
 }
 
 function students_studentID_DELETE(req) {
 	let id = util.toInt(req.params.studentID);
-	if (!isInteger(id)) return new Response(400, "Bad id path parameter", null);
+	if (!isInteger(id)) return new Response(400, "Bad id path parameter");
 
 	if (students_list[id]) {
 		delete students_list[id];
-		return new Response(204, "Student removed", null);
+		return new Response(204, "Student removed");
 	} else {
-		return new Response(404, "Could not remove the student with the specified ID (student not found).", null);
+		return new Response(404, "Could not remove the student with the specified ID (student not found).");
 	}
 }
 

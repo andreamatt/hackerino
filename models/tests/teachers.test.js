@@ -12,7 +12,7 @@ beforeAll(() => {
             let request = new Request();
             let response = teachers_GET(request);
             expect(response.status).toBe(200);
-            expect(response.text).toBeNull();
+
             expect(response.json.tot_teachers).toBe(0);
             expect(response.json.teachers).toEqual([]);
         });
@@ -21,7 +21,7 @@ beforeAll(() => {
             request.query = { limit: 2, offset: 9 };
             let response = teachers_GET(request);
             expect(response.status).toBe(200);
-            expect(response.text).toBeNull();
+
             expect(response.json.tot_teachers).toBe(0);
             expect(response.json.teachers).toEqual([]);
         });
@@ -34,7 +34,7 @@ describe("/teachers POST and GET", () => {
         request.body = { email: "a.b@c", first_name: "a", last_name: "b" };
         let response = teachers_POST(request);
         expect(response.status).toBe(201);
-        expect(response.text).toBeNull();
+
         expect(response.json).toMatchObject({
             email: "a.b@c",
             first_name: "a",
@@ -43,14 +43,14 @@ describe("/teachers POST and GET", () => {
 
         response = teachers_POST(request);
         expect(response.status).toBe(423);
-        expect(response.json).toBeNull();
+
         expect(util.isString(response.text)).toBe(true);
 
         request = new Request();
         request.query = { email: "a.b@c" };
         response = teachers_GET(request);
         expect(response.status).toBe(200);
-        expect(response.text).toBeNull();
+
         expect(response.json).toMatchObject({
             tot_teachers: 1,
             teachers: [{
@@ -64,7 +64,7 @@ describe("/teachers POST and GET", () => {
         request.query = { email: "a.b@c", limit: 1, offset: 0 };
         response = teachers_GET(request);
         expect(response.status).toBe(200);
-        expect(response.text).toBeNull();
+
         expect(response.json).toMatchObject({
             tot_teachers: 1,
             teachers: [{
@@ -78,7 +78,7 @@ describe("/teachers POST and GET", () => {
         request.query = { email: "a.b@c", limit: 0 };
         response = teachers_GET(request);
         expect(response.status).toBe(200);
-        expect(response.text).toBeNull();
+
         expect(response.json).toEqual({
             tot_teachers: 1,
             teachers: []
@@ -88,7 +88,7 @@ describe("/teachers POST and GET", () => {
         request.query = { email: "a.b@c", offset: 1 };
         response = teachers_GET(request);
         expect(response.status).toBe(200);
-        expect(response.text).toBeNull();
+
         expect(response.json).toEqual({
             tot_teachers: 1,
             teachers: []
@@ -99,14 +99,14 @@ describe("/teachers POST and GET", () => {
         response = teachers_GET(request);
         expect(response.status).toBe(400);
         expect(util.isString(response.text)).toBe(true);
-        expect(response.json).toBeNull();
+
 
         request = new Request();
         request.query = { email: "a.b@c", limit: -1 };
         response = teachers_GET(request);
         expect(response.status).toBe(400);
         expect(util.isString(response.text)).toBe(true);
-        expect(response.json).toBeNull();
+
     });
 });
 
@@ -116,7 +116,7 @@ describe("teachers heavy POST and GET", () => {
         request.body = { email: i.toString(), first_name: "a", last_name: "b" };
         let response = teachers_POST(request);
         expect(response.status).toBe(201);
-        expect(response.text).toBeNull();
+
         expect(util.isTeacher(response.json)).toBe(true);
     }
 
@@ -124,7 +124,7 @@ describe("teachers heavy POST and GET", () => {
     request.query = {};
     let response = teachers_GET(request);
     expect(response.status).toBe(200);
-    expect(response.text).toBeNull();
+
     expect(response.json.tot_teachers).toBe(response.json.teachers.length);
     let teachers = response.json.teachers;
     expect(teachers.every(teach => util.isTeacher(teach))).toBe(true);
@@ -133,7 +133,7 @@ describe("teachers heavy POST and GET", () => {
     request.query = { email: "1" };
     response = teachers_GET(request);
     expect(response.status).toBe(200);
-    expect(response.text).toBeNull();
+
     expect(response.json.tot_teachers).toBe(1);
 
     request = new Request();
@@ -145,7 +145,7 @@ describe("teachers heavy POST and GET", () => {
     request.query = { limit: 20 };
     response = teachers_GET(request);
     expect(response.status).toBe(200);
-    expect(response.text).toBeNull();
+
     expect(response.json.tot_teachers >= 100).toBe(true);
     expect(response.json.teachers.length).toBe(20);
 
@@ -153,7 +153,7 @@ describe("teachers heavy POST and GET", () => {
     request.query = { limit: 20, offset: 50 };
     response = teachers_GET(request);
     expect(response.status).toBe(200);
-    expect(response.text).toBeNull();
+
     expect(response.json.tot_teachers >= 100).toBe(true);
     expect(response.json.teachers.length).toBe(20);
     teachers = response.json.teachers;
@@ -202,7 +202,7 @@ describe("teachers POST with bad parameters", () => {
     let response = teachers_POST(request);
     expect(response.status).toBe(400);
     expect(util.isString(response.text)).toBe(true);
-    expect(response.json).toBeNull();
+
 
     request = new Request();
     request.body = {
@@ -212,7 +212,7 @@ describe("teachers POST with bad parameters", () => {
     response = teachers_POST(request);
     expect(response.status).toBe(400);
     expect(util.isString(response.text)).toBe(true);
-    expect(response.json).toBeNull();
+
 
     request = new Request();
     request.body = {
@@ -223,7 +223,7 @@ describe("teachers POST with bad parameters", () => {
     response = teachers_POST(request);
     expect(response.status).toBe(400);
     expect(util.isString(response.text)).toBe(true);
-    expect(response.json).toBeNull();
+
 
     request = new Request();
     request.body = {
@@ -234,7 +234,7 @@ describe("teachers POST with bad parameters", () => {
     response = teachers_POST(request);
     expect(response.status).toBe(400);
     expect(util.isString(response.text)).toBe(true);
-    expect(response.json).toBeNull();
+
 
     request = new Request();
     request.body = {
@@ -245,7 +245,7 @@ describe("teachers POST with bad parameters", () => {
     response = teachers_POST(request);
     expect(response.status).toBe(400);
     expect(util.isString(response.text)).toBe(true);
-    expect(response.json).toBeNull();
+
 });
 
 describe("teachers/teacherID GET", () => {
@@ -270,7 +270,7 @@ describe("teachers/teacherID GET", () => {
         request.params = { teacherID: "asd" };
         let response = teachers_teacherID_GET(request);
         expect(response.status).toBe(404);
-        expect(response.json).toBeNull();
+
     });
 
     test("with bad param", () => {
@@ -278,7 +278,7 @@ describe("teachers/teacherID GET", () => {
         request.params = { teacherID: 9.2 };
         let response = teachers_teacherID_GET(request);
         expect(response.status).toBe(404);
-        expect(response.json).toBeNull();
+
     });
 
     test("with non-ex id", () => {
@@ -286,7 +286,7 @@ describe("teachers/teacherID GET", () => {
         request.params = { teacherID: 99999999 };
         let response = teachers_teacherID_GET(request);
         expect(response.status).toBe(404);
-        expect(response.json).toBeNull();
+
     });
 });
 
@@ -305,7 +305,7 @@ describe("teachers/teacherID DELETE", () => {
         request.params = { teacherID: "asd" };
         let response = teachers.teachers_teacherID_DELETE(request);
         expect(response.status).toBe(400);
-        expect(response.json).toBeNull();
+
     });
 
     test("with bad param", () => {
@@ -313,7 +313,7 @@ describe("teachers/teacherID DELETE", () => {
         request.params = { teacherID: 0.5 };
         let response = teachers.teachers_teacherID_DELETE(request);
         expect(response.status).toBe(400);
-        expect(response.json).toBeNull();
+
     });
 
     test("with not existing teacherID", () => {
@@ -321,7 +321,7 @@ describe("teachers/teacherID DELETE", () => {
         request.params = { teacherID: id + 5 };
         let response = teachers.teachers_teacherID_DELETE(request);
         expect(response.status).toBe(404);
-        expect(response.json).toBeNull();
+
     });
 
     test("with ok param", () => {
@@ -329,7 +329,7 @@ describe("teachers/teacherID DELETE", () => {
         request.params = { teacherID: id };
         let response = teachers.teachers_teacherID_DELETE(request);
         expect(response.status).toBe(204);
-        expect(response.json).toBeNull();
+
     });
 
 });

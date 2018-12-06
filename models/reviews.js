@@ -2,8 +2,8 @@
 const students = require("./students");
 const students_studentID_GET = students.students_studentID_GET;
 
-const submissions = require("./submissions");
-const submissions_submissionID_GET = submissions.submissions_submissionID_GET;
+//const submissions = require("./submissions");
+//const submissions_submissionID_GET = submissions.submissions_submissionID_GET;
 
 const exams = require("./exams");
 const exams_examID_GET = exams.exams_examID_GET;

@@ -12,7 +12,6 @@ beforeAll(() => {
 			let request = new Request();
 			let response = students_GET(request);
 			expect(response.status).toBe(200);
-			expect(response.text).toBeNull();
 			expect(response.json.tot_students).toBe(0);
 			expect(response.json.students).toEqual([]);
 		});
@@ -21,7 +20,6 @@ beforeAll(() => {
 			request.query = { limit: 2, offset: 9 };
 			let response = students_GET(request);
 			expect(response.status).toBe(200);
-			expect(response.text).toBeNull();
 			expect(response.json.tot_students).toBe(0);
 			expect(response.json.students).toEqual([]);
 		});
@@ -34,7 +32,6 @@ describe("/students POST and GET", () => {
 		request.body = { email: "a.b@c", first_name: "a", last_name: "b" };
 		let response = students_POST(request);
 		expect(response.status).toBe(201);
-		expect(response.text).toBeNull();
 		expect(response.json).toMatchObject({
 			email: "a.b@c",
 			first_name: "a",
@@ -43,14 +40,12 @@ describe("/students POST and GET", () => {
 
 		response = students_POST(request);
 		expect(response.status).toBe(423);
-		expect(response.json).toBeNull();
 		expect(util.isString(response.text)).toBe(true);
 
 		request = new Request();
 		request.query = { email: "a.b@c" };
 		response = students_GET(request);
 		expect(response.status).toBe(200);
-		expect(response.text).toBeNull();
 		expect(response.json).toMatchObject({
 			tot_students: 1,
 			students: [{
@@ -64,7 +59,6 @@ describe("/students POST and GET", () => {
 		request.query = { email: "a.b@c", limit: 1, offset: 0 };
 		response = students_GET(request);
 		expect(response.status).toBe(200);
-		expect(response.text).toBeNull();
 		expect(response.json).toMatchObject({
 			tot_students: 1,
 			students: [{
@@ -78,7 +72,6 @@ describe("/students POST and GET", () => {
 		request.query = { email: "a.b@c", limit: 0 };
 		response = students_GET(request);
 		expect(response.status).toBe(200);
-		expect(response.text).toBeNull();
 		expect(response.json).toEqual({
 			tot_students: 1,
 			students: []
@@ -88,7 +81,6 @@ describe("/students POST and GET", () => {
 		request.query = { email: "a.b@c", offset: 1 };
 		response = students_GET(request);
 		expect(response.status).toBe(200);
-		expect(response.text).toBeNull();
 		expect(response.json).toEqual({
 			tot_students: 1,
 			students: []
@@ -99,14 +91,14 @@ describe("/students POST and GET", () => {
 		response = students_GET(request);
 		expect(response.status).toBe(400);
 		expect(util.isString(response.text)).toBe(true);
-		expect(response.json).toBeNull();
+
 
 		request = new Request();
 		request.query = { email: "a.b@c", limit: -1 };
 		response = students_GET(request);
 		expect(response.status).toBe(400);
 		expect(util.isString(response.text)).toBe(true);
-		expect(response.json).toBeNull();
+
 	});
 });
 
@@ -116,7 +108,7 @@ describe("students heavy POST and GET", () => {
 		request.body = { email: i.toString(), first_name: "a", last_name: "b" };
 		let response = students_POST(request);
 		expect(response.status).toBe(201);
-		expect(response.text).toBeNull();
+
 		expect(util.isStudent(response.json)).toBe(true);
 	}
 
@@ -124,7 +116,7 @@ describe("students heavy POST and GET", () => {
 	request.query = {};
 	let response = students_GET(request);
 	expect(response.status).toBe(200);
-	expect(response.text).toBeNull();
+
 	expect(response.json.tot_students).toBe(response.json.students.length);
 	let students = response.json.students;
 	expect(students.every(stud => util.isStudent(stud))).toBe(true);
@@ -133,7 +125,7 @@ describe("students heavy POST and GET", () => {
 	request.query = { email: "1" };
 	response = students_GET(request);
 	expect(response.status).toBe(200);
-	expect(response.text).toBeNull();
+
 	expect(response.json.tot_students).toBe(1);
 
 	request = new Request();
@@ -145,7 +137,7 @@ describe("students heavy POST and GET", () => {
 	request.query = { limit: 20 };
 	response = students_GET(request);
 	expect(response.status).toBe(200);
-	expect(response.text).toBeNull();
+
 	expect(response.json.tot_students >= 100).toBe(true);
 	expect(response.json.students.length).toBe(20);
 
@@ -153,7 +145,7 @@ describe("students heavy POST and GET", () => {
 	request.query = { limit: 20, offset: 50 };
 	response = students_GET(request);
 	expect(response.status).toBe(200);
-	expect(response.text).toBeNull();
+
 	expect(response.json.tot_students >= 100).toBe(true);
 	expect(response.json.students.length).toBe(20);
 	students = response.json.students;
@@ -202,7 +194,7 @@ describe("students POST with bad parameters", () => {
 	let response = students_POST(request);
 	expect(response.status).toBe(400);
 	expect(util.isString(response.text)).toBe(true);
-	expect(response.json).toBeNull();
+
 
 	request = new Request();
 	request.body = {
@@ -212,7 +204,7 @@ describe("students POST with bad parameters", () => {
 	response = students_POST(request);
 	expect(response.status).toBe(400);
 	expect(util.isString(response.text)).toBe(true);
-	expect(response.json).toBeNull();
+
 
 	request = new Request();
 	request.body = {
@@ -223,7 +215,7 @@ describe("students POST with bad parameters", () => {
 	response = students_POST(request);
 	expect(response.status).toBe(400);
 	expect(util.isString(response.text)).toBe(true);
-	expect(response.json).toBeNull();
+
 
 	request = new Request();
 	request.body = {
@@ -234,7 +226,7 @@ describe("students POST with bad parameters", () => {
 	response = students_POST(request);
 	expect(response.status).toBe(400);
 	expect(util.isString(response.text)).toBe(true);
-	expect(response.json).toBeNull();
+
 
 	request = new Request();
 	request.body = {
@@ -245,7 +237,7 @@ describe("students POST with bad parameters", () => {
 	response = students_POST(request);
 	expect(response.status).toBe(400);
 	expect(util.isString(response.text)).toBe(true);
-	expect(response.json).toBeNull();
+
 });
 
 describe("students/studentID GET", () => {
@@ -270,7 +262,7 @@ describe("students/studentID GET", () => {
 		request.params = { studentID: "asd" };
 		let response = students_studentID_GET(request);
 		expect(response.status).toBe(404);
-		expect(response.json).toBeNull();
+
 	});
 
 	test("with bad param", () => {
@@ -278,7 +270,7 @@ describe("students/studentID GET", () => {
 		request.params = { studentID: 9.2 };
 		let response = students_studentID_GET(request);
 		expect(response.status).toBe(404);
-		expect(response.json).toBeNull();
+
 	});
 
 	test("with non-ex id", () => {
@@ -286,7 +278,7 @@ describe("students/studentID GET", () => {
 		request.params = { studentID: 99999999 };
 		let response = students_studentID_GET(request);
 		expect(response.status).toBe(404);
-		expect(response.json).toBeNull();
+
 	});
 });
 
@@ -305,7 +297,7 @@ describe("students/studentID DELETE", () => {
 		request.params = { studentID: "asd" };
 		let response = students.students_studentID_DELETE(request);
 		expect(response.status).toBe(400);
-		expect(response.json).toBeNull();
+
 	});
 
 	test("with bad param", () => {
@@ -313,7 +305,7 @@ describe("students/studentID DELETE", () => {
 		request.params = { studentID: 0.5 };
 		let response = students.students_studentID_DELETE(request);
 		expect(response.status).toBe(400);
-		expect(response.json).toBeNull();
+
 	});
 
 	test("with not existing studentID", () => {
@@ -321,7 +313,7 @@ describe("students/studentID DELETE", () => {
 		request.params = { studentID: id + 5 };
 		let response = students.students_studentID_DELETE(request);
 		expect(response.status).toBe(404);
-		expect(response.json).toBeNull();
+
 	});
 
 	test("with ok param", () => {
@@ -329,7 +321,7 @@ describe("students/studentID DELETE", () => {
 		request.params = { studentID: id };
 		let response = students.students_studentID_DELETE(request);
 		expect(response.status).toBe(204);
-		expect(response.json).toBeNull();
+
 	});
 
 });
