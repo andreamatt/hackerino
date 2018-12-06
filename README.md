@@ -5,7 +5,10 @@
 - [Edoardo Meneghini](https://github.com/edomenegaz)
 - [Andrea Iossa](https://github.com/andreaiossa)
 
-## [Apiary](https://hackerino.docs.apiary.io)
+## [Apiary (NOT UPDATED)](https://hackerino.docs.apiary.io)
+
+## [SwaggerHUB (Latest version)](https://app.swaggerhub.com/apis-docs/andreamatt/hackerino/1.0)
+Same as swagger inside develop
 
 ## [Heroku](https://hackerino.herokuapp.com)
 - [Develop Branch](https://hackerino-dev.herokuapp.com) (uses CI check)
