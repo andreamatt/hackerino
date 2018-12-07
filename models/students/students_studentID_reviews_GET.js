@@ -1,21 +1,17 @@
-const exams_GET = require('../exams/exams_GET');
-const exams_examID_students_GET = require('../exams/exams_examID_students_GET');
+const reviews_GET = require('../exams/reviews_GET');
 const util = require('../utility');
 const isInteger = util.isInteger;
 const Request = util.Request;
 const Response = util.Response;
 
-function students_studentID_exams_GET(req) {
+function students_studentID_reviews_GET(req) {
 	let id = util.toInt(req.params.studentID);
 	if (!isInteger(id)) return new Response(404, "Bad studentID parameter");
 	if (!students_list[id]) return new Response(404, "Student not found");
 
-	let exams_req = new Request();
-	let result = exams_GET(exams_req).exams.filter(exam => {
-		let stud_req = new Request();
-		stud_req.params.examID = exam.id;
-		let students = exams_examID_students_GET(stud_req).students;
-		return students.filter(student => student.id === id).length > 0;
+	let rev_req = new Request();
+	let result = reviews_GET(rev_req).exams.filter(rev => {
+		return rev.studentID === id;
 	});
 
 	let tot = result.length;
@@ -44,4 +40,4 @@ function students_studentID_exams_GET(req) {
 	return new Response(200, { tot_exams: tot, exams: result });
 }
 
-module.exports = students_studentID_exams_GET;
+module.exports = students_studentID_reviews_GET;

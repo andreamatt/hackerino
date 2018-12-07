@@ -21,6 +21,7 @@ function teachers_teacherID_exams_GET(req) {
 	let tot = result.length;
 	let offset = req.query.offset;
 	if (offset !== undefined) {
+		offset = util.toInt(offset);
 		if (!isInteger(offset)) {
 			return new Response(400, "Bad offset query");
 		}
@@ -31,6 +32,7 @@ function teachers_teacherID_exams_GET(req) {
 	}
 	let limit = req.query.limit;
 	if (limit !== undefined) {
+		limit = util.toInt(limit);
 		if (!isInteger(limit)) {
 			return new Response(400, "Bad limit query");
 		}
