@@ -3,11 +3,8 @@ const Request = util.Request;
 const Response = util.Response;
 const isTask = util.isTask;
 
-const tasks_GET = require("../tasks_GET");
 const tasks_POST = require("../tasks_POST");
 const tasks_taskID_GET = require("../tasks_taskID_GET");
-const tasks_taskID_PUT = require("../tasks_taskID_PUT");
-const tasks_taskID_DELETE = require("../tasks_taskID_DELETE");
 const tasks_taskID_vote_POST = require("../tasks_taskID_vote_POST");
 
 beforeAll(() => {
@@ -24,7 +21,7 @@ beforeAll(() => {
 test("with valid vote for existing task without votes", () => {
     let req = new Request();
     req.params.taskID = "5";
-    req.body.vote = 9.5;
+    req.body.vote = 9;
     let res = tasks_taskID_vote_POST(req);
 
     expect(res).toBeInstanceOf(Response);
@@ -54,7 +51,7 @@ test("with valid vote for existing task having one vote", () => {
     expect(res.status).toBe(200);
     expect(res.json).toBeDefined();
     expect(isTask(res.json)).toBe(true);
-    expect(res.json.rating).toBe(4.75);
+    expect(res.json.rating).toBe(4.5);
 });
 
 test("with valid vote for non existing task", () => {
@@ -75,13 +72,24 @@ test("with vote NaN", () => {
 
     expect(res).toBeInstanceOf(Response);
     expect(res.status).toBe(400);
-    expect(res.text).toMatch("Vote is NaN");
+    expect(res.text).toMatch("Vote is not an integer");
+});
+
+test("with vote not an integer", () => {
+    let req = new Request();
+    req.params.taskID = "5";
+    req.body.vote = 2.1;
+    let res = tasks_taskID_vote_POST(req);
+
+    expect(res).toBeInstanceOf(Response);
+    expect(res.status).toBe(400);
+    expect(res.text).toMatch("Vote is not an integer");
 });
 
 test("with vote > 10", () => {
     let req = new Request();
     req.params.taskID = "5";
-    req.body.vote = 10.01;
+    req.body.vote = 11;
     let res = tasks_taskID_vote_POST(req);
 
     expect(res).toBeInstanceOf(Response);

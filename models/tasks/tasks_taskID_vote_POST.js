@@ -1,7 +1,6 @@
 const util = require("../utility");
 const Response = util.Response;
 const toInt = util.toInt;
-const isNumber = util.isNumber;
 const isInteger = util.isInteger;
 
 const tasks = require("./tasks");
@@ -24,8 +23,8 @@ function tasks_taskID_vote_POST(req) {
     }
 
     let vote = req.body.vote;
-    if (!isNumber(vote)) {
-        return new Response(400, "Vote is NaN");
+    if (!isInteger(vote)) {
+        return new Response(400, "Vote is not an integer");
     }
     if (vote < 0 || vote > 10) {
         return new Response(400, "Vote is out of valid range");

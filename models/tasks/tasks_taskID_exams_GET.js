@@ -9,8 +9,8 @@ const isInteger = util.isInteger;
 const tasks = require("./tasks");
 const tasks_list = tasks.tasks_list;
 
-//const exams_GET = require("../exams/exams_GET");
-//const exams_examID_tasks_GET = require("../exams/exams_examID_tasks_GET");
+const exams_GET = require("../exams/exams_GET");
+const exams_examID_tasks_GET = require("../exams/exams_examID_tasks_GET");
 
 function tasks_taskID_exams_GET(req) {
     if (Object.keys(req.body).length > 1) {
@@ -36,7 +36,6 @@ function tasks_taskID_exams_GET(req) {
     examsRes.exams = examsRes.exams.filter(exam => {
         let exams_tasks_req = new Request();
         exams_tasks_req.params = exam.id;
-
         let tasksList = exams_examID_tasks_GET(exams_tasks_req).tasks.map(task => task.id);
         return tasksList.includes(id);
     });

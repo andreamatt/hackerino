@@ -9,7 +9,7 @@ const isInteger = util.isInteger;
 const tasks = require("./tasks");
 const tasks_list = tasks.tasks_list;
 
-//const submissions_GET = require("../submissions/submissions_GET");
+const submissions_GET = require("../submissions/submissions_GET");
 
 function tasks_taskID_submissions_GET(req) {
     if (Object.keys(req.body).length > 1) {

@@ -4,11 +4,6 @@ const Response = util.Response;
 const isTask = util.isTask;
 
 const tasks_GET = require("../tasks_GET");
-const tasks_POST = require("../tasks_POST");
-const tasks_taskID_GET = require("../tasks_taskID_GET");
-const tasks_taskID_PUT = require("../tasks_taskID_PUT");
-const tasks_taskID_DELETE = require("../tasks_taskID_DELETE");
-const tasks_taskID_vote_POST = require("../tasks_taskID_vote_POST");
 
 test("generic tasks_GET", () => {
     let req = new Request();
@@ -42,8 +37,8 @@ test("with limit and empty tasks_list", () => {
 
 test("with offset", () => {
     let req = new Request();
-    let res = tasks_GET(req);
     req.query.offset = "0";
+    let res = tasks_GET(req);
 
     expect(res).toBeInstanceOf(Response);
     expect(res.status).toBe(200);
@@ -81,9 +76,19 @@ test("with negative limit", () => {
     expect(res.text).toMatch("Limit is negative");
 });
 
-test("with limit not an integer", () => {
+test("with limit as word", () => {
     let req = new Request();
     req.query.limit = "notAnumber";
+    let res = tasks_GET(req);
+
+    expect(res).toBeInstanceOf(Response);
+    expect(res.status).toBe(400);
+    expect(res.text).toMatch("Limit is not an integer");
+});
+
+test("with limit not an integer", () => {
+    let req = new Request();
+    req.query.limit = "3.5";
     let res = tasks_GET(req);
 
     expect(res).toBeInstanceOf(Response);
@@ -101,9 +106,19 @@ test("with negative offset", () => {
     expect(res.text).toMatch("Offset is negative");
 });
 
-test("with offset not an integer", () => {
+test("with offset as a word", () => {
     let req = new Request();
     req.query.offset = "notAnumber";
+    let res = tasks_GET(req);
+
+    expect(res).toBeInstanceOf(Response);
+    expect(res.status).toBe(400);
+    expect(res.text).toMatch("Offset is not an integer");
+});
+
+test("with offset not an integer", () => {
+    let req = new Request();
+    req.query.offset = "2.8";
     let res = tasks_GET(req);
 
     expect(res).toBeInstanceOf(Response);

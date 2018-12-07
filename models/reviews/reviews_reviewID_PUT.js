@@ -3,9 +3,9 @@ const Request = util.Request;
 const Response = util.Response;
 const toInt = util.toInt;
 
-//const exams_examID_GET = require("../exams/exams_examID_GET");
-//const students_studentID_GET = require("../students/students_studentID_GET");
-//const submissions_submissionID_GET = require("../submissions/submissions_submissionID_GET");
+const exams_examID_GET = require("../exams/exams_examID_GET");
+const students_studentID_GET = require("../students/students_studentID_GET");
+const submissions_submissionID_GET = require("../submissions/submissions_submissionID_GET");
 
 const reviews = require("./reviews");
 const reviews_list = reviews.reviews_list;
@@ -28,7 +28,7 @@ function reviews_reviewID_PUT(req) {
     }
 
     // check review uniqueness
-    if (!reviews.isUnique(studentID, submissionID)) {
+    if (reviews.isUnique(studentID, submissionID) === false) {
         return new Response(423, "This student has already reviewed that submission");
     }
 

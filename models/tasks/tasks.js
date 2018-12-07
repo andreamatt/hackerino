@@ -49,6 +49,12 @@ function createTask(id, question, answers) {
     }
 }
 
+function isUnique(question) {
+    let byQuestion = Object.values(tasks_list).filter(task => task.question === question);
+    let result = (byQuestion.length === 0) ? true : false;
+    return result;
+}
+
 function addVote(taskID, vote) {
     let n_votes = tasks_list[taskID].n_votes;
     let rating = tasks_list[taskID].rating;
@@ -56,4 +62,4 @@ function addVote(taskID, vote) {
     tasks_list[taskID].rating = (n_votes * rating + vote) / (n_votes + 1);
 }
 
-module.exports = { tasks_list, createTask, addVote };
+module.exports = { tasks_list, createTask, addVote, isUnique };

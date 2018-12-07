@@ -5,10 +5,6 @@ const isTask = util.isTask;
 
 const tasks_GET = require("../tasks_GET");
 const tasks_POST = require("../tasks_POST");
-const tasks_taskID_GET = require("../tasks_taskID_GET");
-const tasks_taskID_PUT = require("../tasks_taskID_PUT");
-const tasks_taskID_DELETE = require("../tasks_taskID_DELETE");
-const tasks_taskID_vote_POST = require("../tasks_taskID_vote_POST");
 
 test("tasks_GET after each valid POST", () => {
     let req_GET = new Request();

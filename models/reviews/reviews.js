@@ -46,14 +46,11 @@ function createReview(id, studentID, submissionID, mark) {
 }
 
 function isUnique(studentID, submissionID) {
-    let byStudent = Object.values(reviews_list).filter(review => review.studentID === studentID);
-    let byStudentAndSubmission = byStudent.filter(review => review.submissionID === submissionID);
+    let byStudentAndSubmission = Object.values(reviews_list)
+        .filter(review => review.studentID === studentID && review.submissionID === submissionID);
 
-    if (byStudentAndSubmission.length === 0) {
-        return true;
-    } else {
-        return false;
-    }
+    let result = (byStudentAndSubmission.length === 0) ? true : false;
+    return result;
 }
 
 module.exports = { reviews_list, createReview, isUnique };

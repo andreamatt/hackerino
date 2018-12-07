@@ -10,19 +10,22 @@ const createTask = tasks.createTask;
 
 function tasks_taskID_PUT(req) {
     let taskID = toInt(req.params.taskID);
+    let answers = req.body.answers;
+    let question = req.body.question;
 
-    if (!isInteger(taskID))
+    if (!isInteger(taskID)) {
         return new Response(400, "TaskID is not an integer");
-    if (taskID < 1)
+    }
+    if (taskID < 1) {
         return new Response(400, "TaskID invalid value");
+    }
 
-    let byQuestion = Object.values(tasks_list).filter(t => t.question === req.body.question);
-    if (byQuestion.length > 0) {
+    if (tasks.isUnique(question) === false) {
         return new Response(423, "A task with such question already exists");
     }
 
     let status = tasks_list[taskID] ? "update" : "create";
-    let result = createTask(taskID, req.body.question, req.body.answers);
+    let result = createTask(taskID, question, answers);
 
     if (isString(result)) {
         return new Response(400, result);
