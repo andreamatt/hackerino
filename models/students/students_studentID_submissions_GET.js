@@ -1,4 +1,4 @@
-const submissions_GET = require('../exams/submissions_GET');
+const submissions_GET = require('../submissions/submissions_GET');
 const util = require('../utility');
 const isInteger = util.isInteger;
 const Request = util.Request;

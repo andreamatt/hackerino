@@ -1,6 +1,5 @@
 const util = require('../../utility');
-const ex_GET = require('../exams_GET');
-const exams_GET = ex_GET.exams_GET;
+const exams_GET = require('../exams_GET');
 const Request = util.Request;
 
 

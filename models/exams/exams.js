@@ -52,7 +52,7 @@ function createExam(id, date, deadline, review_deadline) {
         exam.id = id;
     }
     let msg = isExam(exam);
-    if (msg !== "ok") {
+    if (util.isString(msg)) {
         return msg;
     }
 

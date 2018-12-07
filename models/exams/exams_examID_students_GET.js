@@ -1,14 +1,14 @@
-const exam = require('./exam');
+const exams = require('./exams');
 const util = require('../utility');
-const students = require('../students');
-const exams_students = exam.exams_students;
-const exams_list = exam.exams_list;
+const students_studentID_GET = require('../students/students_studentID_GET');
+const exams_students = exams.exams_students;
+const exams_list = exams.exams_list;
 const isInteger = util.isInteger;
 const Response = util.Response;
 const doOffset = util.doOffset;
 const doLimit = util.doLimit;
 const toInt = util.toInt;
-
+const Request = util.Request;
 
 
 function exams_examID_students_GET(req) {
@@ -47,13 +47,11 @@ function exams_examID_students_GET(req) {
     result = result.map(studID => {
         let r = new Request();
         r.params.studentID = studID;
-        return students.students_GET(r);
+        return students_studentID_GET(r).json;
     });
     return new Response(200, { tot_students: tot, students: result });
 }
 
 
 
-module.exports = {
-    exams_examID_students_GET
-};
+module.exports = exams_examID_students_GET;

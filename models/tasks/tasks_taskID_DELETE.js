@@ -29,7 +29,7 @@ function tasks_taskID_DELETE(req) {
     // get submissions with this task
     let taskReq = new Request();
     taskReq.params.taskID = taskID;
-    let subsList = tasks_taskID_submissions_GET(taskReq).submissions;
+    let subsList = tasks_taskID_submissions_GET(taskReq).json.submissions;
 
     // delete submissions with this task
     let subReq = new Request();
@@ -39,7 +39,7 @@ function tasks_taskID_DELETE(req) {
     }
 
     // remove task from exams
-    let examsList = tasks_taskID_exams_GET(taskReq).exams;
+    let examsList = tasks_taskID_exams_GET(taskReq).json.exams;
     let examReq = new Request();
     for (exam of examsList) {
         examReq.params.examID = exam.id;

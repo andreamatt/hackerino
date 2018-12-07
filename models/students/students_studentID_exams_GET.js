@@ -1,5 +1,6 @@
 const exams_GET = require('../exams/exams_GET');
 const exams_examID_students_GET = require('../exams/exams_examID_students_GET');
+const students_list = require('./students').students_list;
 const util = require('../utility');
 const isInteger = util.isInteger;
 const Request = util.Request;
@@ -11,10 +12,10 @@ function students_studentID_exams_GET(req) {
 	if (!students_list[id]) return new Response(404, "Student not found");
 
 	let exams_req = new Request();
-	let result = exams_GET(exams_req).exams.filter(exam => {
+	let result = exams_GET(exams_req).json.exams.filter(exam => {
 		let stud_req = new Request();
 		stud_req.params.examID = exam.id;
-		let students = exams_examID_students_GET(stud_req).students;
+		let students = exams_examID_students_GET(stud_req).json.students;
 		return students.filter(student => student.id === id).length > 0;
 	});
 

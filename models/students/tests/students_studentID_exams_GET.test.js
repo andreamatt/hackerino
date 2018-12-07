@@ -2,10 +2,10 @@ const students_POST = require('../students_POST');
 const exams_POST = require('../../exams/exams_POST');
 const exams_examID_students_POST = require('../../exams/exams_examID_students_POST');
 const students_studentID_exams_GET = require('../students_studentID_exams_GET');
-const util = require('../utility');
+const util = require('../../utility');
 const Request = util.Request;
 
-describe("students_studentID_exams_GET", () => {
+test("students_studentID_exams_GET", () => {
 	// add a student
 	let request = new Request();
 	request.body = {
@@ -24,7 +24,7 @@ describe("students_studentID_exams_GET", () => {
 		deadline: "2019-12-07T14:55:13.649Z",
 		review_deadline: "2020-12-07T14:55:13.649Z"
 	};
-	response = students_POST(request);
+	response = exams_POST(request);
 	expect(response.status).toBe(201);
 	let exam_id = response.json.id;
 
@@ -65,7 +65,7 @@ describe("students_studentID_exams_GET", () => {
 
 	request = new Request();
 	request.params.studentID = student_id;
-	request.query = { limit: -1 };
+	request.query = { limit: "-1" };
 	response = students_studentID_exams_GET(request);
 	expect(response.status).toBe(400);
 

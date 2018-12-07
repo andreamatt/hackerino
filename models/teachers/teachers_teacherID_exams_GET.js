@@ -1,4 +1,5 @@
 const exams_GET = require('../exams/exams_GET');
+const teachers_list = require('./teachers').teachers_list;
 const exams_examID_teachers_GET = require('../exams/exams_examID_teachers_GET');
 const util = require('../utility');
 const isInteger = util.isInteger;
@@ -11,11 +12,11 @@ function teachers_teacherID_exams_GET(req) {
 	if (!teachers_list[id]) return new Response(404, "Teacher not found");
 
 	let exams_req = new Request();
-	let result = exams_GET(exams_req).exams.filter(exam => {
-		let stud_req = new Request();
-		stud_req.params.examID = exam.id;
-		let teachers = exams_examID_teachers_GET(stud_req).teachers;
-		return teachers.filter(teacher => teacher.id === id).length > 0;
+	let result = exams_GET(exams_req).json.exams.filter(exam => {
+		let teacher_req = new Request();
+		teacher_req.params.examID = exam.id;
+		let teachers = exams_examID_teachers_GET(teacher_req).json.teachers;
+		return (teachers.filter(teacher => teacher.id === id)).length > 0;
 	});
 
 	let tot = result.length;

@@ -1,10 +1,10 @@
 const util = require('../utility');
-const exam = require('./exam');
-const exams_students = exam.exams_students;
-const exams_teachers = exam.exams_teachers;
-const exams_tasks = exam.exams_tasks;
-const exams_list = exam.exams_list;
-const createExam = exam.createExam;
+const exams = require('./exams');
+const exams_students = exams.exams_students;
+const exams_teachers = exams.exams_teachers;
+const exams_tasks = exams.exams_tasks;
+const exams_list = exams.exams_list;
+const createExam = exams.createExam;
 const Response = util.Response;
 const isString = util.isString;
 
@@ -25,6 +25,4 @@ function exams_POST(req) {
     return new Response(201, exam);
 }
 
-module.exports = {
-    exams_POST,
-};
+module.exports = exams_POST;

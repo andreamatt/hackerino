@@ -1,5 +1,6 @@
 const util = require('../utility');
-const submissions = require('../submissions');
+const submissions_GET = require('../submissions/submissions_GET');
+const exams_list = require('./exams').exams_list;
 const isInteger = util.isInteger;
 const Response = util.Response;
 const doOffset = util.doOffset;
@@ -18,7 +19,7 @@ function exams_examID_submissions_GET(req) {
     }
 
     let sub_req = new Request();
-    let result = submissions.submissions_GET(sub_req).submissions;
+    let result = submissions_GET(sub_req).submissions;
     result = result.filter(sub => sub.examID === id);
 
     let tot = result.length;
@@ -47,6 +48,4 @@ function exams_examID_submissions_GET(req) {
     return new Response(200, { tot_submissions: tot, submissions: result });
 }
 
-module.exports = {
-    exams_examID_submissions_GET
-};
+module.exports = exams_examID_submissions_GET;

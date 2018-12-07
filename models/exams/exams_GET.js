@@ -1,6 +1,6 @@
 const util = require('../utility');
-const exam = require('./exam');
-const exams_list = exam.exams_list;
+const exams = require('./exams');
+const exams_list = exams.exams_list;
 const isInteger = util.isInteger;
 const Response = util.Response;
 const doOffset = util.doOffset;
@@ -37,6 +37,4 @@ function exams_GET(req) {
     return new Response(200, { tot_exams: tot, exams: result });
 }
 
-module.exports = {
-    exams_GET,
-};
+module.exports = exams_GET;

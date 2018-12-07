@@ -1,6 +1,6 @@
 const util = require('../utility');
-const sub = require('./submission');
-const reviews = require('../reviews');
+const sub = require('./submissions');
+const reviews = require('../reviews/reviews');
 const submissions_list = sub.submissions_list;
 const isInteger = Number.isInteger;
 const Response = util.Response;
@@ -34,6 +34,4 @@ function submissions_submissionID_DELETE(req) {
 
 
 
-module.exports = {
-    submissions_submissionID_DELETE
-};
+module.exports = submissions_submissionID_DELETE;

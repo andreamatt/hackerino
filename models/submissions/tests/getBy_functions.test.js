@@ -1,15 +1,12 @@
-const sub_POST = require('../submission_POST');
-const submission = require('../submission');
-const students = require('../../students');
 const util = require('../../utility');
-const exams = require('../../exams');
-const tasks = require('../../tasks');
-const submissions_GET = submission.submissions_GET;
-const submission_POST = sub_POST.submission_POST;
-const getByStudentID = submission.getByStudentID;
-const student_POST = students.students_POST;
-const getByExamID = submission.getByExamID;
-const getByTaskID = submission.getByTaskID;
+const submissions_GET = require('../submissions_GET');
+const submissions_POST = require('../submissions_POST');
+const student_POST = require('../../students/students_POST');
+const submissions = require('../submissions');
+const getByStudentID = submissions.getByStudentID;
+const getByExamID = submissions.getByExamID;
+const getByTaskID = submissions.getByTaskID;
+const tasks_POST = require('../../tasks/tasks_POST');
 const Request = util.Request;
 
 
@@ -46,7 +43,7 @@ describe("getBy functions", () => {
         request.body.examID = 1;
         request.body.answer = "a";
         request.body.chosen_answer = 1;
-        submission_POST(request);
+        submissions_POST(request);
         let result = getByExamID(1);
 
         expect(result.length).toBeGreaterThanOrEqual(0);
@@ -58,7 +55,7 @@ describe("getBy functions", () => {
         request.body.examID = 1;
         request.body.answer = "a";
         request.body.chosen_answer = 1;
-        submission_POST(request);
+        submissions_POST(request);
         let result = getByExamID(1);
 
         expect(result.length).toBeGreaterThanOrEqual(0);
@@ -75,7 +72,7 @@ describe("getBy functions", () => {
         request.body.examID = 1;
         request.body.answer = "a";
         request.body.chosen_answer = 1;
-        submission_POST(request);
+        submissions_POST(request);
         let result = getByStudentID(studentID);
 
         expect(result.length).toBeGreaterThanOrEqual(0);
@@ -84,7 +81,7 @@ describe("getBy functions", () => {
     test("getByTaskID function", () => {
         let task_request = new Request();
         task_request.body = { question: "Who?", answers: { possible_answers: ["Elyon", "Jhw"], correct_answers: [0] } };
-        let task_response = tasks.tasks_POST(task_request);
+        let task_response = tasks_POST(task_request);
         let taskID = task_response.json.id;
 
         let request = new Request();
@@ -93,7 +90,7 @@ describe("getBy functions", () => {
         request.body.examID = 1;
         request.body.answer = "a";
         request.body.chosen_answer = 1;
-        submission_POST(request);
+        submissions_POST(request);
         let result = getByTaskID(taskID);
 
         expect(result.length).toBeGreaterThanOrEqual(0);

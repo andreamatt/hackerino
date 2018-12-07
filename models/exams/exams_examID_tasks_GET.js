@@ -1,7 +1,8 @@
 const util = require('../utility');
-const tasks = require('../tasks');
-const exams_tasks = exam.exams_tasks;
-const exams_list = exam.exams_list;
+const tasks_GET = require('../tasks/tasks_GET');
+const exams = require('./exams');
+const exams_tasks = exams.exams_tasks;
+const exams_list = exams.exams_list;
 const isInteger = util.isInteger;
 const Response = util.Response;
 const doOffset = util.doOffset;
@@ -46,13 +47,11 @@ function exams_examID_tasks_GET(req) {
     result = result.map(taskID => {
         let r = new Request();
         r.params.taskID = taskID;
-        return tasks.tasks_GET(r);
+        return tasks_GET(r);
     });
     return new Response(200, { tot_tasks: tot, tasks: result });
 }
 
 
 
-module.exports = {
-    exams_examID_tasks_GET
-};
+module.exports = exams_examID_tasks_GET;

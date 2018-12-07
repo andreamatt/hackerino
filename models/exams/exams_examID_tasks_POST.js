@@ -1,7 +1,8 @@
 const util = require('../utility');
-const tasks = require('../tasks');
-const exams_tasks = exam.exams_tasks;
-const exams_list = exam.exams_list;
+const tasks_taskID_GET = require('../tasks/tasks_taskID_GET');
+const exams = require('./exams');
+const exams_tasks = exams.exams_tasks;
+const exams_list = exams.exams_list;
 const isInteger = util.isInteger;
 const Response = util.Response;
 const toInt = util.toInt;
@@ -26,7 +27,7 @@ function exams_examID_tasks_POST(req) {
     }
     let stud_req = new Request();
     stud_req.params.taskID = taskID;
-    let stud_res = tasks.tasks_taskID_GET(stud_req);
+    let stud_res = tasks_taskID_GET(stud_req);
     if (stud_res.status !== 200) {
         return new Response(424, "Task not found therefore not added");
     } else {
@@ -37,6 +38,4 @@ function exams_examID_tasks_POST(req) {
 
 
 
-module.exports = {
-    exams_examID_tasks_POST
-};
+module.exports = exams_examID_tasks_POST;

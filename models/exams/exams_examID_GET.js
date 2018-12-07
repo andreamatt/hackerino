@@ -1,6 +1,6 @@
 const util = require('../utility');
-const exam = require('./exam');
-const exams_list = exam.exams_list;
+const exams = require('./exams');
+const exams_list = exams.exams_list;
 const isInteger = util.isInteger;
 const Response = util.Response;
 const toInt = util.toInt;
@@ -20,6 +20,4 @@ function exams_examID_GET(req) {
 
 
 
-module.exports = {
-    exams_examID_GET
-};
+module.exports = exams_examID_GET;

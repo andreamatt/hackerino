@@ -1,11 +1,11 @@
 const util = require('../utility');
-const submissions = require('../submissions');
-const exams_ID_sub_GET = require('./exams_examID_submissions_GET');
-const exams_examID_submissions_GET = exams_ID_sub_GET.exams_ID_sub_GET;
-const exams_students = exam.exams_students;
-const exams_teachers = exam.exams_teachers;
-const exams_tasks = exam.exams_tasks;
-const exams_list = exam.exams_list;
+const submissions_submissionID_DELETE = require('../submissions/submissions_submissionID_DELETE');
+const exams_examID_submissions_GET = require('./exams_examID_submissions_GET');
+const exams = require('./exams');
+const exams_students = exams.exams_students;
+const exams_teachers = exams.exams_teachers;
+const exams_tasks = exams.exams_tasks;
+const exams_list = exams.exams_list;
 const isInteger = util.isInteger;
 const Response = util.Response;
 const toInt = util.toInt;
@@ -33,7 +33,7 @@ function exams_examID_DELETE(req) {
     for (sub of filtered_subs) {
         let req = new Request();
         req.params.submissionID = sub.id;
-        submissions.submissions_submissionID_DELETE(req);
+        submissions_submissionID_DELETE(req);
     }
 
     return new Response(204, "Deleted");
@@ -41,6 +41,4 @@ function exams_examID_DELETE(req) {
 
 
 
-module.exports = {
-    exams_examID_DELETE
-};
+module.exports = exams_examID_DELETE;

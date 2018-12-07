@@ -1,8 +1,8 @@
-const exams = require('../exams');
-const tasks = require('../tasks');
 const util = require('../utility');
-const sub = require('./submission');
-const students = require('../students');
+const sub = require('./submissions');
+const students_studentID_GET = require('../students/students_studentID_GET');
+const tasks_taskID_GET = require('../tasks/tasks_taskID_GET');
+const exams_examID_GET = require('../exams/exams_examID_GET');
 const create_submission = sub.create_submission;
 const submissions_list = sub.submissions_list;
 const isString = util.isString;
@@ -28,9 +28,9 @@ function submission_POST(req) {
     request.params.examID = examID;
     request.params.taskID = taskID;
 
-    let student_status = students.students_studentID_GET(request).status;
-    let task_status = tasks.tasks_taskID_GET(request).status;
-    let selected_exam = exams.exams_examID_GET(request);
+    let student_status = students_studentID_GET(request).status;
+    let task_status = tasks_taskID_GET(request).status;
+    let selected_exam = exams_examID_GET(request);
     let exam_status = selected_exam.status;
 
     if (task_status !== 200) return new Response(424, "task foreign key can't be resolved.");
@@ -62,6 +62,4 @@ function submission_POST(req) {
 
 
 
-module.exports = {
-    submission_POST
-};
+module.exports = submission_POST;

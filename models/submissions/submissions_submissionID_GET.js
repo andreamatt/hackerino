@@ -1,5 +1,5 @@
 const util = require('../utility');
-const sub = require('./submission');
+const sub = require('./submissions');
 const submissions_list = sub.submissions_list;
 const isInteger = Number.isInteger;
 const Response = util.Response;
@@ -21,6 +21,4 @@ function submissions_submissionID_GET(req) {
 
 
 
-module.exports = {
-    submissions_submissionID_GET
-};
+module.exports = submissions_submissionID_GET;

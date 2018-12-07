@@ -107,7 +107,7 @@ describe("students heavy POST and GET", () => {
 	request = new Request();
 	request.query = { limit: "1" };
 	response = students_GET(request);
-	expect(response.status).toBe(400);
+	expect(response.status).toBe(200);
 
 	request = new Request();
 	request.query = { limit: 20 };

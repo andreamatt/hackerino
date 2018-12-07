@@ -1,4 +1,4 @@
-const reviews_GET = require('../exams/reviews_GET');
+const reviews_GET = require('../reviews/reviews_GET');
 const util = require('../utility');
 const isInteger = util.isInteger;
 const Request = util.Request;

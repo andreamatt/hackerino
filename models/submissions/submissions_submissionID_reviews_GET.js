@@ -1,5 +1,6 @@
-const reviews = require('../reviews');
+const reviews = require('../reviews/reviews');
 const util = require('../utility');
+const submissions_list = require('./submissions').submissions_list;
 const isInteger = Number.isInteger;
 const Response = util.Response;
 const doOffset = util.doOffset;
@@ -16,6 +17,9 @@ function submissions_submissionID_review_GET(req) {
 
     if (!isInteger(id) || id < 1) {
         return new Response(400, "Bad id paramater");
+    }
+    if (!submissions_list[id]) {
+        return new Response(404, "A submission with the specified submissionID was not found.");
     }
 
     let request = new Request();
@@ -50,6 +54,4 @@ function submissions_submissionID_review_GET(req) {
 
 
 
-module.exports = {
-    submissions_submissionID_review_GET
-};
+module.exports = submissions_submissionID_review_GET;

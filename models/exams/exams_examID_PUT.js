@@ -1,7 +1,7 @@
 const util = require('../utility');
-const exam = require('./exam');
-const createExam = exam.createExam;
-const exams_list = exam.exams_list;
+const exams = require('./exams');
+const createExam = exams.createExam;
+const exams_list = exams.exams_list;
 const isInteger = util.isInteger;
 const isString = util.isString;
 const Response = util.Response;
@@ -33,6 +33,4 @@ function exams_examID_PUT(req) {
 
 
 
-module.exports = {
-    exams_examID_PUT
-};
+module.exports = exams_examID_PUT;

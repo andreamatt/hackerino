@@ -1,10 +1,12 @@
 const util = require('../utility');
-const teachers = require('../teachers');
-const exams_teachers = exam.exams_teachers;
-const exams_list = exam.exams_list;
+const teachers_teacherID_GET = require('../teachers/teachers_teacherID_GET');
+const exams = require('./exams');
+const exams_teachers = exams.exams_teachers;
+const exams_list = exams.exams_list;
 const isInteger = util.isInteger;
 const Response = util.Response;
 const toInt = util.toInt;
+const Request = util.Request;
 
 
 
@@ -26,7 +28,7 @@ function exams_examID_teachers_POST(req) {
     }
     let stud_req = new Request();
     stud_req.params.teacherID = teacherID;
-    let stud_res = teachers.teachers_teacherID_GET(stud_req);
+    let stud_res = teachers_teacherID_GET(stud_req);
     if (stud_res.status !== 200) {
         return new Response(424, "Teacher not found therefore not added");
     } else {
@@ -37,6 +39,4 @@ function exams_examID_teachers_POST(req) {
 
 
 
-module.exports = {
-    exams_examID_teachers_POST
-};
+module.exports = exams_examID_teachers_POST;

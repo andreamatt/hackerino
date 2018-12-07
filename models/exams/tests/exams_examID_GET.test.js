@@ -1,10 +1,7 @@
 const util = require('../../utility');
-const ex_GET = require('../exams_GET');
-const ex_POST = require('../exams_POST');
-const ex_exID_GET = require('../exams_examID_GET');
-const exams_examID_GET = ex_exID_GET.exams_examID_GET;
-const exams_POST = ex_POST.exams_POST;
-const exams_GET = ex_GET.exams_GET;
+const exams_GET = require('../exams_GET');
+const exams_POST = require('../exams_POST');
+const exams_examID_GET = require('../exams_examID_GET');
 const Request = util.Request;
 
 

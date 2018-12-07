@@ -2,10 +2,11 @@ const teachers_POST = require('../teachers_POST');
 const exams_POST = require('../../exams/exams_POST');
 const exams_examID_teachers_POST = require('../../exams/exams_examID_teachers_POST');
 const teachers_teacherID_exams_GET = require('../teachers_teacherID_exams_GET');
-const util = require('../utility');
+const exams_examID_teachers_GET = require('../../exams/exams_examID_teachers_GET');
+const util = require('../../utility');
 const Request = util.Request;
 
-describe("teachers_teacherID_exams_GET", () => {
+test("teachers_teacherID_exams_GET", () => {
 	// add a teacher
 	let request = new Request();
 	request.body = {
@@ -24,7 +25,7 @@ describe("teachers_teacherID_exams_GET", () => {
 		deadline: "2019-12-07T14:55:13.649Z",
 		review_deadline: "2020-12-07T14:55:13.649Z"
 	};
-	response = teachers_POST(request);
+	response = exams_POST(request);
 	expect(response.status).toBe(201);
 	let exam_id = response.json.id;
 
@@ -35,12 +36,20 @@ describe("teachers_teacherID_exams_GET", () => {
 	response = exams_examID_teachers_POST(request);
 	expect(response.status).toBe(204);
 
+	// get exam's teachers
+	request = new Request();
+	request.params.examID = exam_id;
+	response = exams_examID_teachers_GET(request);
+	expect(response.status).toBe(200);
+	expect(response.json.teachers.length > 0).toBe(true);
+	expect(util.isTeacher(response.json.teachers[0])).toBe(true);
+
 	// get exams
 	request = new Request();
 	request.params.teacherID = teacher_id;
 	response = teachers_teacherID_exams_GET(request);
 	expect(response.status).toBe(200);
-	expect(util.isExam(response.json.exams[0])).toBe(true);
+	expect(response.json.exams.length > 0).toBe(true);
 	expect(response.json.exams[0].id).toBe(exam_id);
 
 	request = new Request();
@@ -48,7 +57,7 @@ describe("teachers_teacherID_exams_GET", () => {
 	request.query = { offset: 0, limit: 1 };
 	response = teachers_teacherID_exams_GET(request);
 	expect(response.status).toBe(200);
-	expect(util.isExam(response.json.exams[0])).toBe(true);
+	expect(response.json.exams.length > 0).toBe(true);
 	expect(response.json.exams[0].id).toBe(exam_id);
 
 	request = new Request();
@@ -65,7 +74,7 @@ describe("teachers_teacherID_exams_GET", () => {
 
 	request = new Request();
 	request.params.teacherID = teacher_id;
-	request.query = { limit: -1 };
+	request.query = { limit: "-1" };
 	response = teachers_teacherID_exams_GET(request);
 	expect(response.status).toBe(400);
 

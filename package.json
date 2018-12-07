@@ -24,7 +24,14 @@
   },
   "jest": {
     "verbose": true,
-    "collectCoverage": true
+    "collectCoverage": true,
+    "collectCoverageFrom": [
+      "**/*.{js,jsx}",
+      "!**server.js",
+      "!**settings.js",
+      "!**/node_modules/**",
+      "!**/coverage/**"
+    ]
   },
   "devDependencies": {
     "jest": "^23.6.0"

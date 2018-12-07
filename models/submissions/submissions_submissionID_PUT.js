@@ -1,8 +1,8 @@
-const students = require('../students');
-const sub = require('./submission');
+const exams = require('../exams/exams');
+const tasks = require('../tasks/tasks');
 const util = require('../utility');
-const exams = require('../exams');
-const tasks = require('../tasks');
+const sub = require('./submissions');
+const students = require('../students/students');
 const submissions_list = sub.submissions_list;
 const Response = util.Response;
 const isString = util.isString;
@@ -29,9 +29,9 @@ function submission_submissionID_PUT(req) {
     request.params.examID = examID;
     request.params.taskID = taskID;
 
-    let student_status = students.students_studentID_GET(request).status;
-    let task_status = tasks.tasks_taskID_GET(request).status;
-    let selected_exam = exams.exams_examID_GET(request);
+    let student_status = students_studentID_GET(request).status;
+    let task_status = tasks_taskID_GET(request).status;
+    let selected_exam = exams_examID_GET(request);
     let exam_status = selected_exam.status;
 
     if (student_status !== 200) return new Response(424, "studentID foreign key can't be resolved.");
@@ -71,6 +71,4 @@ function submission_submissionID_PUT(req) {
 
 
 
-module.exports = {
-    submission_submissionID_PUT
-};
+module.exports = submission_submissionID_PUT;

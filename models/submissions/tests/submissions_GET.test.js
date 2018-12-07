@@ -1,6 +1,5 @@
-const sub_GET = require('../submissions_GET');
+const submissions_GET = require('../submissions_GET');
 const util = require('../../utility');
-const submissions_GET = sub_GET.submissions_GET;
 const Request = util.Request;
 
 describe("/submissions GET", () => {

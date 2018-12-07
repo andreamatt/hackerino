@@ -97,7 +97,7 @@ function isExam(exam) {
 	if (Date.parse(exam.date) >= Date.parse(exam.deadline)) return "deadline needs to be after date";
 	if (Date.parse(exam.deadline) >= Date.parse(exam.review_deadline)) return "review_deadline needs to be after deadline";
 
-	return "ok";
+	return true;
 }
 
 function isTask(task) {

@@ -33,12 +33,13 @@ function tasks_taskID_exams_GET(req) {
     let examsRes = exams_GET(examsReq);
 
     // filter exams which have not this tasks in their tasks array
-    examsRes.exams = examsRes.exams.filter(exam => {
+    let result = examsRes.json.exams.filter(exam => {
         let exams_tasks_req = new Request();
         exams_tasks_req.params = exam.id;
-        let tasksList = exams_examID_tasks_GET(exams_tasks_req).tasks.map(task => task.id);
+        let tasksList = exams_examID_tasks_GET(exams_tasks_req).json.tasks.map(task => task.id);
         return tasksList.includes(id);
     });
+    let tot = result.length;
 
     // check query parameters
     if (req.query.offset !== undefined) {
@@ -49,7 +50,7 @@ function tasks_taskID_exams_GET(req) {
         if (offset < 0) {
             return new Response(400, "Offset is negative");
         }
-        examsRes.exams = doOffset(examsRes, offset);
+        result = doOffset(result, offset);
     }
     if (req.query.limit !== undefined) {
         let limit = toInt(req.query.limit);
@@ -60,10 +61,10 @@ function tasks_taskID_exams_GET(req) {
             return new Response(400, "Limit is negative");
         }
 
-        examsRes.exams = doLimit(examsRes, limit);
+        result = doLimit(result, limit);
     }
 
-    return new Response(200, examsRes);
+    return new Response(200, { tot_exams: tot, exams: result });
 }
 
 module.exports = tasks_taskID_exams_GET;

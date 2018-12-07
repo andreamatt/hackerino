@@ -33,14 +33,14 @@ describe("students GET with wrong parameters", () => {
 	expect(response.status).toBe(400);
 
 	request = new Request();
-	request.query = { offset: -1 };
+	request.query = { offset: "-1" };
 	response = students_GET(request);
 	expect(response.status).toBe(400);
 
 	request = new Request();
 	request.query = { limit: "1" };
 	response = students_GET(request);
-	expect(response.status).toBe(400);
+	expect(response.status).toBe(200);
 
 	request = new Request();
 	request.query = { offset: {} };

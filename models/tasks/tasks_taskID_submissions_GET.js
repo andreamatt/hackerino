@@ -32,8 +32,8 @@ function tasks_taskID_submissions_GET(req) {
     let subsRes = submissions_GET(subsReq);
 
     // filter submissions which have not this task as taskID
-    subsRes.submissions = subsRes.submissions.filter(submission => submission.taskID === id);
-    subsRes.tot_submissions = subsRes.submissions.length;
+    let result = subsRes.json.submissions.filter(submission => submission.taskID === id);
+    let tot = subsRes.json.submissions.length;
 
     // check query parameters
     if (req.query.offset !== undefined) {
@@ -44,7 +44,7 @@ function tasks_taskID_submissions_GET(req) {
         if (offset < 0) {
             return new Response(400, "Offset is negative");
         }
-        subsRes.submissions = doOffset(subsRes, offset);
+        result = doOffset(result, offset);
     }
     if (req.query.limit !== undefined) {
         let limit = toInt(req.query.limit);
@@ -55,10 +55,10 @@ function tasks_taskID_submissions_GET(req) {
             return new Response(400, "Limit is negative");
         }
 
-        subsRes.submissions = doLimit(subsRes, limit);
+        result = doLimit(result, limit);
     }
 
-    return new Response(200, subsRes);
+    return new Response(200, { tot_submissions: tot, submissions: result });
 }
 
 module.exports = tasks_taskID_submissions_GET;

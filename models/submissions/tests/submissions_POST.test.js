@@ -1,30 +1,28 @@
-const submissions = require('../submission_POST');
 const util = require('../../utility');
-const exams = require('../../exams');
-const students = require('../../students');
-const tasks = require('../../tasks');
+const submissions_POST = require('../submissions_POST');
+const exams_POST = require('../../exams/exams_POST');
+const students_POST = require('../../students/students_POST');
+const tasks_POST = require('../../tasks/tasks_POST');
 const Request = util.Request;
-const submission_POST = submissions.submission_POST;
-const student_POST = students.students_POST;
 
 
 describe("/submissions_POST", () => {
-    test("submission_POST all working", () => {
+    test("submissions_POST all working", () => {
         let student_request = new Request();
         student_request.body = { email: "a.b@c", first_name: "a", last_name: "b" };
-        let student_response = student_POST(student_request);
+        let student_response = students_POST(student_request);
         let studentID = student_response.json.id;
 
         let task_request = new Request();
         task_request.body = { question: "Why?", answers: { possible_answers: ["Elyon", "Jhw"], correct_answers: [0] } };
-        let task_response = tasks.tasks_POST(task_request);
+        let task_response = tasks_POST(task_request);
         let taskID = task_response.json.id;
 
         let exam_request = new Request();
         exam_request.body.date = "2001/10/10";
         exam_request.body.deadline = "2030/10/10";
         exam_request.body.review_deadline = "20031/10/10";
-        let exam_response = exams.exams_POST(exam_request);
+        let exam_response = exams_POST(exam_request);
         let examID = exam_response.json.id;
 
         let request = new Request();
@@ -33,22 +31,22 @@ describe("/submissions_POST", () => {
         request.body.examID = examID;
         request.body.answer = "a";
         request.body.chosen_answer = 1;
-        let response = submission_POST(request);
+        let response = submissions_POST(request);
 
         expect(response.status).toBe(201);
     });
 
-    test("submission_POST with given task not existing", () => {
+    test("submissions_POST with given task not existing", () => {
         let student_request = new Request();
         student_request.body = { email: "a.bc@d", first_name: "a", last_name: "b" };
-        let student_response = student_POST(student_request);
+        let student_response = students_POST(student_request);
         let studentID = student_response.json.id;
 
         let exam_request = new Request();
         exam_request.body.date = "2001/10/10";
         exam_request.body.deadline = "2030/10/10";
         exam_request.body.review_deadline = "20031/10/10";
-        let exam_response = exams.exams_POST(exam_request);
+        let exam_response = exams_POST(exam_request);
         let examID = exam_response.json.id;
 
         let request = new Request();
@@ -57,23 +55,23 @@ describe("/submissions_POST", () => {
         request.body.examID = examID;
         request.body.answer = "a";
         request.body.chosen_answer = 1;
-        let response = submission_POST(request);
+        let response = submissions_POST(request);
 
         expect(response.status).toBe(424);
         expect(response.text).toBe("task foreign key can't be resolved.");
     });
 
-    test("submission_POST with given student not existing", () => {
+    test("submissions_POST with given student not existing", () => {
         let task_request = new Request();
         task_request.body = { question: "What?", answers: { possible_answers: ["Elyon", "Jhw"], correct_answers: [0] } };
-        let task_response = tasks.tasks_POST(task_request);
+        let task_response = tasks_POST(task_request);
         let taskID = task_response.json.id;
 
         let exam_request = new Request();
         exam_request.body.date = "2001/10/10";
         exam_request.body.deadline = "2030/10/10";
         exam_request.body.review_deadline = "20031/10/10";
-        let exam_response = exams.exams_POST(exam_request);
+        let exam_response = exams_POST(exam_request);
         let examID = exam_response.json.id;
 
         let request = new Request();
@@ -82,16 +80,16 @@ describe("/submissions_POST", () => {
         request.body.examID = examID;
         request.body.answer = "a";
         request.body.chosen_answer = 1;
-        let response = submission_POST(request);
+        let response = submissions_POST(request);
 
         expect(response.status).toBe(424);
         expect(response.text).toBe("student foreign key can't be resolved.");
     });
 
-    test("submission_POST with given exam not existing", () => {
+    test("submissions_POST with given exam not existing", () => {
         let task_request = new Request();
         task_request.body = { question: "How?", answers: { possible_answers: ["Elyon", "Jhw"], correct_answers: [0] } };
-        let task_response = tasks.tasks_POST(task_request);
+        let task_response = tasks_POST(task_request);
         let taskID = task_response.json.id;
 
         let request = new Request();
@@ -100,28 +98,28 @@ describe("/submissions_POST", () => {
         request.body.examID = 4;
         request.body.answer = "a";
         request.body.chosen_answer = 1;
-        let response = submission_POST(request);
+        let response = submissions_POST(request);
 
         expect(response.status).toBe(424);
         expect(response.text).toBe("exam foreign key can't be resolved.");
     });
 
-    test("submission_POST with deadline reached", () => {
+    test("submissions_POST with deadline reached", () => {
         let student_request = new Request();
         student_request.body = { email: "a.bcd@e", first_name: "a", last_name: "b" };
-        let student_response = student_POST(student_request);
+        let student_response = students_POST(student_request);
         let studentID = student_response.json.id;
 
         let task_request = new Request();
         task_request.body = { question: "???", answers: { possible_answers: ["Elyon", "Jhw"], correct_answers: [0] } };
-        let task_response = tasks.tasks_POST(task_request);
+        let task_response = tasks_POST(task_request);
         let taskID = task_response.json.id;
 
         let exam_request = new Request();
         exam_request.body.date = "2001/10/10";
         exam_request.body.deadline = "2002/10/10";
         exam_request.body.review_deadline = "20031/10/10";
-        let exam_response = exams.exams_POST(exam_request);
+        let exam_response = exams_POST(exam_request);
         let examID = exam_response.json.id;
 
         let request = new Request();
@@ -130,7 +128,7 @@ describe("/submissions_POST", () => {
         request.body.examID = examID;
         request.body.answer = "a";
         request.body.chosen_answer = 1;
-        let response = submission_POST(request);
+        let response = submissions_POST(request);
 
         expect(response.status).toBe(423);
         expect(response.text).toBe("Deadline reached: cannot change submission.");
@@ -139,19 +137,19 @@ describe("/submissions_POST", () => {
     test("submissions_POST with same submission already registered", () => {
         let student_request = new Request();
         student_request.body = { email: "a.bcde@f", first_name: "a", last_name: "b" };
-        let student_response = student_POST(student_request);
+        let student_response = students_POST(student_request);
         let studentID = student_response.json.id;
 
         let task_request = new Request();
         task_request.body = { question: "?!?!?", answers: { possible_answers: ["Elyon", "Jhw"], correct_answers: [0] } };
-        let task_response = tasks.tasks_POST(task_request);
+        let task_response = tasks_POST(task_request);
         let taskID = task_response.json.id;
 
         let exam_request = new Request();
         exam_request.body.date = "2001/10/10";
         exam_request.body.deadline = "2030/10/10";
         exam_request.body.review_deadline = "20031/10/10";
-        let exam_response = exams.exams_POST(exam_request);
+        let exam_response = exams_POST(exam_request);
         let examID = exam_response.json.id;
 
         let request = new Request();
@@ -160,7 +158,7 @@ describe("/submissions_POST", () => {
         request.body.examID = examID;
         request.body.answer = "a";
         request.body.chosen_answer = 1;
-        let response = submission_POST(request);
+        let response = submissions_POST(request);
 
         let same_request = new Request();
         same_request.body.studentID = studentID;
@@ -168,7 +166,7 @@ describe("/submissions_POST", () => {
         same_request.body.examID = examID;
         same_request.body.answer = "b";
         same_request.body.chosen_answer = 2;
-        let same_response = submission_POST(same_request);
+        let same_response = submissions_POST(same_request);
 
         expect(response.status).toBe(201);
         expect(same_response.status).toBe(451);
@@ -178,12 +176,12 @@ describe("/submissions_POST", () => {
     test("submissions_POST with exam body paramater wrong", () => {
         let student_request = new Request();
         student_request.body = { email: "a.bcdef@g", first_name: "a", last_name: "b" };
-        let student_response = student_POST(student_request);
+        let student_response = students_POST(student_request);
         let studentID = student_response.json.id;
 
         let task_request = new Request();
         task_request.body = { question: "?!?!?!?", answers: { possible_answers: ["Elyon", "Jhw"], correct_answers: [0] } };
-        let task_response = tasks.tasks_POST(task_request);
+        let task_response = tasks_POST(task_request);
         let taskID = task_response.json.id;
 
         let request = new Request();
@@ -192,7 +190,7 @@ describe("/submissions_POST", () => {
         request.body.examID = "ciao";
         request.body.answer = "a";
         request.body.chosen_answer = 1;
-        let response = submission_POST(request);
+        let response = submissions_POST(request);
 
         expect(response.status).toBe(400);
     });
@@ -200,14 +198,14 @@ describe("/submissions_POST", () => {
     test("submissions_POST with student body paramater wrong", () => {
         let task_request = new Request();
         task_request.body = { question: "Wut?", answers: { possible_answers: ["Elyon", "Jhw"], correct_answers: [0] } };
-        let task_response = tasks.tasks_POST(task_request);
+        let task_response = tasks_POST(task_request);
         let taskID = task_response.json.id;
 
         let exam_request = new Request();
         exam_request.body.date = "2001/10/10";
         exam_request.body.deadline = "2030/10/10";
         exam_request.body.review_deadline = "20031/10/10";
-        let exam_response = exams.exams_POST(exam_request);
+        let exam_response = exams_POST(exam_request);
         let examID = exam_response.json.id;
 
         let request = new Request();
@@ -216,7 +214,7 @@ describe("/submissions_POST", () => {
         request.body.examID = examID;
         request.body.answer = "a";
         request.body.chosen_answer = 1;
-        let response = submission_POST(request);
+        let response = submissions_POST(request);
 
         expect(response.status).toBe(400);
     });
@@ -224,14 +222,14 @@ describe("/submissions_POST", () => {
     test("submissions_POST with task body paramater wrong", () => {
         let student_request = new Request();
         student_request.body = { email: "a.bcdefg@h", first_name: "a", last_name: "b" };
-        let student_response = student_POST(student_request);
+        let student_response = students_POST(student_request);
         let studentID = student_response.json.id;
 
         let exam_request = new Request();
         exam_request.body.date = "2001/10/10";
         exam_request.body.deadline = "2030/10/10";
         exam_request.body.review_deadline = "20031/10/10";
-        let exam_response = exams.exams_POST(exam_request);
+        let exam_response = exams_POST(exam_request);
         let examID = exam_response.json.id;
 
         let request = new Request();
@@ -240,7 +238,7 @@ describe("/submissions_POST", () => {
         request.body.examID = examID;
         request.body.answer = "a";
         request.body.chosen_answer = 1;
-        let response = submission_POST(request);
+        let response = submissions_POST(request);
 
         expect(response.status).toBe(400);
     });
@@ -248,19 +246,19 @@ describe("/submissions_POST", () => {
     test("submissions_POST with answer body paramater wrong", () => {
         let student_request = new Request();
         student_request.body = { email: "a.bcdefgh@i", first_name: "a", last_name: "b" };
-        let student_response = student_POST(student_request);
+        let student_response = students_POST(student_request);
         let studentID = student_response.json.id;
 
         let task_request = new Request();
         task_request.body = { question: "2 + 2?", answers: { possible_answers: ["Elyon", "Jhw"], correct_answers: [0] } };
-        let task_response = tasks.tasks_POST(task_request);
+        let task_response = tasks_POST(task_request);
         let taskID = task_response.json.id;
 
         let exam_request = new Request();
         exam_request.body.date = "2001/10/10";
         exam_request.body.deadline = "2030/10/10";
         exam_request.body.review_deadline = "20031/10/10";
-        let exam_response = exams.exams_POST(exam_request);
+        let exam_response = exams_POST(exam_request);
         let examID = exam_response.json.id;
 
 
@@ -270,7 +268,7 @@ describe("/submissions_POST", () => {
         request.body.examID = examID;
         request.body.answer = 99999;
         request.body.chosen_answer = 1;
-        let response = submission_POST(request);
+        let response = submissions_POST(request);
 
         expect(response.status).toBe(400);
     });
@@ -282,7 +280,7 @@ describe("/submissions_POST", () => {
         request.body.examID = 1;
         request.body.answer = 99999;
         request.body.chosen_answer = "ciao";
-        let response = submission_POST(request);
+        let response = submissions_POST(request);
 
         expect(response.status).toBe(400);
     });
@@ -294,7 +292,7 @@ describe("/submissions_POST", () => {
         request.body.examID = 1;
         request.body.answer = 99999;
         request.body.chosen_answer = 1;
-        let response = submission_POST(request);
+        let response = submissions_POST(request);
 
         expect(response.status).toBe(400);
     });
