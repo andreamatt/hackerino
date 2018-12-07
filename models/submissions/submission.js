@@ -1,9 +1,10 @@
 const util = require('../utility');
+const isString = util.isString;
 const isSubmission = util.isSubmission;
 
 const submissions_list = {};
 
-function Submission(student, exam, task, answer, chosen_aswer) {
+function Submission(student, exam, task, answer, chosen_answer) {
     this.id = 1;
     while (submissions_list[this.id]) {
         this.id++;
@@ -13,7 +14,7 @@ function Submission(student, exam, task, answer, chosen_aswer) {
     this.examID = exam;
     this.taskID = task;
     this.answer = answer;
-    this.chosen_aswer = chosen_aswer;
+    this.chosen_answer = chosen_answer;
     this.review_points = 0;
     this.final_points = 0;
 }
@@ -24,10 +25,10 @@ function create_submission(id, studentID, examID, taskID, answer, chosen_answer)
         sub.id = id;
     }
     let result = isSubmission(sub);
-    if (result) {
-        return sub;
-    } else {
+    if (isString(result)) {
         return result;
+    } else {
+        return sub;
     }
 }
 
@@ -53,6 +54,7 @@ function getByStudentID(ID) {
 
 module.exports = {
     create_submission,
+    submissions_list,
     getByStudentID,
     getByExamID,
     getByTaskID,

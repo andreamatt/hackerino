@@ -88,17 +88,6 @@ function isTeacher(teach) {
 	return true;
 }
 
-function isSubmission(sub) {
-	if (!sub) return "falsy value";
-	if (!isInteger(sub.id) || sub.id < 1) return "Bad id body parameter";
-	if (!isInteger(sub.studentID)) return "Bad studentID body parameter";
-	if (!isInteger(sub.examID)) return "Bad examID body parameter";
-	if (!isInteger(sub.taskID)) return "Bad taskID body parameter";
-	if (!isString(sub.answer)) return "Bad answer body parameter";
-	if (!isInteger(sub.chosen_answer)) return "Bad chosen_answer body parameter";
-	return true;
-}
-
 function isExam(exam) {
 	if (!exam) return "falsy value";
 	if (!isInteger(exam.id) || exam.id < 1) return "bad id";

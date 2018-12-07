@@ -17,7 +17,7 @@ function submission_POST(req) {
     let examID = req.body.examID;
     let answer = req.body.answer;
     let chosen_answer = req.body.chosen_answer;
-    let sub = create_submission(null, studentID, taskID, examID, answer, chosen_answer);
+    let sub = create_submission(null, studentID, examID, taskID, answer, chosen_answer);
 
     if (isString(sub)) {
         return new Response(400, sub);
