@@ -194,6 +194,20 @@ paths:
         "424":
           description: One of the foreign keys can't be resolved.
 
+  /exams/{examID}/students/{studentID}:
+    parameters:
+      - $ref: "#/parameters/examID"
+      - $ref: "#/parameters/studentID"
+    delete:
+      description: Remove a student FROM THIS EXAM.
+      tags:
+        - /exams
+      responses:
+        "204":
+          description: Student removed from this exam.
+        "404":
+          description: Exam or student not found.
+
   /exams/{examID}/teachers:
     parameters:
       - $ref: "#/parameters/examID"
@@ -252,6 +266,20 @@ paths:
         "424":
           description: One of the foreign keys can't be resolved.
 
+  /exams/{examID}/teachers/{teacherID}:
+    parameters:
+      - $ref: "#/parameters/examID"
+      - $ref: "#/parameters/teacherID"
+    delete:
+      description: Remove a teacher FROM THIS EXAM.
+      tags:
+        - /exams
+      responses:
+        "204":
+          description: Teacher removed from this exam.
+        "404":
+          description: Exam or teacher not found.
+
   /exams/{examID}/tasks:
     parameters:
       - $ref: "#/parameters/examID"
@@ -309,6 +337,20 @@ paths:
           description: Task already added.
         "424":
           description: One of the foreign keys can't be resolved.
+
+  /exams/{examID}/tasks/{taskID}:
+    parameters:
+      - $ref: "#/parameters/examID"
+      - $ref: "#/parameters/taskID"
+    delete:
+      description: Remove a task FROM THIS EXAM.
+      tags:
+        - /exams
+      responses:
+        "204":
+          description: Task removed from this exam.
+        "404":
+          description: Exam or task not found.
 
   /exams/{examID}/submissions:
     parameters:
@@ -469,6 +511,8 @@ paths:
           description: Review deleted.
         "404":
           description: Could not delete review with the specified reviewID (review not found).
+        "451":
+          description: "Cannot delete the review right now: too early ( < exam/deadline ) or too late ( >= exam/review_deadline)."
 
   /submissions:
     get:
@@ -618,6 +662,8 @@ paths:
           description: Submission removed.
         "404":
           description: Could not remove the submission with the specified submissionID (submission not found).
+        "451":
+          description: "Cannot submit the submission right now: too early ( < exam/date ) or too late ( >= exam/deadline)."
 
   /submissions/{submissionID}/reviews:
     parameters:
