@@ -23,7 +23,7 @@ function submissions_submissionID_DELETE(req) {
     let request = new Request();
     let examID = submissions_list[id].examID;
     request.params.examID = examID;
-    let exam = exams_examID_GET(request);
+    let exam = exams_examID_GET(request).json;
     let deadlineDate = new Date(exam.deadline);
     let date = new Date();
 
@@ -40,15 +40,3 @@ function submissions_submissionID_DELETE(req) {
 module.exports = submissions_submissionID_DELETE;
 
 
-
-
-
-let request = new Request();
-let reviews_list = reviews.reviews_GET(request);
-let filtered = reviews_list.filter(review => {
-    return review.submissionID === id;
-});
-
-for (let entry in filtered) {
-    reviews.reviews_reviewID_DELETE(entry.id);
-}

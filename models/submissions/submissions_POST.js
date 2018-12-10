@@ -37,18 +37,25 @@ function submission_POST(req) {
     if (exam_status !== 200) return new Response(424, "exam foreign key can't be resolved.");
     if (student_status !== 200) return new Response(424, "student foreign key can't be resolved.");
 
+    let students_array = exams_students[examID];
+    let tasks_array = exams_tasks[examID];
+
+    if (students_array.includes(studentID) === false) return new Response(424, "student foreign key can't be resolved.");
+    if (tasks_array.includes(taskID) === false) return new Response(424, "task foreign key can't be resolved.");
+
     let result = Object.values(submissions_list);
     let filtered = result.filter(submission => {
         return (submission.studentID === studentID && submission.examID === examID && submission.taskID == taskID);
     });
 
     if (filtered.length === 0) {
-        let deadline = selected_exam.json.deadline;
+        let deadline = selected_exam.deadline;
+        let start = selected_exam.date;
         let deadlineDate = new Date(deadline);
+        let startDate = new Date(start);
         let currentDate = new Date();
-        let notLate = deadlineDate > currentDate;
 
-        if (notLate) {
+        if ((deadlineDate > currentDate) && (currentDate > startDate)) {
             submissions_list[sub.id] = sub;
             return new Response(201, sub);
 

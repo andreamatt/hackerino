@@ -37,6 +37,12 @@ function submission_submissionID_PUT(req) {
     if (task_status !== 200) return new Response(424, "taskID foreign key can't be resolved.");
     if (exam_status !== 200) return new Response(424, "examID foreign key can't be resolved.");
 
+    let students_array = exams_students[examID];
+    let tasks_array = exams_tasks[examID];
+
+    if (students_array.includes(studentID) === false) return new Response(424, "student foreign key can't be resolved.");
+    if (tasks_array.includes(taskID) === false) return new Response(424, "task foreign key can't be resolved.");
+
     let deadline = new Date(selected_exam.deadline);
     let start = new Date(selected_exam.date);
     let currentDate = new Date();
