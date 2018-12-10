@@ -6,6 +6,7 @@ const toInt = util.toInt;
 const exams_examID_GET = require("../exams/exams_examID_GET");
 const students_studentID_GET = require("../students/students_studentID_GET");
 const submissions_submissionID_GET = require("../submissions/submissions_submissionID_GET");
+const submissions_list = require("../submissions/submissions").submissions_list;
 
 const reviews = require("./reviews");
 const reviews_list = reviews.reviews_list;
@@ -34,7 +35,7 @@ function reviews_reviewID_PUT(req) {
 
     // check for existing student
     let studentReq = new Request();
-    studentReq.params = studentID;
+    studentReq.params.studentID = studentID;
     let studentRes = students_studentID_GET(studentReq);
     if (studentRes.status !== 200) {
         return new Response(424, "StudentID foreign key could not be resolved");
@@ -42,18 +43,29 @@ function reviews_reviewID_PUT(req) {
 
     // check for existing submission
     let submissionReq = new Request();
-    submissionReq.params = submissionID;
+    submissionReq.params.submissionID = submissionID;
     let submissionRes = submissions_submissionID_GET(submissionReq);
     if (submissionRes.status !== 200) {
         return new Response(424, "SubmissionID foreign key could not be resolved");
     }
 
+    // check if student is reviewer of its own submission
+    let refStudID = submissionRes.body.studentID;
+    if (studentID === refStudID) {
+        return new Response(400, "The student can not review its own submission");
+    }
+
     // check for existing exam
     let examReq = new Request();
-    examReq.params = submissionRes.body.exam;
+    examReq.params.examID = submissionRes.body.examID;
     let examRes = exams_examID_GET(examReq);
     if (examRes.status !== 200) {
         return new Response(424, "Could not find exam associated to given submission");
+    }
+
+    // check that the student is in the same exam of the submission he is reviewing 
+    if (!examRes.body.students[studentID]) {
+        return new Response(424, "Cannot submit the review: submission not found in the same exam");
     }
 
     // check deadlines
@@ -66,6 +78,10 @@ function reviews_reviewID_PUT(req) {
 
     // finally create/update the review
     let status = reviews_list[reviewID] ? "update" : "create";
+    let oldMark;
+    if (status === "update") {
+        oldMark = reviews_list[reviewID].mark;
+    }
     let result = createReview(reviewID, studentID, submissionID, mark);
 
     if (isString(result)) {
@@ -73,9 +89,14 @@ function reviews_reviewID_PUT(req) {
     }
 
     if (status === "update") {
+        // update submission points from peer-reviews
+        submissions_list[submissionID].review_points -= oldMark;
+        submissions_list[submissionID].review_points += mark;
         return new Response(200, "Review updated");
     }
     else {
+        // add review points to the submission
+        submissions_list[submissionID].review_points += mark;
         return new Response(201, "Review created");
     }
 }

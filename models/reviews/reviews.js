@@ -53,5 +53,13 @@ function isUnique(studentID, submissionID) {
     return result;
 }
 
-module.exports = { reviews_list, createReview, isUnique };
+function forceDelete_review(id) {
+    if (reviews_list[id]) {
+        delete reviews_list[id];
+    } else {
+        throw new Error("submission not existing");
+    }
+}
+
+module.exports = { reviews_list, createReview, isUnique, forceDelete_review };
 

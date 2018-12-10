@@ -35,7 +35,7 @@ function tasks_taskID_DELETE(req) {
     let subReq = new Request();
     for (sub of subsList) {
         subReq.params.submissionID = sub.id;
-        submissions_submissionID_DELETE(subReq);
+        submissions_submissionID_DELETE(subReq); // TODO: force delete
     }
 
     // remove task from exams
@@ -43,7 +43,7 @@ function tasks_taskID_DELETE(req) {
     let examReq = new Request();
     for (exam of examsList) {
         examReq.params.examID = exam.id;
-        exams_examID_DELETE(examReq);
+        exams_examID_DELETE(examReq); // TODO: delete task from exam
     }
 
     delete tasks_list[taskID];
