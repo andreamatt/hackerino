@@ -10,10 +10,10 @@ function reviews_reviewID_GET(req) {
     let reviewID = toInt(req.params.reviewID);
 
     if (!isInteger(reviewID)) {
-        return new Response(400, "reviewID is not an integer");
+        return new Response(400, "ReviewID is not an integer");
     }
     if (reviewID < 1) {
-        return new Response(400, "reviewID invalid value");
+        return new Response(400, "ReviewID invalid value");
     }
 
     if (!reviews_list[reviewID]) {

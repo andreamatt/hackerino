@@ -1,26 +1,16 @@
 const util = require("../../utility.js");
 const Request = util.Request;
 const Response = util.Response;
-const isTask = util.isTask;
 
-const tasks_POST = require("../tasks_POST");
 const tasks_taskID_GET = require("../tasks_taskID_GET");
 const tasks_taskID_vote_POST = require("../tasks_taskID_vote_POST");
+const resetDB = require("../../sampleDB").resetDB;
 
-beforeAll(() => {
-    // populate
-    for (let i = 1; i < 50; i++) {
-        let postReq = new Request();
-        postReq.body = {
-            question: "Tell me about those " + i
-        };
-        tasks_POST(postReq);
-    }
-});
+beforeEach(resetDB);
 
-test("with valid vote for existing task without votes", () => {
+test("with valid votes for existing task without votes", () => {
     let req = new Request();
-    req.params.taskID = "5";
+    req.params.taskID = "555";
     req.body.vote = 9;
     let res = tasks_taskID_vote_POST(req);
 
@@ -32,26 +22,41 @@ test("with valid vote for existing task without votes", () => {
     expect(res).toBeInstanceOf(Response);
     expect(res.status).toBe(200);
     expect(res.json).toBeDefined();
-    expect(isTask(res.json)).toBe(true);
-    expect(res.json.rating).toBe(req.body.vote);
-});
+    expect(res.json).toMatchObject({
+        id: 555,
+        question: "Is yoza scarso at dota?",
+        answers: {
+            possible_answers: ["yes", "sure", "obviously"],
+            correct_answers: [0, 1, 2]
+        },
+        n_votes: 1,
+        rating: 9
+    });
 
-test("with valid vote for existing task having one vote", () => {
-    let req = new Request();
-    req.params.taskID = "5";
-    req.body.vote = 0;
-    let res = tasks_taskID_vote_POST(req);
+    // add another vote
+    let req2 = new Request();
+    req2.params.taskID = "555";
+    req2.body.vote = 0;
+    let res2 = tasks_taskID_vote_POST(req2);
 
-    expect(res).toBeInstanceOf(Response);
-    expect(res.status).toBe(204);
+    expect(res2).toBeInstanceOf(Response);
+    expect(res2.status).toBe(204);
 
     // checking for updated rating
-    res = tasks_taskID_GET(req);
-    expect(res).toBeInstanceOf(Response);
-    expect(res.status).toBe(200);
-    expect(res.json).toBeDefined();
-    expect(isTask(res.json)).toBe(true);
-    expect(res.json.rating).toBe(4.5);
+    res2 = tasks_taskID_GET(req2);
+    expect(res2).toBeInstanceOf(Response);
+    expect(res2.status).toBe(200);
+    expect(res2.json).toBeDefined();
+    expect(res2.json).toMatchObject({
+        id: 555,
+        question: "Is yoza scarso at dota?",
+        answers: {
+            possible_answers: ["yes", "sure", "obviously"],
+            correct_answers: [0, 1, 2]
+        },
+        n_votes: 2,
+        rating: 4.5
+    });
 });
 
 test("with valid vote for non existing task", () => {
@@ -66,7 +71,7 @@ test("with valid vote for non existing task", () => {
 
 test("with vote NaN", () => {
     let req = new Request();
-    req.params.taskID = "5";
+    req.params.taskID = "2";
     req.body.vote = "Africa";
     let res = tasks_taskID_vote_POST(req);
 
@@ -77,7 +82,7 @@ test("with vote NaN", () => {
 
 test("with vote not an integer", () => {
     let req = new Request();
-    req.params.taskID = "5";
+    req.params.taskID = "2";
     req.body.vote = 2.1;
     let res = tasks_taskID_vote_POST(req);
 
@@ -88,7 +93,7 @@ test("with vote not an integer", () => {
 
 test("with vote > 10", () => {
     let req = new Request();
-    req.params.taskID = "5";
+    req.params.taskID = "2";
     req.body.vote = 11;
     let res = tasks_taskID_vote_POST(req);
 
@@ -99,7 +104,7 @@ test("with vote > 10", () => {
 
 test("with vote < 0", () => {
     let req = new Request();
-    req.params.taskID = "5";
+    req.params.taskID = "2";
     req.body.vote = -1;
     let res = tasks_taskID_vote_POST(req);
 
@@ -109,16 +114,24 @@ test("with vote < 0", () => {
 });
 
 test("update tasks rating many times", () => {
-    let req_GET = new Request();
     let req_POST = new Request();
-    req_POST.params.taskID = 2;
+    req_POST.params.taskID = "1";
 
     // check old average
     let res_GET1 = tasks_taskID_GET(req_POST);
     expect(res_GET1).toBeInstanceOf(Response);
     expect(res_GET1.status).toBe(200);
     expect(res_GET1.json).toBeDefined();
-    expect(isTask(res_GET1.json)).toBe(true);
+    expect(res_GET1.json).toMatchObject({
+        id: 1,
+        question: "Wut color is dis?",
+        answers: {
+            possible_answers: ["yes", "i'm blind"],
+            correct_answers: [1]
+        },
+        n_votes: 1324,
+        rating: 9.7
+    });
     let rating = res_GET1.json.rating;
     let n_votes = res_GET1.json.n_votes;
 
@@ -134,17 +147,26 @@ test("update tasks rating many times", () => {
         expect(res_GET2).toBeInstanceOf(Response);
         expect(res_GET2.status).toBe(200);
         expect(res_GET2.json).toBeDefined();
-        expect(isTask(res_GET2.json)).toBe(true);
 
         rating = (n_votes * rating + i) / (n_votes + 1);
         n_votes++;
-        expect(res_GET2.json.rating).toBe(rating);
+
+        expect(res_GET2.json).toMatchObject({
+            id: 1,
+            question: "Wut color is dis?",
+            answers: {
+                possible_answers: ["yes", "i'm blind"],
+                correct_answers: [1]
+            },
+            n_votes: n_votes,
+            rating: rating
+        });
     }
 });
 
 test("with malformed body", () => {
     let req = new Request();
-    req.params.taskID = "5";
+    req.params.taskID = "2";
     req.body.vote = 2;
     req.body.extra = "extra";
     let res = tasks_taskID_vote_POST(req);
@@ -155,6 +177,17 @@ test("with malformed body", () => {
 });
 
 test("with taskID not an integer", () => {
+    let req = new Request();
+    req.params.taskID = "9.2";
+    req.body.vote = 2;
+    let res = tasks_taskID_vote_POST(req);
+
+    expect(res).toBeInstanceOf(Response);
+    expect(res.status).toBe(400);
+    expect(res.text).toMatch("TaskID is not an integer");
+});
+
+test("with taskID as word", () => {
     let req = new Request();
     req.params.taskID = "two";
     req.body.vote = 2;

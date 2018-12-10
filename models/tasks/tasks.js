@@ -34,6 +34,8 @@ function createTask(id, question, answers) {
     // update mode
     if (id && tasks_list[id]) {
         task.id = id;
+        task.n_votes = tasks_list[id].n_votes;
+        task.rating = tasks_list[id].rating;
     }
 
     if (answers) {

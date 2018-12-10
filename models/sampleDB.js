@@ -97,7 +97,7 @@ const exams_list = {
 		id: 1,
 		date: "December 17, 1995 03:24:00",
 		deadline: "December 18, 1995 03:24:00",
-		review_deadline: "December 19, 1995 03:24:00",
+		review_deadline: "December 18, 2050 03:24:00",
 		tot_students: 3,
 		tot_teachers: 0,
 		tot_tasks: 2
@@ -106,7 +106,7 @@ const exams_list = {
 		id: 2,
 		date: "December 17, 1995 03:24:00",
 		deadline: "December 18, 1995 03:24:00",
-		review_deadline: "December 19, 1995 03:24:00",
+		review_deadline: "Tue Dec 10 2018 13:28:55 GMT+0100 (GMT+01:00)",
 		tot_students: 2,
 		tot_teachers: 1,
 		tot_tasks: 0
@@ -115,7 +115,7 @@ const exams_list = {
 		id: 3,
 		date: "December 17, 1995 03:24:00",
 		deadline: "December 18, 1995 03:24:00",
-		review_deadline: "December 19, 1995 03:24:00",
+		review_deadline: "Tue Dec 10 2050 13:28:55 GMT+0100 (GMT+01:00)",
 		tot_students: 0,
 		tot_teachers: 3,
 		tot_tasks: 4
@@ -124,7 +124,7 @@ const exams_list = {
 		id: 4,
 		date: "December 17, 1995 03:24:00",
 		deadline: "December 18, 1995 03:24:00",
-		review_deadline: "December 19, 1995 03:24:00",
+		review_deadline: "Tue Dec 10 2000 13:28:55 GMT+0100 (GMT+01:00)",
 		tot_students: 3,
 		tot_teachers: 2,
 		tot_tasks: 3

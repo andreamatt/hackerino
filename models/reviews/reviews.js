@@ -29,7 +29,7 @@ function createReview(id, studentID, submissionID, mark) {
 
     // update mode
     if (id && reviews_list[id]) {
-        if (review.studentID === studentID && review.submissionID === submissionID) {
+        if (reviews_list[id].studentID === studentID && reviews_list[id].submissionID === submissionID) {
             review.id = id;
         } else {
             return "Unique identifiers in your request body differ from existent review";
@@ -38,7 +38,7 @@ function createReview(id, studentID, submissionID, mark) {
 
     let result = isReview(review);
     if (result === true) {
-        reviews_list[review.id] = review;
+        //reviews_list[review.id] = review;
         return review;
     } else {
         return result;

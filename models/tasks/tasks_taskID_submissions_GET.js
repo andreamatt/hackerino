@@ -12,8 +12,8 @@ const tasks_list = tasks.tasks_list;
 const submissions_GET = require("../submissions/submissions_GET");
 
 function tasks_taskID_submissions_GET(req) {
-    if (Object.keys(req.body).length > 1) {
-        return new Response(400, "Request body has invalid number of properties");
+    if (Object.keys(req.body).length > 0) {
+        return new Response(400, "Request body must be empty");
     }
 
     let taskID = toInt(req.params.taskID);
@@ -32,8 +32,8 @@ function tasks_taskID_submissions_GET(req) {
     let subsRes = submissions_GET(subsReq);
 
     // filter submissions which have not this task as taskID
-    let result = subsRes.json.submissions.filter(submission => submission.taskID === id);
-    let tot = subsRes.json.submissions.length;
+    let result = subsRes.json.submissions.filter(submission => submission.taskID === taskID);
+    let tot = result.length;
 
     // check query parameters
     if (req.query.offset !== undefined) {

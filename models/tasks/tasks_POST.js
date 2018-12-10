@@ -6,10 +6,6 @@ const tasks = require("./tasks");
 const createTask = tasks.createTask;
 
 function tasks_POST(req) {
-    if (Object.keys(req.body).length > 2) {
-        return new Response(400, "Request body has invalid number of properties");
-    }
-
     let question = req.body.question;
     if (tasks.isUnique(question) === false) {
         return new Response(423, "A task with such question already exists");

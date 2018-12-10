@@ -4,10 +4,10 @@ const Response = util.Response;
 const toInt = util.toInt;
 const isInteger = util.isInteger;
 
+const forceDelete_submission = require("../submissions/submissions").forceDelete_submission;
 const tasks_taskID_submissions_GET = require("../tasks/tasks_taskID_submissions_GET");
-const submissions_submissionID_DELETE = require("../submissions/submissions_submissionID_DELETE");
 const tasks_taskID_exams_GET = require("../tasks/tasks_taskID_exams_GET");
-const exams_examID_DELETE = require("../exams/exams_examID_DELETE");
+const exams_examID_tasks_taskID_DELETE = require("../exams/exams_examID_tasks_taskID_DELETE");
 
 const tasks = require("./tasks");
 const tasks_list = tasks.tasks_list;
@@ -32,10 +32,8 @@ function tasks_taskID_DELETE(req) {
     let subsList = tasks_taskID_submissions_GET(taskReq).json.submissions;
 
     // delete submissions with this task
-    let subReq = new Request();
     for (sub of subsList) {
-        subReq.params.submissionID = sub.id;
-        submissions_submissionID_DELETE(subReq); // TODO: force delete
+        forceDelete_submission(sub.id);
     }
 
     // remove task from exams
@@ -43,10 +41,11 @@ function tasks_taskID_DELETE(req) {
     let examReq = new Request();
     for (exam of examsList) {
         examReq.params.examID = exam.id;
-        exams_examID_DELETE(examReq); // TODO: delete task from exam
-    }
+        examReq.params.taskID = taskID;
+        exams_examID_tasks_taskID_DELETE(examReq);
 
-    delete tasks_list[taskID];
+        delete tasks_list[taskID];
+    }
     return new Response(204, "Task removed");
 }
 

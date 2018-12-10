@@ -1,5 +1,5 @@
 const util = require('../utility');
-const tasks_GET = require('../tasks/tasks_GET');
+const tasks_taskID_GET = require('../tasks/tasks_taskID_GET');
 const exams = require('./exams');
 const exams_tasks = exams.exams_tasks;
 const exams_list = exams.exams_list;
@@ -8,6 +8,7 @@ const Response = util.Response;
 const doOffset = util.doOffset;
 const doLimit = util.doLimit;
 const toInt = util.toInt;
+const Request = util.Request;
 
 
 
@@ -47,7 +48,7 @@ function exams_examID_tasks_GET(req) {
     result = result.map(taskID => {
         let r = new Request();
         r.params.taskID = taskID;
-        return tasks_GET(r);
+        return tasks_taskID_GET(r).json;
     });
     return new Response(200, { tot_tasks: tot, tasks: result });
 }

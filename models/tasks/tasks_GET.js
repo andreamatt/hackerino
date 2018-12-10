@@ -12,6 +12,10 @@ function tasks_GET(req) {
     let tasks = Object.values(tasks_list);
     let tot_tasks = tasks.length;
 
+    if (Object.keys(req.body).length > 0) {
+        return new Response(400, "Request body must be empty");
+    }
+
     if (req.query.offset !== undefined) {
         let offset = toInt(req.query.offset);
         if (!isInteger(offset)) {
