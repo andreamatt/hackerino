@@ -2,7 +2,6 @@ const exams = require('../exams/exams');
 const tasks = require('../tasks/tasks');
 const util = require('../utility');
 const sub = require('./submissions');
-const students = require('../students/students');
 const submissions_list = sub.submissions_list;
 const Response = util.Response;
 const isString = util.isString;

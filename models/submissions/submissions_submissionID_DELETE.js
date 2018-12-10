@@ -1,6 +1,8 @@
 const util = require('../utility');
 const sub = require('./submissions');
 const reviews = require('../reviews/reviews');
+const exam = require('../exams/exams_examID_GET');
+const exams_examID_GET = exam.exams_examID_GET;
 const submissions_list = sub.submissions_list;
 const isInteger = Number.isInteger;
 const Response = util.Response;
@@ -19,19 +21,34 @@ function submissions_submissionID_DELETE(req) {
     }
 
     let request = new Request();
-    let reviews_list = reviews.reviews_GET(request);
-    let filtered = reviews_list.filter(review => {
-        return review.submissionID === id;
-    });
+    let examID = submissions_list[id].examID;
+    request.params.examID = examID;
+    let exam = exams_examID_GET(request);
+    let deadlineDate = new Date(exam.deadline);
+    let date = new Date();
 
-    delete submissions_list[id];
-    for (let entry in filtered) {
-        reviews.reviews_reviewID_DELETE(entry.id);
+    if (date > deadlineDate) {
+        return new Response(451, "Cannot delete the submission right now: too late");
     }
 
+    delete submissions_list[id];
     return new Response(204, "Submission removed.");
 }
 
 
 
 module.exports = submissions_submissionID_DELETE;
+
+
+
+
+
+let request = new Request();
+let reviews_list = reviews.reviews_GET(request);
+let filtered = reviews_list.filter(review => {
+    return review.submissionID === id;
+});
+
+for (let entry in filtered) {
+    reviews.reviews_reviewID_DELETE(entry.id);
+}
