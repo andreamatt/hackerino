@@ -512,7 +512,7 @@ paths:
         "404":
           description: Could not delete review with the specified reviewID (review not found).
         "451":
-          description: "Cannot delete the review right now: too early ( < exam/deadline ) or too late ( >= exam/review_deadline)."
+          description: "Cannot delete the review right now: too late ( >= exam/review_deadline)."
 
   /submissions:
     get:
@@ -663,7 +663,7 @@ paths:
         "404":
           description: Could not remove the submission with the specified submissionID (submission not found).
         "451":
-          description: "Cannot submit the submission right now: too early ( < exam/date ) or too late ( >= exam/deadline)."
+          description: "Cannot delete the submission right now: too late ( >= exam/deadline)."
 
   /submissions/{submissionID}/reviews:
     parameters:
