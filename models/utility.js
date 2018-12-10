@@ -160,14 +160,37 @@ function isReview(review) {
 }
 
 function isSubmission(sub) {
-	if (!sub) return "faalsy value";
+	if (!sub) return "Falsy value";
 	if (!isInteger(sub.id) || sub.id < 1) return "Bad id body parameter";
 	if (!isInteger(sub.studentID)) return "Bad studentID body parameter";
 	if (!isInteger(sub.examID)) return "Bad examID body parameter";
 	if (!isInteger(sub.taskID)) return "Bad taskID body parameter";
-	if (!isString(sub.answer)) return "Bad answer body parameter";
-	if (!isInteger(sub.chosen_answer)) return "Bad chosen_answer body parameter";
+	if (sub.chosen_answers !== undefined) {
+		if (!isArray(sub.chosen_answers)) return "Chosen_answer must be an array of integers";
+		if (!sub.chosen_answers.every(i => isInteger(i) && i >= 0)) return "Every item in chosen_answer must be an integer";
+	}
+	if (sub.answer !== undefined && !isString(sub.answer)) return "Bad answer body parameter";
+	if (sub.answer !== undefined && sub.chosen_answers !== undefined) return "Cannot have both answer and chosen_answers";
+	if (sub.answer === undefined && sub.chosen_answers === undefined) return "Must have either answer or chosen_answers";
 	return true;
 }
 
-module.exports = { toInt, isInteger, isString, isNumber, isStringDate, isArray, isStudent, isTeacher, isTask, isSubmission, isReview, isExam, doOffset, doLimit, doOffsetLimit, Request, Response };
+module.exports = {
+	toInt,
+	isInteger,
+	isString,
+	isNumber,
+	isStringDate,
+	isArray,
+	isStudent,
+	isTeacher,
+	isTask,
+	isSubmission,
+	isReview,
+	isExam,
+	doOffset,
+	doLimit,
+	doOffsetLimit,
+	Request,
+	Response
+};

@@ -12,6 +12,14 @@ const bodyParser = require('body-parser');
 //const homeFolder = require('path').join(__dirname, '..');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+// logging
+app.use((req, res, next) => {
+	console.log(`Params: ${JSON.stringify(req.params)}`);
+	console.log(`Query: ${JSON.stringify(req.query)}`);
+	console.log(`Body: ${JSON.stringify(req.body)}\n`);
+	next();
+});
+
 
 const V = process.env.APIVERSION;
 

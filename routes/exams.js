@@ -12,6 +12,9 @@ const exams_examID_teachers_POST = require('../models/exams/exams_examID_teacher
 const exams_examID_tasks_GET = require('../models/exams/exams_examID_tasks_GET');
 const exams_examID_tasks_POST = require('../models/exams/exams_examID_tasks_POST');
 const exams_examID_submissions_GET = require('../models/exams/exams_examID_submissions_GET');
+const exams_examID_tasks_taskID_DELETE = require('../');
+const exams_examID_teachers_teacherID_DELETE = require('../');
+const exams_examID_students_studentID_DELETE = require('../');
 
 router
     .get("/exams", (req, res) => {

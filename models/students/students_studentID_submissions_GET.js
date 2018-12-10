@@ -1,4 +1,5 @@
 const submissions_GET = require('../submissions/submissions_GET');
+const students_list = require('./students').students_list;
 const util = require('../utility');
 const isInteger = util.isInteger;
 const Request = util.Request;
@@ -10,7 +11,7 @@ function students_studentID_submissions_GET(req) {
 	if (!students_list[id]) return new Response(404, "Student not found");
 
 	let subs_req = new Request();
-	let result = submissions_GET(subs_req).exams.filter(sub => {
+	let result = submissions_GET(subs_req).json.submissions.filter(sub => {
 		return sub.studentID === id;
 	});
 
@@ -37,7 +38,7 @@ function students_studentID_submissions_GET(req) {
 		}
 		result = util.doLimit(result, limit);
 	}
-	return new Response(200, { tot_exams: tot, exams: result });
+	return new Response(200, { tot_submissions: tot, submissions: result });
 }
 
 module.exports = students_studentID_submissions_GET;

@@ -30,7 +30,7 @@ describe("/submissions_POST", () => {
         request.body.taskID = taskID;
         request.body.examID = examID;
         request.body.answer = "a";
-        request.body.chosen_answer = 1;
+        request.body.chosen_answers = 1;
         let response = submissions_POST(request);
 
         expect(response.status).toBe(201);
@@ -54,7 +54,7 @@ describe("/submissions_POST", () => {
         request.body.taskID = 898989;
         request.body.examID = examID;
         request.body.answer = "a";
-        request.body.chosen_answer = 1;
+        request.body.chosen_answers = 1;
         let response = submissions_POST(request);
 
         expect(response.status).toBe(424);
@@ -79,7 +79,7 @@ describe("/submissions_POST", () => {
         request.body.taskID = taskID;
         request.body.examID = examID;
         request.body.answer = "a";
-        request.body.chosen_answer = 1;
+        request.body.chosen_answers = 1;
         let response = submissions_POST(request);
 
         expect(response.status).toBe(424);
@@ -97,7 +97,7 @@ describe("/submissions_POST", () => {
         request.body.taskID = taskID;
         request.body.examID = 4;
         request.body.answer = "a";
-        request.body.chosen_answer = 1;
+        request.body.chosen_answers = 1;
         let response = submissions_POST(request);
 
         expect(response.status).toBe(424);
@@ -127,7 +127,7 @@ describe("/submissions_POST", () => {
         request.body.taskID = taskID;
         request.body.examID = examID;
         request.body.answer = "a";
-        request.body.chosen_answer = 1;
+        request.body.chosen_answers = 1;
         let response = submissions_POST(request);
 
         expect(response.status).toBe(423);
@@ -157,7 +157,7 @@ describe("/submissions_POST", () => {
         request.body.taskID = taskID;
         request.body.examID = examID;
         request.body.answer = "a";
-        request.body.chosen_answer = 1;
+        request.body.chosen_answers = 1;
         let response = submissions_POST(request);
 
         let same_request = new Request();
@@ -165,7 +165,7 @@ describe("/submissions_POST", () => {
         same_request.body.taskID = taskID;
         same_request.body.examID = examID;
         same_request.body.answer = "b";
-        same_request.body.chosen_answer = 2;
+        same_request.body.chosen_answers = 2;
         let same_response = submissions_POST(same_request);
 
         expect(response.status).toBe(201);
@@ -189,7 +189,7 @@ describe("/submissions_POST", () => {
         request.body.taskID = taskID;
         request.body.examID = "ciao";
         request.body.answer = "a";
-        request.body.chosen_answer = 1;
+        request.body.chosen_answers = 1;
         let response = submissions_POST(request);
 
         expect(response.status).toBe(400);
@@ -213,7 +213,7 @@ describe("/submissions_POST", () => {
         request.body.taskID = taskID;
         request.body.examID = examID;
         request.body.answer = "a";
-        request.body.chosen_answer = 1;
+        request.body.chosen_answers = 1;
         let response = submissions_POST(request);
 
         expect(response.status).toBe(400);
@@ -237,7 +237,7 @@ describe("/submissions_POST", () => {
         request.body.taskID = "ciao";
         request.body.examID = examID;
         request.body.answer = "a";
-        request.body.chosen_answer = 1;
+        request.body.chosen_answers = 1;
         let response = submissions_POST(request);
 
         expect(response.status).toBe(400);
@@ -267,31 +267,31 @@ describe("/submissions_POST", () => {
         request.body.taskID = taskID;
         request.body.examID = examID;
         request.body.answer = 99999;
-        request.body.chosen_answer = 1;
+        request.body.chosen_answers = 1;
         let response = submissions_POST(request);
 
         expect(response.status).toBe(400);
     });
 
-    test("submissions_POST with chosen_answer body paramater wrong", () => {
+    test("submissions_POST with chosen_answers body paramater wrong", () => {
         let request = new Request();
         request.body.studentID = 1;
         request.body.taskID = 1;
         request.body.examID = 1;
         request.body.answer = 99999;
-        request.body.chosen_answer = "ciao";
+        request.body.chosen_answers = "ciao";
         let response = submissions_POST(request);
 
         expect(response.status).toBe(400);
     });
 
-    test("submissions_POST with chosen_answer body paramater wrong", () => {
+    test("submissions_POST with chosen_answers body paramater wrong", () => {
         let request = new Request();
         request.body.studentID = -1;
         request.body.taskID = 1;
         request.body.examID = 1;
         request.body.answer = 99999;
-        request.body.chosen_answer = 1;
+        request.body.chosen_answers = 1;
         let response = submissions_POST(request);
 
         expect(response.status).toBe(400);

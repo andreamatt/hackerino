@@ -17,8 +17,8 @@ function submission_submissionID_PUT(req) {
     let examID = req.body.examID;
     let taskID = req.body.taskID;
     let answer = req.body.answer;
-    let chosen_answer = req.body.chosen_answer;
-    let result = create_submission(id, studentID, examID, taskID, answer, chosen_answer);
+    let chosen_answers = req.body.chosen_answers;
+    let result = create_submission(id, studentID, examID, taskID, answer, chosen_answers);
 
     if (isString(result)) {
         return new Response(400, result);

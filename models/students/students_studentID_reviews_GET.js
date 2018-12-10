@@ -1,4 +1,5 @@
 const reviews_GET = require('../reviews/reviews_GET');
+const students_list = require('./students').students_list;
 const util = require('../utility');
 const isInteger = util.isInteger;
 const Request = util.Request;
@@ -10,7 +11,7 @@ function students_studentID_reviews_GET(req) {
 	if (!students_list[id]) return new Response(404, "Student not found");
 
 	let rev_req = new Request();
-	let result = reviews_GET(rev_req).exams.filter(rev => {
+	let result = reviews_GET(rev_req).json.reviews.filter(rev => {
 		return rev.studentID === id;
 	});
 
@@ -37,7 +38,7 @@ function students_studentID_reviews_GET(req) {
 		}
 		result = util.doLimit(result, limit);
 	}
-	return new Response(200, { tot_exams: tot, exams: result });
+	return new Response(200, { tot_reviews: tot, reviews: result });
 }
 
 module.exports = students_studentID_reviews_GET;

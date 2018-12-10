@@ -1,18 +1,13 @@
 const util = require('../../utility');
 const Request = util.Request;
 const students_studentID_GET = require('../students_studentID_GET');
-const students_POST = require('../students_POST');
+const resetDB = require('../../sampleDB').resetDB;
 
+beforeEach(resetDB);
 
 describe("students/studentID GET", () => {
-	let request = new Request();
-	request.body = {
-		email: "andrea.matte",
-		first_name: "andrea",
-		last_name: "matte"
-	};
-	let response = students_POST(request);
-	let id = response.json.id;
+
+	let id = 1;
 	test("with ok param", () => {
 		let request = new Request();
 		request.params = { studentID: id };

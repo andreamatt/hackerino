@@ -1,64 +1,47 @@
-const teachers_POST = require('../teachers_POST');
-const exams_POST = require('../../exams/exams_POST');
-const exams_examID_teachers_POST = require('../../exams/exams_examID_teachers_POST');
 const teachers_teacherID_exams_GET = require('../teachers_teacherID_exams_GET');
 const exams_examID_teachers_GET = require('../../exams/exams_examID_teachers_GET');
 const util = require('../../utility');
 const Request = util.Request;
+const resetDB = require('../../sampleDB').resetDB;
+
+beforeEach(resetDB);
 
 test("teachers_teacherID_exams_GET", () => {
-	// add a teacher
-	let request = new Request();
-	request.body = {
-		email: "teachers_teacherID_exams_GET_test",
-		first_name: "a",
-		last_name: "b"
-	};
-	let response = teachers_POST(request);
-	expect(response.status).toBe(201);
-	let teacher_id = response.json.id;
-
-	// add an exam
-	request = new Request();
-	request.body = {
-		date: "2018-12-07T14:55:13.649Z",
-		deadline: "2019-12-07T14:55:13.649Z",
-		review_deadline: "2020-12-07T14:55:13.649Z"
-	};
-	response = exams_POST(request);
-	expect(response.status).toBe(201);
-	let exam_id = response.json.id;
-
-	// add teacher to exam
-	request = new Request();
-	request.params.examID = exam_id;
-	request.body.teacherID = teacher_id;
-	response = exams_examID_teachers_POST(request);
-	expect(response.status).toBe(204);
+	let teacher_id = 1;
+	let exam_id = 3;
 
 	// get exam's teachers
 	request = new Request();
 	request.params.examID = exam_id;
 	response = exams_examID_teachers_GET(request);
 	expect(response.status).toBe(200);
-	expect(response.json.teachers.length > 0).toBe(true);
-	expect(util.isTeacher(response.json.teachers[0])).toBe(true);
+	let teachers = response.json.teachers;
+	expect(teachers.filter(t => t.id === teacher_id).length).toBe(1);
+	expect(teachers.length > 0).toBe(true);
+	expect(util.isTeacher(teachers[0])).toBe(true);
+	expect(teachers.map(t => t.id).includes(teacher_id)).toBe(true);
 
 	// get exams
 	request = new Request();
 	request.params.teacherID = teacher_id;
 	response = teachers_teacherID_exams_GET(request);
 	expect(response.status).toBe(200);
-	expect(response.json.exams.length > 0).toBe(true);
-	expect(response.json.exams[0].id).toBe(exam_id);
+	let exams = response.json.exams;
+	expect(exams.length > 0).toBe(true);
+	expect(util.isExam(exams[0])).toBe(true);
+	expect(exams.filter(e => e.id === exam_id).length).toBe(1);
+	expect(exams.map(e => e.id).includes(exam_id)).toBe(true);
 
 	request = new Request();
 	request.params.teacherID = teacher_id;
 	request.query = { offset: 0, limit: 1 };
 	response = teachers_teacherID_exams_GET(request);
 	expect(response.status).toBe(200);
-	expect(response.json.exams.length > 0).toBe(true);
-	expect(response.json.exams[0].id).toBe(exam_id);
+	exams = response.json.exams;
+	expect(exams.length > 0).toBe(true);
+	expect(util.isExam(exams[0])).toBe(true);
+	expect(exams.filter(e => e.id === exam_id).length).toBe(1);
+	expect(exams.map(e => e.id).includes(exam_id)).toBe(true);
 
 	request = new Request();
 	request.params.teacherID = teacher_id;
@@ -83,4 +66,14 @@ test("teachers_teacherID_exams_GET", () => {
 	request.query = { limit: "a" };
 	response = teachers_teacherID_exams_GET(request);
 	expect(response.status).toBe(400);
+
+	request = new Request();
+	request.params.teacherID = "a";
+	response = teachers_teacherID_exams_GET(request);
+	expect(response.status).toBe(404);
+
+	request = new Request();
+	request.params.teacherID = "-1";
+	response = teachers_teacherID_exams_GET(request);
+	expect(response.status).toBe(404);
 });

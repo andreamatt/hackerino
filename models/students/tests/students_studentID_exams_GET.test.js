@@ -1,55 +1,47 @@
-const students_POST = require('../students_POST');
-const exams_POST = require('../../exams/exams_POST');
-const exams_examID_students_POST = require('../../exams/exams_examID_students_POST');
 const students_studentID_exams_GET = require('../students_studentID_exams_GET');
+const exams_examID_students_GET = require('../../exams/exams_examID_students_GET');
 const util = require('../../utility');
 const Request = util.Request;
+const resetDB = require('../../sampleDB').resetDB;
+
+beforeEach(resetDB);
 
 test("students_studentID_exams_GET", () => {
-	// add a student
-	let request = new Request();
-	request.body = {
-		email: "students_studentID_exams_GET_test",
-		first_name: "a",
-		last_name: "b"
-	};
-	let response = students_POST(request);
-	expect(response.status).toBe(201);
-	let student_id = response.json.id;
+	let student_id = 1;
+	let exam_id = 2;
 
-	// add an exam
-	request = new Request();
-	request.body = {
-		date: "2018-12-07T14:55:13.649Z",
-		deadline: "2019-12-07T14:55:13.649Z",
-		review_deadline: "2020-12-07T14:55:13.649Z"
-	};
-	response = exams_POST(request);
-	expect(response.status).toBe(201);
-	let exam_id = response.json.id;
-
-	// add student to exam
+	// get exam's students
 	request = new Request();
 	request.params.examID = exam_id;
-	request.body.studentID = student_id;
-	response = exams_examID_students_POST(request);
-	expect(response.status).toBe(204);
+	response = exams_examID_students_GET(request);
+	expect(response.status).toBe(200);
+	let students = response.json.students;
+	expect(students.filter(s => s.id === student_id).length).toBe(1);
+	expect(students.length > 0).toBe(true);
+	expect(util.isStudent(students[0])).toBe(true);
+	expect(students.map(s => s.id).includes(student_id)).toBe(true);
 
 	// get exams
 	request = new Request();
 	request.params.studentID = student_id;
 	response = students_studentID_exams_GET(request);
 	expect(response.status).toBe(200);
-	expect(util.isExam(response.json.exams[0])).toBe(true);
-	expect(response.json.exams[0].id).toBe(exam_id);
+	let exams = response.json.exams;
+	expect(exams.length > 0).toBe(true);
+	expect(util.isExam(exams[0])).toBe(true);
+	expect(exams.filter(e => e.id === exam_id).length).toBe(1);
+	expect(exams.map(e => e.id).includes(exam_id)).toBe(true);
 
 	request = new Request();
 	request.params.studentID = student_id;
 	request.query = { offset: 0, limit: 1 };
 	response = students_studentID_exams_GET(request);
 	expect(response.status).toBe(200);
-	expect(util.isExam(response.json.exams[0])).toBe(true);
-	expect(response.json.exams[0].id).toBe(exam_id);
+	exams = response.json.exams;
+	expect(exams.length > 0).toBe(true);
+	expect(util.isExam(exams[0])).toBe(true);
+	expect(exams.filter(e => e.id === exam_id).length).toBe(1);
+	expect(exams.map(e => e.id).includes(exam_id)).toBe(true);
 
 	request = new Request();
 	request.params.studentID = student_id;
@@ -74,4 +66,14 @@ test("students_studentID_exams_GET", () => {
 	request.query = { limit: "a" };
 	response = students_studentID_exams_GET(request);
 	expect(response.status).toBe(400);
+
+	request = new Request();
+	request.params.studentID = "a";
+	response = students_studentID_exams_GET(request);
+	expect(response.status).toBe(404);
+
+	request = new Request();
+	request.params.studentID = "-1";
+	response = students_studentID_exams_GET(request);
+	expect(response.status).toBe(404);
 });

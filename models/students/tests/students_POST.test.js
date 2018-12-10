@@ -2,83 +2,83 @@ const util = require('../../utility');
 const Request = util.Request;
 const students_GET = require('../students_GET');
 const students_POST = require('../students_POST');
+const resetDB = require('../../sampleDB').resetDB;
 
-describe("/students POST and GET", () => {
-	test("Add twice and get it", () => {
-		let request = new Request();
-		request.body = { email: "a.b@c", first_name: "a", last_name: "b" };
-		let response = students_POST(request);
-		expect(response.status).toBe(201);
-		expect(response.json).toMatchObject({
+beforeEach(resetDB);
+
+test("/students POST and GET", () => {
+	let request = new Request();
+	request.body = { email: "a.b@c", first_name: "a", last_name: "b" };
+	let response = students_POST(request);
+	expect(response.status).toBe(201);
+	expect(response.json).toMatchObject({
+		email: "a.b@c",
+		first_name: "a",
+		last_name: "b"
+	});
+
+	response = students_POST(request);
+	expect(response.status).toBe(423);
+	expect(util.isString(response.text)).toBe(true);
+
+	request = new Request();
+	request.query = { email: "a.b@c" };
+	response = students_GET(request);
+	expect(response.status).toBe(200);
+	expect(response.json).toMatchObject({
+		tot_students: 1,
+		students: [{
 			email: "a.b@c",
 			first_name: "a",
 			last_name: "b"
-		});
-
-		response = students_POST(request);
-		expect(response.status).toBe(423);
-		expect(util.isString(response.text)).toBe(true);
-
-		request = new Request();
-		request.query = { email: "a.b@c" };
-		response = students_GET(request);
-		expect(response.status).toBe(200);
-		expect(response.json).toMatchObject({
-			tot_students: 1,
-			students: [{
-				email: "a.b@c",
-				first_name: "a",
-				last_name: "b"
-			}]
-		});
-
-		request = new Request();
-		request.query = { email: "a.b@c", limit: 1, offset: 0 };
-		response = students_GET(request);
-		expect(response.status).toBe(200);
-		expect(response.json).toMatchObject({
-			tot_students: 1,
-			students: [{
-				email: "a.b@c",
-				first_name: "a",
-				last_name: "b"
-			}]
-		});
-
-		request = new Request();
-		request.query = { email: "a.b@c", limit: 0 };
-		response = students_GET(request);
-		expect(response.status).toBe(200);
-		expect(response.json).toEqual({
-			tot_students: 1,
-			students: []
-		});
-
-		request = new Request();
-		request.query = { email: "a.b@c", offset: 1 };
-		response = students_GET(request);
-		expect(response.status).toBe(200);
-		expect(response.json).toEqual({
-			tot_students: 1,
-			students: []
-		});
-
-		request = new Request();
-		request.query = { email: "a.b@c", offset: -1 };
-		response = students_GET(request);
-		expect(response.status).toBe(400);
-		expect(util.isString(response.text)).toBe(true);
-
-		request = new Request();
-		request.query = { email: "a.b@c", limit: -1 };
-		response = students_GET(request);
-		expect(response.status).toBe(400);
-		expect(util.isString(response.text)).toBe(true);
-
+		}]
 	});
+
+	request = new Request();
+	request.query = { email: "a.b@c", limit: 1, offset: 0 };
+	response = students_GET(request);
+	expect(response.status).toBe(200);
+	expect(response.json).toMatchObject({
+		tot_students: 1,
+		students: [{
+			email: "a.b@c",
+			first_name: "a",
+			last_name: "b"
+		}]
+	});
+
+	request = new Request();
+	request.query = { email: "a.b@c", limit: 0 };
+	response = students_GET(request);
+	expect(response.status).toBe(200);
+	expect(response.json).toEqual({
+		tot_students: 1,
+		students: []
+	});
+
+	request = new Request();
+	request.query = { email: "a.b@c", offset: 1 };
+	response = students_GET(request);
+	expect(response.status).toBe(200);
+	expect(response.json).toEqual({
+		tot_students: 1,
+		students: []
+	});
+
+	request = new Request();
+	request.query = { email: "a.b@c", offset: -1 };
+	response = students_GET(request);
+	expect(response.status).toBe(400);
+	expect(util.isString(response.text)).toBe(true);
+
+	request = new Request();
+	request.query = { email: "a.b@c", limit: -1 };
+	response = students_GET(request);
+	expect(response.status).toBe(400);
+	expect(util.isString(response.text)).toBe(true);
 });
 
-describe("students heavy POST and GET", () => {
+test("students heavy POST and GET", () => {
 	for (let i = 0; i < 100; i++) {
 		let request = new Request();
 		request.body = { email: i.toString(), first_name: "a", last_name: "b" };
@@ -128,7 +128,7 @@ describe("students heavy POST and GET", () => {
 	expect(students.every(stud => stud.id >= 50)).toBe(true);
 });
 
-describe("students POST with bad parameters", () => {
+test("students POST with bad parameters", () => {
 	let request = new Request();
 	request.body = {
 		email: 1,
@@ -184,24 +184,14 @@ describe("students POST with bad parameters", () => {
 
 });
 
-describe("student POST already used email", () => {
+test("student POST already used email", () => {
 	let request = new Request();
 	request.body = {
-		email: "andrea.casati",
+		email: "andrea.matte@studenti.unitn.it",
 		first_name: "a",
 		last_name: "b"
 	};
 	let response = students_POST(request);
-	expect(response.status).toBe(201);
-	expect(util.isString(response.text)).toBe(false);
-
-	request = new Request();
-	request.body = {
-		email: "andrea.casati",
-		first_name: "a",
-		last_name: "b"
-	};
-	response = students_POST(request);
 	expect(response.status).toBe(423);
 	expect(util.isString(response.text)).toBe(true);
 });

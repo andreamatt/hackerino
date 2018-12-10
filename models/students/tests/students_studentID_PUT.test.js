@@ -2,23 +2,28 @@ const util = require('../../utility');
 const Request = util.Request;
 const students_studentID_PUT = require('../students_studentID_PUT');
 
+const resetDB = require('../../sampleDB').resetDB;
+
+beforeEach(resetDB);
+
 describe("students/studentID PUT", () => {
-	let request = new Request();
-	let id = 83721897;
-	request.params = { studentID: id };
-	request.body = {
-		email: "andrea.matte2",
-		first_name: "andrea",
-		last_name: "matte"
-	};
-	let response = students_studentID_PUT(request);
-	expect(response.status).toBe(201);
+	test("creating", () => {
+		let request = new Request();
+		request.params = { studentID: 99 };
+		request.body = {
+			email: "andrea.matte2@studenti.unitn.it",
+			first_name: "f",
+			last_name: "b"
+		};
+		let response = students_studentID_PUT(request);
+		expect(response.status).toBe(201);
+	});
 
 	test("updating with good params", () => {
 		let request = new Request();
-		request.params = { studentID: id };
+		request.params = { studentID: 1 };
 		request.body = {
-			email: "andrea.matte2",
+			email: "andrea.matte@studenti.unitn.it",
 			first_name: "asd",
 			last_name: "mk"
 		};
@@ -28,9 +33,9 @@ describe("students/studentID PUT", () => {
 
 	test("updating with bad params", () => {
 		let request = new Request();
-		request.params = { studentID: id };
+		request.params = { studentID: 1 };
 		request.body = {
-			email: "andrea.matte2",
+			email: "andrea.matte@studenti.unitn.it",
 			first_name: 1,
 			last_name: "mk"
 		};
@@ -40,9 +45,9 @@ describe("students/studentID PUT", () => {
 
 	test("updating with bad params", () => {
 		let request = new Request();
-		request.params = { studentID: id };
+		request.params = { studentID: 1 };
 		request.body = {
-			email: "andrea.matte2",
+			email: "andrea.matte@studenti.unitn.it",
 			first_name: "asd",
 			last_name: null
 		};
@@ -52,25 +57,21 @@ describe("students/studentID PUT", () => {
 
 	test("creating with existing email", () => {
 		let request = new Request();
-		request.params = { studentID: id + 2 };
+		request.params = { studentID: 99 };
 		request.body = {
-			email: "andrea.matte",
+			email: "andrea.matte@studenti.unitn.it",
 			first_name: "undefined",
 			last_name: "null"
 		};
 		let response = students_studentID_PUT(request);
-		expect(response.status).toBe(201);
-
-		request.params = { studentID: id + 8392 };
-		response = students_studentID_PUT(request);
 		expect(response.status).toBe(423);
 	});
 
 	test("creating with bad params", () => {
 		let request = new Request();
-		request.params = { studentID: id + 4 };
+		request.params = { studentID: 99 };
 		request.body = {
-			email: "andrea.matte9",
+			email: "andrea.matte@studenti.unitn.it",
 			first_name: "asd",
 			last_name: null
 		};
@@ -80,9 +81,9 @@ describe("students/studentID PUT", () => {
 
 	test("creating with bad params", () => {
 		let request = new Request();
-		request.params = { studentID: 9.2 };
+		request.params = { studentID: 99 };
 		request.body = {
-			email: "andrea.matte9",
+			email: "andrea.matte@studenti.unitn.it",
 			first_name: "asd",
 			last_name: null
 		};
@@ -92,7 +93,7 @@ describe("students/studentID PUT", () => {
 
 	test("creating with bad params", () => {
 		let request = new Request();
-		request.params = { studentID: id + 100 };
+		request.params = { studentID: 99 };
 		request.body = {
 			email: "",
 			first_name: "asd",
@@ -104,16 +105,12 @@ describe("students/studentID PUT", () => {
 
 	test("put-update with wrong email", () => {
 		let request = new Request();
-		request.params = { studentID: id + 92110 };
+		request.params = { studentID: 1 };
 		request.body = {
-			email: "90890ddsaio",
+			email: "andrea.maaaatte@studenti.unitn.it",
 			first_name: "asd",
 			last_name: "be"
 		};
-		let response = students_studentID_PUT(request);
-		expect(response.status).toBe(201);
-
-		request.body.email = "wrong";
 		response = students_studentID_PUT(request);
 		expect(response.status).toBe(400);
 	});

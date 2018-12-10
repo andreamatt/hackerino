@@ -42,7 +42,7 @@ describe("getBy functions", () => {
         request.body.taskID = 1;
         request.body.examID = 1;
         request.body.answer = "a";
-        request.body.chosen_answer = 1;
+        request.body.chosen_answers = 1;
         submissions_POST(request);
         let result = getByExamID(1);
 
@@ -54,7 +54,7 @@ describe("getBy functions", () => {
         request.body.taskID = 1;
         request.body.examID = 1;
         request.body.answer = "a";
-        request.body.chosen_answer = 1;
+        request.body.chosen_answers = 1;
         submissions_POST(request);
         let result = getByExamID(1);
 
@@ -71,7 +71,7 @@ describe("getBy functions", () => {
         request.body.taskID = 1;
         request.body.examID = 1;
         request.body.answer = "a";
-        request.body.chosen_answer = 1;
+        request.body.chosen_answers = 1;
         submissions_POST(request);
         let result = getByStudentID(studentID);
 
@@ -89,7 +89,7 @@ describe("getBy functions", () => {
         request.body.taskID = taskID;
         request.body.examID = 1;
         request.body.answer = "a";
-        request.body.chosen_answer = 1;
+        request.body.chosen_answers = 1;
         submissions_POST(request);
         let result = getByTaskID(taskID);
 
