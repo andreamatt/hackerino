@@ -23,6 +23,7 @@ function exams_examID_students_studentID_DELETE(req) {
     }
 
     exams_students[id] = exams_students[id].filter(s => s !== studentID);
+    exams_list[id].tot_students--;
 }
 
 module.exports = exams_examID_students_studentID_DELETE;

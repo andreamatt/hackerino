@@ -32,6 +32,7 @@ function exams_examID_students_POST(req) {
         return new Response(424, "Student not found therefore not added");
     } else {
         exams_students[id].push(studentID);
+        exams_list[id].tot_students++;
         return new Response(204, "Student added to exam");
     }
 }

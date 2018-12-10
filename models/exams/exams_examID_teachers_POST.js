@@ -33,6 +33,7 @@ function exams_examID_teachers_POST(req) {
         return new Response(424, "Teacher not found therefore not added");
     } else {
         exams_teachers[id].push(teacherID);
+        exams_list[id].tot_teachers++;
         return new Response(204, "Teacher added to exam");
     }
 }

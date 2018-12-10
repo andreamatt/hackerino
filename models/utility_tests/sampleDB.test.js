@@ -64,6 +64,7 @@ describe("SampleDB testing", () => {
 			expect(util.isExam(exam)).toBe(true);
 
 			expect(util.isArray(exams_students[id])).toBe(true);
+			expect(exams_list[id].tot_students).toBe(exams_students[id].length);
 			for (key in exams_students) {
 				expect(util.isExam(exams_list[key])).toBe(true);
 				for (s_id of exams_students[key]) {
@@ -74,6 +75,7 @@ describe("SampleDB testing", () => {
 			}
 
 			expect(util.isArray(exams_teachers[id])).toBe(true);
+			expect(exams_list[id].tot_teachers).toBe(exams_teachers[id].length);
 			for (key in exams_teachers) {
 				expect(util.isExam(exams_list[key])).toBe(true);
 				for (s_id of exams_teachers[key]) {
@@ -84,6 +86,7 @@ describe("SampleDB testing", () => {
 			}
 
 			expect(util.isArray(exams_tasks[id])).toBe(true);
+			expect(exams_list[id].tot_tasks).toBe(exams_tasks[id].length);
 			for (key in exams_tasks) {
 				expect(util.isExam(exams_list[key])).toBe(true);
 				for (s_id of exams_tasks[key]) {

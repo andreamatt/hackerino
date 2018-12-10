@@ -23,6 +23,7 @@ function exams_examID_tasks_taskID_DELETE(req) {
     }
 
     exams_tasks[id] = exams_tasks[id].filter(t => t !== taskID);
+    exams_list[id].tot_tasks--;
 }
 
 module.exports = exams_examID_tasks_taskID_DELETE;

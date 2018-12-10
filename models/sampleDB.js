@@ -98,36 +98,36 @@ const exams_list = {
 		date: "December 17, 1995 03:24:00",
 		deadline: "December 18, 1995 03:24:00",
 		review_deadline: "December 19, 1995 03:24:00",
-		tot_students: 1,
-		tot_teachers: 1,
-		tot_tasks: 1
+		tot_students: 3,
+		tot_teachers: 0,
+		tot_tasks: 2
 	},
 	2: {
 		id: 2,
 		date: "December 17, 1995 03:24:00",
 		deadline: "December 18, 1995 03:24:00",
 		review_deadline: "December 19, 1995 03:24:00",
-		tot_students: 1,
+		tot_students: 2,
 		tot_teachers: 1,
-		tot_tasks: 1
+		tot_tasks: 0
 	},
 	3: {
 		id: 3,
 		date: "December 17, 1995 03:24:00",
 		deadline: "December 18, 1995 03:24:00",
 		review_deadline: "December 19, 1995 03:24:00",
-		tot_students: 1,
-		tot_teachers: 1,
-		tot_tasks: 1
+		tot_students: 0,
+		tot_teachers: 3,
+		tot_tasks: 4
 	},
 	4: {
 		id: 4,
 		date: "December 17, 1995 03:24:00",
 		deadline: "December 18, 1995 03:24:00",
 		review_deadline: "December 19, 1995 03:24:00",
-		tot_students: 1,
-		tot_teachers: 1,
-		tot_tasks: 1
+		tot_students: 3,
+		tot_teachers: 2,
+		tot_tasks: 3
 	}
 };
 const exams_students = {

@@ -32,6 +32,7 @@ function exams_examID_tasks_POST(req) {
         return new Response(424, "Task not found therefore not added");
     } else {
         exams_tasks[id].push(taskID);
+        exams_list[id].tot_tasks++;
         return new Response(204, "Task added to exam");
     }
 }
