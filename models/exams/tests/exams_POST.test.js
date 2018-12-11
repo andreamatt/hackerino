@@ -3,29 +3,11 @@ const exams_GET = require('../exams_GET');
 const exams_POST = require('../exams_POST');
 const Request = util.Request;
 
-beforeAll(() => {
-    describe("/exams GET empty", () => {
-        test("With no query", () => {
-            let request = new Request();
-            let response = exams_GET(request);
-            expect(response.status).toBe(200);
-            expect(response.json.tot_exams).toBe(0);
-            expect(response.json.exams).toEqual([]);
-        });
-        test("With good limit and offset", () => {
-            let request = new Request();
-            request.query = { limit: 2, offset: 9 };
-            let response = exams_GET(request);
-            expect(response.status).toBe(200);
-            expect(response.json.tot_exams).toBe(0);
-            expect(response.json.exams).toEqual([]);
-        });
-    });
-});
+const resetDB = require('../../sampleDB').resetDB;
+beforeEach(resetDB);
 
 
-
-describe("/exams_POST", () => {
+describe("/exams_POST good Response", () => {
     test("exams_POST working", () => {
         let request = new Request();
         request.body.date = "2001/10/10";
@@ -35,7 +17,9 @@ describe("/exams_POST", () => {
 
         expect(response.status).toBe(201);
     });
+});
 
+describe("/exams_POST with bad parameters", () => {
     test("exams_POST date > deadline", () => {
         let request = new Request();
         request.body.date = "2003/10/10";
@@ -76,3 +60,6 @@ describe("/exams_POST", () => {
         expect(response.status).toBe(400);
     });
 });
+
+
+
