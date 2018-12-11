@@ -16,9 +16,7 @@ const exams_tasks = exams.exams_tasks;
 const submissions_list = submissions.submissions_list;
 const reviews_list = reviews.reviews_list;
 
-beforeAll(() => {
-	resetDB();
-});
+beforeAll(resetDB);
 
 describe("SampleDB testing", () => {
 	test("Check students", () => {

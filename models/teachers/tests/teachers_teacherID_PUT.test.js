@@ -9,7 +9,7 @@ beforeEach(resetDB);
 describe("teachers/teacherID PUT", () => {
 	test("creating", () => {
 		let request = new Request();
-		request.params = { teacherID: 99 };
+		request.params = { teacherID: "99" };
 		request.body = {
 			email: "fabio.casati2@unitn.it",
 			first_name: "f",
@@ -21,7 +21,7 @@ describe("teachers/teacherID PUT", () => {
 
 	test("updating with good params", () => {
 		let request = new Request();
-		request.params = { teacherID: 1 };
+		request.params = { teacherID: "1" };
 		request.body = {
 			email: "fabio.casati@unitn.it",
 			first_name: "asd",
@@ -33,7 +33,7 @@ describe("teachers/teacherID PUT", () => {
 
 	test("updating with bad params", () => {
 		let request = new Request();
-		request.params = { teacherID: 1 };
+		request.params = { teacherID: "1" };
 		request.body = {
 			email: "fabio.casati@unitn.it",
 			first_name: 1,
@@ -45,7 +45,7 @@ describe("teachers/teacherID PUT", () => {
 
 	test("updating with bad params", () => {
 		let request = new Request();
-		request.params = { teacherID: 1 };
+		request.params = { teacherID: "1" };
 		request.body = {
 			email: "fabio.casati@unitn.it",
 			first_name: "asd",
@@ -57,7 +57,7 @@ describe("teachers/teacherID PUT", () => {
 
 	test("creating with existing email", () => {
 		let request = new Request();
-		request.params = { teacherID: 99 };
+		request.params = { teacherID: "99" };
 		request.body = {
 			email: "fabio.casati@unitn.it",
 			first_name: "undefined",
@@ -69,7 +69,7 @@ describe("teachers/teacherID PUT", () => {
 
 	test("creating with bad params", () => {
 		let request = new Request();
-		request.params = { teacherID: 99 };
+		request.params = { teacherID: "99" };
 		request.body = {
 			email: "fabio.casati@unitn.it",
 			first_name: "asd",
@@ -81,7 +81,7 @@ describe("teachers/teacherID PUT", () => {
 
 	test("creating with bad params", () => {
 		let request = new Request();
-		request.params = { teacherID: 99 };
+		request.params = { teacherID: "99" };
 		request.body = {
 			email: "fabio.casati@unitn.it",
 			first_name: "asd",
@@ -93,7 +93,7 @@ describe("teachers/teacherID PUT", () => {
 
 	test("creating with bad params", () => {
 		let request = new Request();
-		request.params = { teacherID: 99 };
+		request.params = { teacherID: "99" };
 		request.body = {
 			email: "",
 			first_name: "asd",
@@ -103,9 +103,21 @@ describe("teachers/teacherID PUT", () => {
 		expect(response.status).toBe(400);
 	});
 
+	test("creating with bad params", () => {
+		let request = new Request();
+		request.params = { teacherID: "9.2" };
+		request.body = {
+			email: "f.c@u.it",
+			first_name: "asd",
+			last_name: "be"
+		};
+		let response = teachers_teacherID_PUT(request);
+		expect(response.status).toBe(400);
+	});
+
 	test("put-update with wrong email", () => {
 		let request = new Request();
-		request.params = { teacherID: 1 };
+		request.params = { teacherID: "1" };
 		request.body = {
 			email: "fabio.casaaaaaaati@unitn.it",
 			first_name: "asd",

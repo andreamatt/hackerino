@@ -1,11 +1,9 @@
 const util = require('../utility');
-const rev = require('../reviews/reviews');
-const sub_subID_rev_get = require('./submissions_submissionID_reviews_GET');
-const submissions_submissionID_reviews_GET = sub_subID_rev_get.submissions_submissionID_reviews_GET;
-const forceDelete_review = rev.forceDelete_review;
+const forceDelete_review = require('../reviews/reviews').forceDelete_review;
+const reviews_GET = require('../reviews/reviews_GET');
 const isSubmission = util.isSubmission;
 const isString = util.isString;
-
+const Request = util.Request;
 
 const submissions_list = {
     /*
@@ -71,15 +69,14 @@ function getByStudentID(ID) {
 
 function forceDelete_submission(id) {
     if (submissions_list[id]) {
-        delete submissions_list[id];
-
         let request = new Request();
-        request.params.id = id;
-        let reviews_list = submissions_submissionID_reviews_GET(request).json.reviews;
-
-        for (let entry in reviews_list) {
-            forceDelete_review(entry.id);
+        let reviews_list = reviews_GET(request).json.reviews;
+        let filtered = reviews_list.filter(rev => rev.submissionID === id);
+        for (rev of filtered) {
+            forceDelete_review(rev.id);
         }
+
+        delete submissions_list[id];
     } else {
         throw new Error("submission not existing");
     }

@@ -7,62 +7,60 @@ const resetDB = require('../../sampleDB').resetDB;
 beforeEach(resetDB);
 
 test("teachers_teacherID_exams_GET", () => {
-	let teacher_id = 1;
-	let exam_id = 3;
+	// let teacher_id = 1;
+	// let exam_id = 3;
 
 	// get exam's teachers
 	request = new Request();
-	request.params.examID = exam_id;
+	request.params.examID = "3";
 	response = exams_examID_teachers_GET(request);
 	expect(response.status).toBe(200);
 	let teachers = response.json.teachers;
-	expect(teachers.filter(t => t.id === teacher_id).length).toBe(1);
+	expect(teachers.filter(t => t.id === 1).length).toBe(1);
 	expect(teachers.length > 0).toBe(true);
 	expect(util.isTeacher(teachers[0])).toBe(true);
-	expect(teachers.map(t => t.id).includes(teacher_id)).toBe(true);
+	expect(teachers.map(t => t.id).includes(1)).toBe(true);
 
 	// get exams
 	request = new Request();
-	request.params.teacherID = teacher_id;
+	request.params.teacherID = "1";
 	response = teachers_teacherID_exams_GET(request);
 	expect(response.status).toBe(200);
 	let exams = response.json.exams;
 	expect(exams.length > 0).toBe(true);
 	expect(util.isExam(exams[0])).toBe(true);
-	expect(exams.filter(e => e.id === exam_id).length).toBe(1);
-	expect(exams.map(e => e.id).includes(exam_id)).toBe(true);
+	expect(exams.map(e => e.id)).toEqual([3, 4]);
 
 	request = new Request();
-	request.params.teacherID = teacher_id;
-	request.query = { offset: 0, limit: 1 };
+	request.params.teacherID = "1";
+	request.query = { offset: "1", limit: "1" };
 	response = teachers_teacherID_exams_GET(request);
 	expect(response.status).toBe(200);
 	exams = response.json.exams;
 	expect(exams.length > 0).toBe(true);
 	expect(util.isExam(exams[0])).toBe(true);
-	expect(exams.filter(e => e.id === exam_id).length).toBe(1);
-	expect(exams.map(e => e.id).includes(exam_id)).toBe(true);
+	expect(exams.map(e => e.id)).toEqual([4]);
 
 	request = new Request();
-	request.params.teacherID = teacher_id;
-	request.query = { offset: -1 };
+	request.params.teacherID = "1";
+	request.query = { offset: "-1" };
 	response = teachers_teacherID_exams_GET(request);
 	expect(response.status).toBe(400);
 
 	request = new Request();
-	request.params.teacherID = teacher_id;
+	request.params.teacherID = "1";
 	request.query = { offset: "a" };
 	response = teachers_teacherID_exams_GET(request);
 	expect(response.status).toBe(400);
 
 	request = new Request();
-	request.params.teacherID = teacher_id;
+	request.params.teacherID = "1";
 	request.query = { limit: "-1" };
 	response = teachers_teacherID_exams_GET(request);
 	expect(response.status).toBe(400);
 
 	request = new Request();
-	request.params.teacherID = teacher_id;
+	request.params.teacherID = "1";
 	request.query = { limit: "a" };
 	response = teachers_teacherID_exams_GET(request);
 	expect(response.status).toBe(400);
@@ -76,4 +74,21 @@ test("teachers_teacherID_exams_GET", () => {
 	request.params.teacherID = "-1";
 	response = teachers_teacherID_exams_GET(request);
 	expect(response.status).toBe(404);
+
+	request = new Request();
+	request.params.teacherID = "9.2";
+	response = teachers_teacherID_exams_GET(request);
+	expect(response.status).toBe(404);
+
+	request = new Request();
+	request.params.teacherID = "1";
+	request.query = { offset: "9.2" };
+	response = teachers_teacherID_exams_GET(request);
+	expect(response.status).toBe(400);
+
+	request = new Request();
+	request.params.teacherID = "1";
+	request.query = { limit: "9.2" };
+	response = teachers_teacherID_exams_GET(request);
+	expect(response.status).toBe(400);
 });

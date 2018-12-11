@@ -10,7 +10,7 @@ describe("teachers/teacherID DELETE", () => {
 
 	test("with ok param", () => {
 		let request = new Request();
-		request.params = { teacherID: 1 };
+		request.params = { teacherID: "1" };
 		let response = teachers_teacherID_DELETE(request);
 		expect(response.status).toBe(204);
 
@@ -29,7 +29,7 @@ describe("teachers/teacherID DELETE", () => {
 
 	test("with bad param", () => {
 		let request = new Request();
-		request.params = { teacherID: 9.2 };
+		request.params = { teacherID: "9.2" };
 		let response = teachers_teacherID_DELETE(request);
 		expect(response.status).toBe(400);
 
@@ -37,7 +37,7 @@ describe("teachers/teacherID DELETE", () => {
 
 	test("with not existing teacherID", () => {
 		let request = new Request();
-		request.params = { teacherID: 99 };
+		request.params = { teacherID: "99" };
 		let response = teachers_teacherID_DELETE(request);
 		expect(response.status).toBe(404);
 

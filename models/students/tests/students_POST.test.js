@@ -35,7 +35,7 @@ test("/students POST and GET", () => {
 	});
 
 	request = new Request();
-	request.query = { email: "a.b@c", limit: 1, offset: 0 };
+	request.query = { email: "a.b@c", limit: "1", offset: "0" };
 	response = students_GET(request);
 	expect(response.status).toBe(200);
 	expect(response.json).toMatchObject({
@@ -48,7 +48,7 @@ test("/students POST and GET", () => {
 	});
 
 	request = new Request();
-	request.query = { email: "a.b@c", limit: 0 };
+	request.query = { email: "a.b@c", limit: "0" };
 	response = students_GET(request);
 	expect(response.status).toBe(200);
 	expect(response.json).toEqual({
@@ -57,7 +57,7 @@ test("/students POST and GET", () => {
 	});
 
 	request = new Request();
-	request.query = { email: "a.b@c", offset: 1 };
+	request.query = { email: "a.b@c", offset: "1" };
 	response = students_GET(request);
 	expect(response.status).toBe(200);
 	expect(response.json).toEqual({
@@ -66,7 +66,7 @@ test("/students POST and GET", () => {
 	});
 
 	request = new Request();
-	request.query = { email: "a.b@c", offset: -1 };
+	request.query = { email: "a.b@c", offset: "-1" };
 	response = students_GET(request);
 	expect(response.status).toBe(400);
 	expect(util.isString(response.text)).toBe(true);
@@ -85,7 +85,7 @@ test("students heavy POST and GET", () => {
 		let response = students_POST(request);
 		expect(response.status).toBe(201);
 
-		expect(util.isStudent(response.json)).toBe(true);
+		expect(util.isTeacher(response.json)).toBe(true);
 	}
 
 	let request = new Request();
@@ -95,7 +95,7 @@ test("students heavy POST and GET", () => {
 
 	expect(response.json.tot_students).toBe(response.json.students.length);
 	let students = response.json.students;
-	expect(students.every(stud => util.isStudent(stud))).toBe(true);
+	expect(students.every(stud => util.isTeacher(stud))).toBe(true);
 
 	request = new Request();
 	request.query = { email: "1" };
@@ -110,7 +110,7 @@ test("students heavy POST and GET", () => {
 	expect(response.status).toBe(200);
 
 	request = new Request();
-	request.query = { limit: 20 };
+	request.query = { limit: "20" };
 	response = students_GET(request);
 	expect(response.status).toBe(200);
 
@@ -118,7 +118,7 @@ test("students heavy POST and GET", () => {
 	expect(response.json.students.length).toBe(20);
 
 	request = new Request();
-	request.query = { limit: 20, offset: 50 };
+	request.query = { limit: "20", offset: "50" };
 	response = students_GET(request);
 	expect(response.status).toBe(200);
 

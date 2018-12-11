@@ -7,13 +7,12 @@ beforeEach(resetDB);
 
 describe("teachers/teacherID GET", () => {
 
-	let id = 1;
 	test("with ok param", () => {
 		let request = new Request();
-		request.params = { teacherID: id };
+		request.params = { teacherID: "1" };
 		let response = teachers_teacherID_GET(request);
 		expect(response.status).toBe(200);
-		expect(response.json.id).toBe(id);
+		expect(response.json.id).toBe(1);
 	});
 
 	test("with bad param", () => {
@@ -26,7 +25,7 @@ describe("teachers/teacherID GET", () => {
 
 	test("with bad param", () => {
 		let request = new Request();
-		request.params = { teacherID: 9.2 };
+		request.params = { teacherID: "9.2" };
 		let response = teachers_teacherID_GET(request);
 		expect(response.status).toBe(404);
 
@@ -34,7 +33,7 @@ describe("teachers/teacherID GET", () => {
 
 	test("with non-ex id", () => {
 		let request = new Request();
-		request.params = { teacherID: 99999999 };
+		request.params = { teacherID: "99999999" };
 		let response = teachers_teacherID_GET(request);
 		expect(response.status).toBe(404);
 

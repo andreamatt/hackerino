@@ -9,7 +9,7 @@ describe("students/id/reviews GET", () => {
 
 	test("with good params", () => {
 		let request = new Request();
-		request.params.studentID = 7;
+		request.params.studentID = "7";
 		let response = students_studentID_reviews_GET(request);
 		expect(response.status).toBe(200);
 		let reviews = response.json.reviews;
@@ -20,8 +20,8 @@ describe("students/id/reviews GET", () => {
 
 	test("with good params and offset-limit", () => {
 		let request = new Request();
-		request.params.studentID = 7;
-		request.query = { offset: 1, limit: 1 };
+		request.params.studentID = "7";
+		request.query = { offset: "1", limit: "1" };
 		let response = students_studentID_reviews_GET(request);
 		expect(response.status).toBe(200);
 		let reviews = response.json.reviews;
@@ -32,7 +32,7 @@ describe("students/id/reviews GET", () => {
 
 	test("with bad params", () => {
 		let request = new Request();
-		request.params.studentID = 999;
+		request.params.studentID = "999";
 		let response = students_studentID_reviews_GET(request);
 		expect(response.status).toBe(404);
 	});
@@ -46,7 +46,7 @@ describe("students/id/reviews GET", () => {
 
 	test("with bad params", () => {
 		let request = new Request();
-		request.params.studentID = 1;
+		request.params.studentID = "1";
 		request.query = { offset: "a" };
 		let response = students_studentID_reviews_GET(request);
 		expect(response.status).toBe(400);
@@ -54,7 +54,7 @@ describe("students/id/reviews GET", () => {
 
 	test("with bad params", () => {
 		let request = new Request();
-		request.params.studentID = 1;
+		request.params.studentID = "1";
 		request.query = { limit: "a" };
 		let response = students_studentID_reviews_GET(request);
 		expect(response.status).toBe(400);
@@ -62,7 +62,7 @@ describe("students/id/reviews GET", () => {
 
 	test("with bad params", () => {
 		let request = new Request();
-		request.params.studentID = 1;
+		request.params.studentID = "1";
 		request.query = { offset: "-1" };
 		let response = students_studentID_reviews_GET(request);
 		expect(response.status).toBe(400);
@@ -70,10 +70,33 @@ describe("students/id/reviews GET", () => {
 
 	test("with bad params", () => {
 		let request = new Request();
-		request.params.studentID = 1;
+		request.params.studentID = "1";
 		request.query = { limit: "-10" };
 		let response = students_studentID_reviews_GET(request);
 		expect(response.status).toBe(400);
+	});
+
+	test("with bad params", () => {
+		let request = new Request();
+		request.params.studentID = "1";
+		request.query = { limit: "9.2" };
+		let response = students_studentID_reviews_GET(request);
+		expect(response.status).toBe(400);
+	});
+
+	test("with bad params", () => {
+		let request = new Request();
+		request.params.studentID = "1";
+		request.query = { offset: "9.2" };
+		let response = students_studentID_reviews_GET(request);
+		expect(response.status).toBe(400);
+	});
+
+	test("with bad params", () => {
+		let request = new Request();
+		request.params.studentID = "9.2";
+		let response = students_studentID_reviews_GET(request);
+		expect(response.status).toBe(404);
 	});
 
 });

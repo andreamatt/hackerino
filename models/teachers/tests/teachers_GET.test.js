@@ -24,41 +24,51 @@ describe("/teachers GET", () => {
 		expect(response.status).toBe(200);
 		expect(response.json.teachers.length).toBe(1);
 	});
+	test("with wrong parameters", () => {
+		let request = new Request();
+		request.query = { email: "" };
+		let response = teachers_GET(request);
+		expect(response.status).toBe(400);
+
+		request = new Request();
+		request.query = { email: 19191 };
+		response = teachers_GET(request);
+		expect(response.status).toBe(400);
+
+		request = new Request();
+		request.query = { limit: "-1" };
+		response = teachers_GET(request);
+		expect(response.status).toBe(400);
+
+		request = new Request();
+		request.query = { offset: "-1" };
+		response = teachers_GET(request);
+		expect(response.status).toBe(400);
+
+		request = new Request();
+		request.query = { limit: "1" };
+		response = teachers_GET(request);
+		expect(response.status).toBe(200);
+
+		request = new Request();
+		request.query = { limit: "asd" };
+		response = teachers_GET(request);
+		expect(response.status).toBe(400);
+
+		request = new Request();
+		request.query = { limit: "9.2" };
+		response = teachers_GET(request);
+		expect(response.status).toBe(400);
+
+		request = new Request();
+		request.query = { offset: "9.2" };
+		response = teachers_GET(request);
+		expect(response.status).toBe(400);
+
+		request = new Request();
+		request.query = { offset: {} };
+		response = teachers_GET(request);
+		expect(response.status).toBe(400);
+	});
 });
 
-describe("teachers GET with wrong parameters", () => {
-	let request = new Request();
-	request.query = { email: "" };
-	let response = teachers_GET(request);
-	expect(response.status).toBe(400);
-
-	request = new Request();
-	request.query = { email: 1 };
-	response = teachers_GET(request);
-	expect(response.status).toBe(400);
-
-	request = new Request();
-	request.query = { limit: -1 };
-	response = teachers_GET(request);
-	expect(response.status).toBe(400);
-
-	request = new Request();
-	request.query = { offset: "-1" };
-	response = teachers_GET(request);
-	expect(response.status).toBe(400);
-
-	request = new Request();
-	request.query = { limit: "1" };
-	response = teachers_GET(request);
-	expect(response.status).toBe(200);
-
-	request = new Request();
-	request.query = { limit: "asd" };
-	response = teachers_GET(request);
-	expect(response.status).toBe(400);
-
-	request = new Request();
-	request.query = { offset: {} };
-	response = teachers_GET(request);
-	expect(response.status).toBe(400);
-});

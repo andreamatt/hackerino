@@ -1,6 +1,7 @@
 const reviews = require('../reviews/reviews');
 const util = require('../utility');
 const submissions_list = require('./submissions').submissions_list;
+if (!submissions_list) throw new Error("DIOCANE");
 const isInteger = Number.isInteger;
 const Response = util.Response;
 const doOffset = util.doOffset;

@@ -35,7 +35,7 @@ test("/teachers POST and GET", () => {
 	});
 
 	request = new Request();
-	request.query = { email: "a.b@c", limit: 1, offset: 0 };
+	request.query = { email: "a.b@c", limit: "1", offset: "0" };
 	response = teachers_GET(request);
 	expect(response.status).toBe(200);
 	expect(response.json).toMatchObject({
@@ -48,7 +48,7 @@ test("/teachers POST and GET", () => {
 	});
 
 	request = new Request();
-	request.query = { email: "a.b@c", limit: 0 };
+	request.query = { email: "a.b@c", limit: "0" };
 	response = teachers_GET(request);
 	expect(response.status).toBe(200);
 	expect(response.json).toEqual({
@@ -57,7 +57,7 @@ test("/teachers POST and GET", () => {
 	});
 
 	request = new Request();
-	request.query = { email: "a.b@c", offset: 1 };
+	request.query = { email: "a.b@c", offset: "1" };
 	response = teachers_GET(request);
 	expect(response.status).toBe(200);
 	expect(response.json).toEqual({
@@ -66,7 +66,7 @@ test("/teachers POST and GET", () => {
 	});
 
 	request = new Request();
-	request.query = { email: "a.b@c", offset: -1 };
+	request.query = { email: "a.b@c", offset: "-1" };
 	response = teachers_GET(request);
 	expect(response.status).toBe(400);
 	expect(util.isString(response.text)).toBe(true);
@@ -110,7 +110,7 @@ test("teachers heavy POST and GET", () => {
 	expect(response.status).toBe(200);
 
 	request = new Request();
-	request.query = { limit: 20 };
+	request.query = { limit: "20" };
 	response = teachers_GET(request);
 	expect(response.status).toBe(200);
 
@@ -118,7 +118,7 @@ test("teachers heavy POST and GET", () => {
 	expect(response.json.teachers.length).toBe(20);
 
 	request = new Request();
-	request.query = { limit: 20, offset: 50 };
+	request.query = { limit: "20", offset: "50" };
 	response = teachers_GET(request);
 	expect(response.status).toBe(200);
 
