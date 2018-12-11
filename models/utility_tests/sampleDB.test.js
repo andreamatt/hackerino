@@ -6,6 +6,8 @@ const submissions = require('../submissions/submissions');
 const tasks = require('../tasks/tasks');
 const teachers = require('../teachers/teachers');
 const resetDB = require('../sampleDB').resetDB;
+const copyFromTo = require('../sampleDB').copyFromTo;
+const clearObject = require('../sampleDB').clearObject;
 const students_list = students.students_list;
 const teachers_list = teachers.teachers_list;
 const tasks_list = tasks.tasks_list;
@@ -139,5 +141,37 @@ describe("SampleDB testing", () => {
 
 			expect(exams_students[sub.examID].includes(rev.studentID)).toBe(true);
 		}
+	});
+
+	test("Testing copyFromTo", () => {
+		let f = { a: 1 };
+		let t = {};
+		copyFromTo(f, t);
+		expect(t.a).toBe(1);
+
+		function A() {
+			this.color = 'red';
+		}
+		A.prototype = { a: 1 };
+		f = new A();
+		t = {};
+		copyFromTo(f, t);
+		expect(t).toEqual({ color: 'red' });
+		expect(t.a).toBeUndefined();
+	});
+
+	test("Testing clearObject", () => {
+		let obj = { a: 1 };
+		clearObject(obj);
+		expect(obj).toEqual({});
+
+		function A() {
+			this.color = 'red';
+		}
+		A.prototype = { a: 1 };
+		obj = new A();
+		clearObject(obj);
+		expect(obj).toEqual({});
+		expect(obj.a).toBe(1);
 	});
 });

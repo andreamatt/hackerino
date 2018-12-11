@@ -225,8 +225,6 @@ function clearObject(obj) {
 	for (var key in obj) {
 		if (obj.hasOwnProperty(key)) {
 			delete obj[key];
-		} else {
-			console.log(key);
 		}
 	}
 }
@@ -265,4 +263,4 @@ function resetDB() {
 	copyFromTo(reviews_list, reviews.reviews_list);
 }
 
-module.exports = { resetDB };
+module.exports = { resetDB, copyFromTo, clearObject };

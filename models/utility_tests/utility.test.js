@@ -12,6 +12,9 @@ const doOffsetLimit = util.doOffsetLimit;
 const isStudent = util.isStudent;
 const isTeacher = util.isTeacher;
 const isReview = util.isReview;
+const isSubmission = util.isSubmission;
+const isExam = util.isExam;
+const isInteger = util.isInteger;
 
 test("toInt function", () => {
 	let toInt = util.toInt;
@@ -23,6 +26,21 @@ test("toInt function", () => {
 	expect(toInt(null)).toBeNaN();
 	expect(toInt("Infinity")).toBe(Infinity);
 	expect(toInt(Infinity)).toBe(Infinity);
+});
+
+test("isInteger", () => {
+	expect(isInteger(3)).toBe(true);
+	expect(isInteger(0)).toBe(true);
+	expect(isInteger(-9)).toBe(true);
+
+	expect(isInteger('3')).toBe(false);
+	expect(isInteger(9.2)).toBe(false);
+	expect(isInteger('9.2')).toBe(false);
+	expect(isInteger([])).toBe(false);
+	expect(isInteger()).toBe(false);
+	expect(isInteger(null)).toBe(false);
+	expect(isInteger({})).toBe(false);
+	expect(isInteger(Infinity)).toBe(false);
 });
 
 test('Request and response utilities', () => {
@@ -151,6 +169,10 @@ test("isTask", () => {
 	};
 	expect(isTask(task)).toBe(true);	// multiple choice
 
+	task.answers.color = 'red';
+	expect(isTask(task)).not.toBe(true);
+	delete task.answers['color'];
+
 	delete task.answers.possible_answers;
 	expect(isTask(task)).not.toBe(true);	// multipe choice but no possible answers
 
@@ -220,7 +242,11 @@ test("isTask", () => {
 	task.question = 23;
 	expect(isTask(task)).not.toBe(true);	// question is integer
 
+	task.question = undefined;
+	expect(isTask(task)).not.toBe(true);
+
 	task.question = "Are you what?";
+	expect(isTask(task)).toBe(true);
 	task.rating = "4.7";
 	expect(isTask(task)).not.toBe(true);	// rating is string
 
@@ -468,3 +494,130 @@ test("isReview", () => {
 	expect(isReview(JSON.stringify(review))).not.toBe(true);
 });
 
+test("isSubmission", () => {
+	let sub = {
+		id: 1,
+		studentID: 9,
+		examID: 19,
+		taskID: 7,
+		chosen_answers: [0, 1]
+	};
+	expect(isSubmission(sub)).toBe(true);
+
+	delete sub['chosen_answers'];
+	expect(isSubmission(sub)).not.toBe(true);
+
+	sub.answer = "Heh";
+	expect(isSubmission(sub)).toBe(true);
+	sub.answer = "";
+	expect(isSubmission(sub)).not.toBe(true);
+	sub.answer = 9;
+	expect(isSubmission(sub)).not.toBe(true);
+	delete sub['answer'];
+	expect(isSubmission(sub)).not.toBe(true);
+	sub.answer = 'halo';
+
+	sub.id = "1";
+	expect(isSubmission(sub)).not.toBe(true);
+	sub.id = 0;
+	expect(isSubmission(sub)).not.toBe(true);
+	sub.id = null;
+	expect(isSubmission(sub)).not.toBe(true);
+	sub.id = 1;
+	sub.studentID = "1";
+	expect(isSubmission(sub)).not.toBe(true);
+	sub.studentID = 0;
+	expect(isSubmission(sub)).not.toBe(true);
+	sub.studentID = 1;
+	expect(isSubmission(sub)).toBe(true);
+
+	sub.examID = "1";
+	expect(isSubmission(sub)).not.toBe(true);
+	delete sub['examID'];
+	expect(isSubmission(sub)).not.toBe(true);
+	sub.examID = 0;
+	expect(isSubmission(sub)).not.toBe(true);
+	sub.examID = 1;
+	sub.taskID = "1";
+	expect(isSubmission(sub)).not.toBe(true);
+	sub.taskID = 0;
+	expect(isSubmission(sub)).not.toBe(true);
+	delete sub['taskID'];
+	expect(isSubmission(sub)).not.toBe(true);
+	sub.taskID = 1;
+	expect(isSubmission(sub)).toBe(true);
+
+	sub.chosen_answers = [0, 1];
+	expect(isSubmission(sub)).not.toBe(true);
+	delete sub['answer'];
+	expect(isSubmission(sub)).toBe(true);
+
+	sub.chosen_answers = ["no", 1];
+	expect(isSubmission(sub)).not.toBe(true);
+	sub.chosen_answers = [1, {}];
+	expect(isSubmission(sub)).not.toBe(true);
+	sub.chosen_answers = "[0, 1]";
+	expect(isSubmission(sub)).not.toBe(true);
+
+
+	sub = {};
+	expect(isSubmission(sub)).not.toBe(true);
+	sub = null;
+	expect(isSubmission(sub)).not.toBe(true);
+	sub = undefined;
+	expect(isSubmission(sub)).not.toBe(true);
+});
+
+test("isExam", () => {
+	let exam = {
+		id: 4,
+		date: "1999/10/10",
+		deadline: "1999/10/20",
+		review_deadline: "1999/10/30",
+		tot_students: 3,
+		tot_teachers: 2,
+		tot_tasks: 3
+	};
+	expect(isExam(exam)).toBe(true);
+
+	exam = {
+		id: 4,
+		date: "1999/10/10",
+		deadline: "1999/10/20",
+		review_deadline: "1999/10/30"
+	};
+	expect(isExam(exam)).toBe(true);
+
+	exam.deadline = "1999/10/09";
+	expect(isExam(exam)).not.toBe(true);
+	exam.deadline = "1999/10/20";
+	exam.review_deadline = "1999/10/15";
+	expect(isExam(exam)).not.toBe(true);
+	exam.review_deadline = "1999/10/30";
+	exam.id = "1";
+	expect(isExam(exam)).not.toBe(true);
+	exam.id = 0;
+	expect(isExam(exam)).not.toBe(true);
+	exam.id = undefined;
+	expect(isExam(exam)).not.toBe(true);
+	exam.id = 1;
+	expect(isExam(exam)).toBe(true);
+
+	exam.date = "?";
+	expect(isExam(exam)).not.toBe(true);
+	exam.date = "1999/10/10";
+	exam.deadline = "asd";
+	expect(isExam(exam)).not.toBe(true);
+	exam.deadline = "1999/10/20";
+	exam.review_deadline = "theyear1992";
+	expect(isExam(exam)).not.toBe(true);
+	exam.review_deadline = "1999/10/30";
+	expect(isExam(exam)).toBe(true);
+
+	exam = {};
+	expect(isExam(exam)).not.toBe(true);
+	exam = null;
+	expect(isExam(exam)).not.toBe(true);
+	exam = undefined;
+	expect(isExam(exam)).not.toBe(true);
+});

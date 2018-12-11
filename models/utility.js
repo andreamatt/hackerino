@@ -90,7 +90,8 @@ function isTeacher(teach) {
 
 function isExam(exam) {
 	if (!exam) return "falsy value";
-	if (!isInteger(exam.id) || exam.id < 1) return "bad id";
+	if (!isInteger(exam.id)) return "bad id";
+	if (exam.id < 1) return "Id can't be < 1";
 	if (!isStringDate(exam.date)) return "bad date";
 	if (!isStringDate(exam.deadline)) return "bad deadline";
 	if (!isStringDate(exam.review_deadline)) return "bad review_deadline";
@@ -161,10 +162,15 @@ function isReview(review) {
 
 function isSubmission(sub) {
 	if (!sub) return "Falsy value";
-	if (!isInteger(sub.id) || sub.id < 1) return "Bad id body parameter";
+	if (!isInteger(sub.id)) return "Bad id body parameter";
+	if (sub.id < 1) return "Id can't be < 1";
 	if (!isInteger(sub.studentID)) return "Bad studentID body parameter";
+	if (sub.studentID < 1) return "studentID can't be < 1";
 	if (!isInteger(sub.examID)) return "Bad examID body parameter";
+	if (sub.examID < 1) return "examID can't be < 1";
 	if (!isInteger(sub.taskID)) return "Bad taskID body parameter";
+	if (sub.taskID < 1) return "taskID can't be < 1";
+
 	if (sub.chosen_answers !== undefined) {
 		if (!isArray(sub.chosen_answers)) return "Chosen_answer must be an array of integers";
 		if (!sub.chosen_answers.every(i => isInteger(i) && i >= 0)) return "Every item in chosen_answer must be an integer";
